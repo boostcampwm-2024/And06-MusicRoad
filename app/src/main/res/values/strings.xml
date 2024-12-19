@@ -50,6 +50,10 @@
     <string name="my_picks_empty">등록한 픽이 없습니다</string>
     <string name="error_loading_pick_list">일시적인 오류가 발생했습니다.</string>
 
+    <!-- Pick List -->
+    <string name="pick_list_deactivate_edit_mode_button_text">취소</string>
+    <string name="pick_list_delete_selection_button_text">선택 삭제</string>
+
     <!-- Pick List Order -->
     <string name="latest_create_order">최근 등록순</string>
     <string name="latest_favorite_order">최근 담은순</string>
@@ -79,6 +83,8 @@
 
     <!-- Top App Bar -->
     <string name="top_app_bar_back_description">상단 바 뒤로 가기 버튼</string>
+    <string name="pick_list_activate_edit_mode_button_description">픽 목록 편집 모드 활성화 버튼</string>
+    <string name="pick_list_select_all_button_text">전체 선택</string>
     <string name="favorite_picks_top_app_bar_title">픽 보관함</string>
     <string name="my_picks_top_app_bar_title">등록한 픽</string>
 

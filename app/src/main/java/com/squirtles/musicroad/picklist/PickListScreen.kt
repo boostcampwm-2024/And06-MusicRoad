@@ -56,6 +56,8 @@ fun PickListScreen(
 ) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val uiState by pickListViewModel.pickListUiState.collectAsStateWithLifecycle()
+
+    var isEditMode by rememberSaveable { mutableStateOf(false) }
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -72,7 +74,14 @@ fun PickListScreen(
                 title = stringResource(
                     if (isFavoritePicks) R.string.favorite_picks_top_app_bar_title else R.string.my_picks_top_app_bar_title
                 ),
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                actions = {
+                    EditModeAction(
+                        isEditMode = isEditMode,
+                        enabled = uiState is PickListUiState.Success,
+                        activateEditMode = { isEditMode = true },
+                    )
+                }
             )
         },
     ) { innerPadding ->
@@ -98,11 +107,13 @@ fun PickListScreen(
                     val order = (uiState as PickListUiState.Success).order
 
                     PickList(
+                        isEditMode = isEditMode,
                         isFavoritePicks = isFavoritePicks,
                         pickList = pickList,
                         order = order,
                         onOrderClick = { showOrderBottomSheet = true },
-                        onItemClick = onItemClick
+                        onItemClick = onItemClick,
+                        deactivateEditMode = { isEditMode = false },
                     )
                 }
 
@@ -133,11 +144,13 @@ fun PickListScreen(
 
 @Composable
 private fun PickList(
+    isEditMode: Boolean,
     isFavoritePicks: Boolean,
     pickList: List<Pick>,
     order: Order,
     onOrderClick: () -> Unit,
     onItemClick: (String) -> Unit,
+    deactivateEditMode: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -217,6 +230,12 @@ private fun PickList(
                         onItemClick = { onItemClick(pick.id) }
                     )
                 }
+            }
+
+            if (isEditMode) {
+                EditModeBottomButton(
+                    deactivateEditMode = deactivateEditMode,
+                )
             }
         }
     }
