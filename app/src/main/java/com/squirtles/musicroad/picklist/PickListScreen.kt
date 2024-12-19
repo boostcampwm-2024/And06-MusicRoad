@@ -221,6 +221,7 @@ private fun PickList(
                     key = { it.id }
                 ) { pick ->
                     PickItem(
+                        isEditMode = isEditMode,
                         song = pick.song,
                         createdByOthers = isFavoritePicks,
                         createUserName = pick.createdBy.userName,

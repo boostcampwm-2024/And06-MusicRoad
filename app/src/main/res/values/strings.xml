@@ -53,6 +53,7 @@
     <!-- Pick List -->
     <string name="pick_list_deactivate_edit_mode_button_text">취소</string>
     <string name="pick_list_delete_selection_button_text">선택 삭제</string>
+    <string name="outlined_check_circle_icon_description">원 윤곽선이 있는 체크 아이콘</string>
 
     <!-- Pick List Order -->
     <string name="latest_create_order">최근 등록순</string>

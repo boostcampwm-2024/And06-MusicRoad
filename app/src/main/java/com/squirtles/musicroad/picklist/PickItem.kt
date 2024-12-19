@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
@@ -17,9 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.squirtles.domain.model.Song
+import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.AlbumImage
 import com.squirtles.musicroad.common.CommentText
 import com.squirtles.musicroad.common.Constants
@@ -32,6 +37,7 @@ import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 internal fun PickItem(
+    isEditMode: Boolean,
     song: Song,
     createdByOthers: Boolean,
     createUserName: String,
@@ -101,6 +107,14 @@ internal fun PickItem(
             CommentText(
                 comment = comment,
                 color = Gray
+            )
+        }
+
+        if (isEditMode) {
+            Icon(
+                imageVector = Icons.Outlined.CheckCircle,
+                contentDescription = stringResource(R.string.outlined_check_circle_icon_description),
+                tint = Gray
             )
         }
     }
