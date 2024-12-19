@@ -36,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.CircularProgressIndicator
 import com.squirtles.domain.model.Order
+import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
@@ -96,87 +97,13 @@ fun PickListScreen(
                     val pickList = (uiState as PickListUiState.Success).pickList
                     val order = (uiState as PickListUiState.Success).order
 
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = DEFAULT_PADDING),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TotalCountText(
-                                totalCount = pickList.size,
-                                defaultColor = White,
-                            )
-
-                            Box(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .clip(CircleShape)
-                                    .clickable { showOrderBottomSheet = true }
-                            ) {
-                                Text(
-                                    text = "${
-                                        stringResource(
-                                            when (order) {
-                                                Order.LATEST ->
-                                                    if (isFavoritePicks) R.string.latest_favorite_order else R.string.latest_create_order
-
-                                                Order.OLDEST ->
-                                                    if (isFavoritePicks) R.string.oldest_favorite_order else R.string.oldest_create_order
-
-                                                Order.FAVORITE_DESC -> R.string.favorite_count_desc
-                                            }
-                                        )
-                                    }  ▼",
-                                    modifier = Modifier.padding(
-                                        horizontal = DEFAULT_PADDING / 2,
-                                        vertical = DEFAULT_PADDING / 4
-                                    ),
-                                    color = White,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-
-                        VerticalSpacer(8)
-
-                        if (pickList.isEmpty()) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(
-                                        if (isFavoritePicks) R.string.favorite_picks_empty else R.string.my_picks_empty
-                                    ),
-                                    color = White,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                items(
-                                    items = pickList,
-                                    key = { it.id }
-                                ) { pick ->
-                                    PickItem(
-                                        song = pick.song,
-                                        createdByOthers = isFavoritePicks,
-                                        createUserName = pick.createdBy.userName,
-                                        favoriteCount = pick.favoriteCount,
-                                        comment = pick.comment,
-                                        createdAt = pick.createdAt,
-                                        onItemClick = { onItemClick(pick.id) }
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    PickList(
+                        isFavoritePicks = isFavoritePicks,
+                        pickList = pickList,
+                        order = order,
+                        onOrderClick = { showOrderBottomSheet = true },
+                        onItemClick = onItemClick
+                    )
                 }
 
                 PickListUiState.Error -> {
@@ -201,5 +128,96 @@ fun PickListScreen(
                 pickListViewModel.setListOrder(isFavoritePicks, order)
             },
         )
+    }
+}
+
+@Composable
+private fun PickList(
+    isFavoritePicks: Boolean,
+    pickList: List<Pick>,
+    order: Order,
+    onOrderClick: () -> Unit,
+    onItemClick: (String) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = DEFAULT_PADDING),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TotalCountText(
+                totalCount = pickList.size,
+                defaultColor = White,
+            )
+
+            Box(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clip(CircleShape)
+                    .clickable { onOrderClick() }
+            ) {
+                Text(
+                    text = "${
+                        stringResource(
+                            when (order) {
+                                Order.LATEST ->
+                                    if (isFavoritePicks) R.string.latest_favorite_order else R.string.latest_create_order
+
+                                Order.OLDEST ->
+                                    if (isFavoritePicks) R.string.oldest_favorite_order else R.string.oldest_create_order
+
+                                Order.FAVORITE_DESC -> R.string.favorite_count_desc
+                            }
+                        )
+                    }  ▼",
+                    modifier = Modifier.padding(
+                        horizontal = DEFAULT_PADDING / 2,
+                        vertical = DEFAULT_PADDING / 4
+                    ),
+                    color = White,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        VerticalSpacer(8)
+
+        if (pickList.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(
+                        if (isFavoritePicks) R.string.favorite_picks_empty else R.string.my_picks_empty
+                    ),
+                    color = White,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                items(
+                    items = pickList,
+                    key = { it.id }
+                ) { pick ->
+                    PickItem(
+                        song = pick.song,
+                        createdByOthers = isFavoritePicks,
+                        createUserName = pick.createdBy.userName,
+                        favoriteCount = pick.favoriteCount,
+                        comment = pick.comment,
+                        createdAt = pick.createdAt,
+                        onItemClick = { onItemClick(pick.id) }
+                    )
+                }
+            }
+        }
     }
 }
