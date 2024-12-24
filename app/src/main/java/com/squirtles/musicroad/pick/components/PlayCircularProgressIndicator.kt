@@ -1,26 +1,41 @@
 package com.squirtles.musicroad.pick.components
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.squirtles.musicroad.ui.theme.White
+import kotlinx.coroutines.delay
 import kotlin.math.atan2
 
 @Composable
 internal fun PlayCircularProgressIndicator(
     modifier: Modifier = Modifier,
+    isPlaying: () -> Boolean,
     currentTime: Float,
     strokeWidth: Dp,
     duration: Float,
@@ -28,6 +43,8 @@ internal fun PlayCircularProgressIndicator(
     onSeekChanged: (Float) -> Unit,
     onCenterClick: () -> Unit = {},
 ) {
+    var showIcon by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .aspectRatio(1f)
@@ -59,11 +76,31 @@ internal fun PlayCircularProgressIndicator(
                 .fillMaxSize()
                 .aspectRatio(1f)
                 .padding(30.dp)
-                .background(White)
+//                .background(White)
                 .clickable {
                     onCenterClick()
+                    showIcon = true
                 },
         )
+
+        AnimatedVisibility(
+            visible = showIcon,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f)
+                .padding(30.dp)
+        ) {
+            Icon(
+                imageVector = if (isPlaying()) Icons.Default.PlayArrow else Icons.Default.Pause,
+                contentDescription = "Play/Pause",
+                modifier = Modifier
+                    .size(64.dp)
+                    .alpha(0.7f),
+                tint = Color.White
+            )
+        }
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             progress = { currentTime / duration },
@@ -73,6 +110,13 @@ internal fun PlayCircularProgressIndicator(
             strokeCap = StrokeCap.Round,
             gapSize = 0.dp,
         )
+
+        if (showIcon) {
+            LaunchedEffect(Unit) {
+                delay(500) // 아이콘이 표시될 시간 (500ms)
+                showIcon = false
+            }
+        }
     }
 }
 

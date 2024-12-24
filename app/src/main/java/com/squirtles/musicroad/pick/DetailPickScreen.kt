@@ -400,6 +400,7 @@ private fun DetailPick(
                                 .size(320.dp)
                                 .align(Alignment.Center),
                             song = pick.song,
+                            isPlaying = { playerUiState.isPlaying },
                             currentPosition = { playerUiState.currentPosition },
                             duration = { playerUiState.duration },
                             audioEffectColor = audioEffectColor,

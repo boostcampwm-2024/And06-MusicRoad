@@ -26,6 +26,7 @@ import com.squirtles.musicroad.pick.components.music.visualizer.CircleVisualizer
 internal fun CircleAlbumCover(
     song: Song,
     currentPosition: () -> Long,
+    isPlaying: () -> Boolean,
     duration: () -> Long,
     audioEffectColor: Color,
     baseVisualizer: () -> BaseVisualizer,
@@ -51,6 +52,7 @@ internal fun CircleAlbumCover(
                 .padding(10.dp)
                 .align(Alignment.Center)
                 .zIndex(1f),
+            isPlaying = isPlaying,
             currentTime = currentPosition().toFloat(),
             duration = duration().toFloat(),
             strokeWidth = 5.dp,
