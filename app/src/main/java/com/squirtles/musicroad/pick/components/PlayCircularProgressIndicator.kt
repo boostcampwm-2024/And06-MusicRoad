@@ -1,9 +1,12 @@
 package com.squirtles.musicroad.pick.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,7 +17,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.squirtles.musicroad.ui.theme.White
 import kotlin.math.atan2
-import kotlin.math.hypot
 
 @Composable
 internal fun PlayCircularProgressIndicator(
@@ -23,7 +25,8 @@ internal fun PlayCircularProgressIndicator(
     strokeWidth: Dp,
     duration: Float,
     innerRadiusRatio: Float = 0.5f, // 터치 비활성 비율
-    onSeekChanged: (Float) -> Unit
+    onSeekChanged: (Float) -> Unit,
+    onCenterClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -33,9 +36,9 @@ internal fun PlayCircularProgressIndicator(
                     val centerX = size.width / 2
                     val centerY = size.height / 2
 
-                    val distanceFromCenter = hypot(offset.x - centerX, offset.y - centerY) // 터치 좌표랑 중심 사이
-                    val innerRadius = size.width * innerRadiusRatio / 2
-                    if (distanceFromCenter < innerRadius) return@detectTapGestures // 중앙의 반경 내 터치 무시
+//                    val distanceFromCenter = hypot(offset.x - centerX, offset.y - centerY) // 터치 좌표랑 중심 사이
+//                    val innerRadius = size.width * innerRadiusRatio / 2
+//                    if (distanceFromCenter < innerRadius) return@detectTapGestures // 중앙의 반경 내 터치 무시
 
                     // 중심 기준 터치좌표의 각도
                     val angle = Math
@@ -51,6 +54,16 @@ internal fun PlayCircularProgressIndicator(
                 }
             }
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f)
+                .padding(30.dp)
+                .background(White)
+                .clickable {
+                    onCenterClick()
+                },
+        )
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             progress = { currentTime / duration },

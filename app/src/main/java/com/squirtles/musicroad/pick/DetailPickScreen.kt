@@ -408,6 +408,9 @@ private fun DetailPick(
                             onSeekChanged = { timeMs ->
                                 playerServiceViewModel.onSeekingFinished(timeMs)
                             },
+                            onCenterClick = {
+                                playerServiceViewModel.togglePlayPause(pick.song)
+                            }
                         )
                     }
 

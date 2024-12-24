@@ -1,5 +1,6 @@
 package com.squirtles.musicroad.media
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Pick
@@ -27,6 +28,14 @@ class PlayerServiceViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = PlayerState()
         )
+
+    init {
+        viewModelScope.launch {
+            playerState.collect { playerState ->
+                Log.d("PlayerServiceViewModel", "playerState: $playerState")
+            }
+        }
+    }
 
     val audioSessionId get() = mediaPlayerUseCase.audioSessionId
 

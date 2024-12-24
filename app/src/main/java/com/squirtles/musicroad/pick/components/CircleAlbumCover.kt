@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import com.squirtles.domain.model.Song
 import com.squirtles.musicroad.R
@@ -30,6 +31,7 @@ internal fun CircleAlbumCover(
     baseVisualizer: () -> BaseVisualizer,
     audioSessionId: Int,
     onSeekChanged: (Long) -> Unit,
+    onCenterClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -47,13 +49,15 @@ internal fun CircleAlbumCover(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp)
-                .align(Alignment.Center),
+                .align(Alignment.Center)
+                .zIndex(1f),
             currentTime = currentPosition().toFloat(),
             duration = duration().toFloat(),
             strokeWidth = 5.dp,
             onSeekChanged = { timeMs ->
                 onSeekChanged(timeMs.toLong())
             },
+            onCenterClick = onCenterClick,
         )
 
         AsyncImage(
@@ -64,7 +68,8 @@ internal fun CircleAlbumCover(
                 .padding(horizontal = 30.dp)
                 .aspectRatio(1f)
                 .clip(CircleShape)
-                .align(Alignment.Center),
+                .align(Alignment.Center)
+                .zIndex(0f),
             contentScale = ContentScale.Crop
         )
     }
