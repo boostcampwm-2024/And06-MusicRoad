@@ -1,8 +1,9 @@
-package com.squirtles.musicroad.pick.components
+package com.squirtles.musicroad.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.squirtles.musicroad.R
-import com.squirtles.musicroad.common.VerticalSpacer
-import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.ui.theme.Black
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import com.squirtles.musicroad.ui.theme.Primary
@@ -31,9 +30,11 @@ import com.squirtles.musicroad.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeletePickDialog(
+internal fun AlertStringDialog(
     onDismissRequest: () -> Unit,
-    onDeletion: () -> Unit
+    title: String,
+    body: String,
+    buttons: @Composable RowScope.() -> Unit,
 ) {
     BasicAlertDialog(
         onDismissRequest = { onDismissRequest() },
@@ -48,7 +49,7 @@ fun DeletePickDialog(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(R.string.delete_pick_dialog_title),
+                    text = title,
                     color = Black,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
@@ -57,7 +58,7 @@ fun DeletePickDialog(
                 VerticalSpacer(8)
 
                 Text(
-                    text = stringResource(R.string.delete_pick_dialog_body),
+                    text = body,
                     color = Black,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -67,45 +68,59 @@ fun DeletePickDialog(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(
-                        onClick = { onDismissRequest() },
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = Color.Transparent,
-                            contentColor = Black
-                        )
-                    ) {
-                        Text(stringResource(R.string.delete_pick_dialog_cancel))
-                    }
-
-                    HorizontalSpacer(8)
-
-                    TextButton(
-                        onClick = { onDeletion() },
-                        colors = ButtonDefaults.buttonColors().copy(
-                            containerColor = Color.Transparent,
-                            contentColor = Primary
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(R.string.delete_pick_dialog_delete),
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = buttons
+                )
             }
         }
     }
 }
 
+@Composable
+internal fun DialogTextButton(
+    onClick: () -> Unit,
+    text: String,
+    textColor: Color = Black,
+    buttonColor: Color = Color.Transparent,
+    fontWeight: FontWeight? = null,
+) {
+    TextButton(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors().copy(
+            containerColor = buttonColor,
+            contentColor = textColor
+        )
+    ) {
+        Text(
+            text = text,
+            fontWeight = fontWeight,
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun DeletePickDialogPreview() {
+private fun DeletePickDialogPreview() {
     MusicRoadTheme {
-        DeletePickDialog(
+        AlertStringDialog(
             onDismissRequest = {},
-            onDeletion = {}
+            title = stringResource(R.string.delete_pick_dialog_title),
+            body = stringResource(R.string.delete_pick_dialog_body),
+            buttons = {
+                DialogTextButton(
+                    onClick = {},
+                    text = "취소"
+                )
+
+                HorizontalSpacer(8)
+
+                DialogTextButton(
+                    onClick = {},
+                    text = "삭제하기",
+                    textColor = Primary,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         )
     }
 }
