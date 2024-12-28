@@ -18,6 +18,7 @@ import com.squirtles.musicroad.map.MapViewModel
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.pick.DetailPickScreen
 import com.squirtles.musicroad.picklist.PickListScreen
+import com.squirtles.musicroad.picklist.PickListType
 import com.squirtles.musicroad.profile.ProfileScreen
 import com.squirtles.musicroad.setting.SettingNotificationScreen
 import com.squirtles.musicroad.setting.SettingProfileScreen
@@ -54,7 +55,7 @@ fun MainNavGraph(
 
             PickListScreen(
                 userId = userId,
-                isFavoritePicks = true,
+                pickListType = PickListType.FAVORITE,
                 onBackClick = { navController.navigateUp() },
                 onItemClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
             )
@@ -68,7 +69,7 @@ fun MainNavGraph(
 
             PickListScreen(
                 userId = userId,
-                isFavoritePicks = false,
+                pickListType = PickListType.CREATED,
                 onBackClick = { navController.navigateUp() },
                 onItemClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
             )

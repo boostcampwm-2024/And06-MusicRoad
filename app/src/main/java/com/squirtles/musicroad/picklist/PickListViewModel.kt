@@ -57,12 +57,11 @@ class PickListViewModel @Inject constructor(
         }
     }
 
-    fun setListOrder(isFavoritePicks: Boolean, order: Order) {
+    fun setListOrder(type: PickListType, order: Order) {
         viewModelScope.launch {
-            if (isFavoritePicks) {
-                saveFavoriteListOrderUseCase(order)
-            } else {
-                saveMyListOrderUseCase(order)
+            when (type) {
+                PickListType.FAVORITE -> saveFavoriteListOrderUseCase(order)
+                PickListType.CREATED -> saveMyListOrderUseCase(order)
             }
             setList(order)
         }

@@ -1,4 +1,5 @@
-![image](https://github.com/user-attachments/assets/c1033178-3b57-4858-b843-b1e1a3811197)
+![image](https://github.com/user-attachments/assets/b08e976f-def8-4921-b15d-f3e4d5808786)
+
 
 <div align="center">
   <h1>Music Road</h1>

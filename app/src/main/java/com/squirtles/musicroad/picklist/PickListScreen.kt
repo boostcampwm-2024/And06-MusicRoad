@@ -49,7 +49,7 @@ import com.squirtles.musicroad.ui.theme.White
 @Composable
 fun PickListScreen(
     userId: String,
-    isFavoritePicks: Boolean,
+    pickListType: PickListType,
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     pickListViewModel: PickListViewModel = hiltViewModel()
@@ -61,10 +61,9 @@ fun PickListScreen(
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        if (isFavoritePicks) {
-            pickListViewModel.fetchFavoritePicks(userId)
-        } else {
-            pickListViewModel.fetchMyPicks(userId)
+        when (pickListType) {
+            PickListType.FAVORITE -> pickListViewModel.fetchFavoritePicks(userId)
+            PickListType.CREATED -> pickListViewModel.fetchMyPicks(userId)
         }
     }
 
@@ -72,7 +71,10 @@ fun PickListScreen(
         topBar = {
             DefaultTopAppBar(
                 title = stringResource(
-                    if (isFavoritePicks) R.string.favorite_picks_top_app_bar_title else R.string.my_picks_top_app_bar_title
+                    when (pickListType) {
+                        PickListType.FAVORITE -> R.string.favorite_picks_top_app_bar_title
+                        PickListType.CREATED -> R.string.my_picks_top_app_bar_title
+                    }
                 ),
                 onBackClick = onBackClick,
                 actions = {
@@ -108,7 +110,7 @@ fun PickListScreen(
 
                     PickList(
                         isEditMode = isEditMode,
-                        isFavoritePicks = isFavoritePicks,
+                        pickListType = pickListType,
                         pickList = pickList,
                         order = order,
                         onOrderClick = { showOrderBottomSheet = true },
@@ -132,11 +134,11 @@ fun PickListScreen(
 
     if (showOrderBottomSheet) {
         OrderBottomSheet(
-            isFavoritePicks = isFavoritePicks,
+            isFavoritePicks = pickListType == PickListType.FAVORITE,
             currentOrder = (uiState as PickListUiState.Success).order,
             onDismissRequest = { showOrderBottomSheet = false },
             onOrderClick = { order ->
-                pickListViewModel.setListOrder(isFavoritePicks, order)
+                pickListViewModel.setListOrder(pickListType, order)
             },
         )
     }
@@ -145,7 +147,7 @@ fun PickListScreen(
 @Composable
 private fun PickList(
     isEditMode: Boolean,
-    isFavoritePicks: Boolean,
+    pickListType: PickListType,
     pickList: List<Pick>,
     order: Order,
     onOrderClick: () -> Unit,
@@ -174,19 +176,10 @@ private fun PickList(
                     .clickable { onOrderClick() }
             ) {
                 Text(
-                    text = "${
-                        stringResource(
-                            when (order) {
-                                Order.LATEST ->
-                                    if (isFavoritePicks) R.string.latest_favorite_order else R.string.latest_create_order
-
-                                Order.OLDEST ->
-                                    if (isFavoritePicks) R.string.oldest_favorite_order else R.string.oldest_create_order
-
-                                Order.FAVORITE_DESC -> R.string.favorite_count_desc
-                            }
-                        )
-                    }  ▼",
+                    text = getOrderString(
+                        pickListType = pickListType,
+                        order = order
+                    ),
                     modifier = Modifier.padding(
                         horizontal = DEFAULT_PADDING / 2,
                         vertical = DEFAULT_PADDING / 4
@@ -206,7 +199,10 @@ private fun PickList(
             ) {
                 Text(
                     text = stringResource(
-                        if (isFavoritePicks) R.string.favorite_picks_empty else R.string.my_picks_empty
+                        when (pickListType) {
+                            PickListType.FAVORITE -> R.string.favorite_picks_empty
+                            PickListType.CREATED -> R.string.my_picks_empty
+                        }
                     ),
                     color = White,
                     style = MaterialTheme.typography.titleMedium
@@ -223,7 +219,7 @@ private fun PickList(
                     PickItem(
                         isEditMode = isEditMode,
                         song = pick.song,
-                        createdByOthers = isFavoritePicks,
+                        createdByOthers = pickListType == PickListType.FAVORITE,
                         createUserName = pick.createdBy.userName,
                         favoriteCount = pick.favoriteCount,
                         comment = pick.comment,
@@ -240,4 +236,27 @@ private fun PickList(
             }
         }
     }
+}
+
+@Composable
+private fun getOrderString(pickListType: PickListType, order: Order): String {
+    return "${
+        stringResource(
+            when (order) {
+                Order.LATEST ->
+                    when (pickListType) {
+                        PickListType.FAVORITE -> R.string.latest_favorite_order
+                        PickListType.CREATED -> R.string.latest_create_order
+                    }
+
+                Order.OLDEST ->
+                    when (pickListType) {
+                        PickListType.FAVORITE -> R.string.oldest_favorite_order
+                        PickListType.CREATED -> R.string.oldest_create_order
+                    }
+
+                Order.FAVORITE_DESC -> R.string.favorite_count_desc
+            }
+        )
+    }  ▼"
 }
