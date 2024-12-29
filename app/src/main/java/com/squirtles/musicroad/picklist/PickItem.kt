@@ -1,5 +1,6 @@
 package com.squirtles.musicroad.picklist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -33,11 +35,13 @@ import com.squirtles.musicroad.common.FavoriteCountText
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.SongInfoText
 import com.squirtles.musicroad.ui.theme.Gray
+import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 internal fun PickItem(
     isEditMode: Boolean,
+    isSelected: Boolean,
     song: Song,
     createdByOthers: Boolean,
     createUserName: String,
@@ -49,6 +53,7 @@ internal fun PickItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .background(color = if (isSelected) White.copy(alpha = 0.2F) else Color.Transparent)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(color = White),
@@ -114,7 +119,7 @@ internal fun PickItem(
             Icon(
                 imageVector = Icons.Outlined.CheckCircle,
                 contentDescription = stringResource(R.string.outlined_check_circle_icon_description),
-                tint = Gray
+                tint = if (isSelected) Primary else Gray
             )
         }
     }

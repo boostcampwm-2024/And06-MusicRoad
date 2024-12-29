@@ -17,16 +17,30 @@ import com.squirtles.musicroad.ui.theme.White
 internal fun EditModeAction(
     isEditMode: Boolean,
     enabled: Boolean,
+    isSelectedEmpty: Boolean,
     activateEditMode: () -> Unit,
+    selectAllPicks: () -> Unit,
+    deselectAllPicks: () -> Unit,
 ) {
     if (isEditMode) {
-        TextButton(
-            onClick = { TODO("픽 목록 전체 선택") }
-        ) {
-            Text(
-                text = stringResource(R.string.pick_list_select_all_button_text),
-                color = White,
-            )
+        if (isSelectedEmpty) {
+            TextButton(
+                onClick = selectAllPicks
+            ) {
+                Text(
+                    text = stringResource(R.string.pick_list_select_all_button_text),
+                    color = White,
+                )
+            }
+        } else {
+            TextButton(
+                onClick = deselectAllPicks
+            ) {
+                Text(
+                    text = stringResource(R.string.pick_list_deselect_all_button_text),
+                    color = White,
+                )
+            }
         }
     } else {
         IconButton(

@@ -31,6 +31,9 @@ class PickListViewModel @Inject constructor(
     private val _pickListUiState = MutableStateFlow<PickListUiState>(PickListUiState.Loading)
     val pickListUiState = _pickListUiState.asStateFlow()
 
+    private val _selectedPicksId = MutableStateFlow<Set<String>>(emptySet())
+    val selectedPicksId = _selectedPicksId.asStateFlow()
+
     fun fetchFavoritePicks(userId: String) {
         viewModelScope.launch {
             fetchFavoritePicksUseCase(userId)
@@ -65,6 +68,22 @@ class PickListViewModel @Inject constructor(
             }
             setList(order)
         }
+    }
+
+    fun toggleSelectedPick(pickId: String) {
+        val curSelectedPicksId = _selectedPicksId.value
+        _selectedPicksId.value =
+            if (curSelectedPicksId.contains(pickId)) curSelectedPicksId - pickId else curSelectedPicksId + pickId
+    }
+
+    fun selectAllPicks() {
+        defaultList?.let { pickList ->
+            _selectedPicksId.value = pickList.map { it.id }.toSet()
+        }
+    }
+
+    fun deselectAllPicks() {
+        _selectedPicksId.value = emptySet()
     }
 
     private fun setList(order: Order) {

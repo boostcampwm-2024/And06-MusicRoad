@@ -56,6 +56,7 @@ fun PickListScreen(
 ) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val uiState by pickListViewModel.pickListUiState.collectAsStateWithLifecycle()
+    val selectedPicksId by pickListViewModel.selectedPicksId.collectAsStateWithLifecycle()
 
     var isEditMode by rememberSaveable { mutableStateOf(false) }
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -81,7 +82,10 @@ fun PickListScreen(
                     EditModeAction(
                         isEditMode = isEditMode,
                         enabled = uiState is PickListUiState.Success,
+                        isSelectedEmpty = selectedPicksId.isEmpty(),
                         activateEditMode = { isEditMode = true },
+                        selectAllPicks = { pickListViewModel.selectAllPicks() },
+                        deselectAllPicks = { pickListViewModel.deselectAllPicks() },
                     )
                 }
             )
@@ -112,10 +116,15 @@ fun PickListScreen(
                         isEditMode = isEditMode,
                         pickListType = pickListType,
                         pickList = pickList,
+                        selectedPicksId = selectedPicksId,
                         order = order,
                         onOrderClick = { showOrderBottomSheet = true },
                         onItemClick = onItemClick,
-                        deactivateEditMode = { isEditMode = false },
+                        onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
+                        deactivateEditMode = {
+                            isEditMode = false
+                            pickListViewModel.deselectAllPicks()
+                        },
                     )
                 }
 
@@ -149,9 +158,11 @@ private fun PickList(
     isEditMode: Boolean,
     pickListType: PickListType,
     pickList: List<Pick>,
+    selectedPicksId: Set<String>,
     order: Order,
     onOrderClick: () -> Unit,
     onItemClick: (String) -> Unit,
+    onEditModeItemClick: (String) -> Unit,
     deactivateEditMode: () -> Unit,
 ) {
     Column(
@@ -194,7 +205,9 @@ private fun PickList(
 
         if (pickList.isEmpty()) {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -218,22 +231,26 @@ private fun PickList(
                 ) { pick ->
                     PickItem(
                         isEditMode = isEditMode,
+                        isSelected = selectedPicksId.contains(pick.id),
                         song = pick.song,
                         createdByOthers = pickListType == PickListType.FAVORITE,
                         createUserName = pick.createdBy.userName,
                         favoriteCount = pick.favoriteCount,
                         comment = pick.comment,
                         createdAt = pick.createdAt,
-                        onItemClick = { onItemClick(pick.id) }
+                        onItemClick = {
+                            if (isEditMode) onEditModeItemClick(pick.id) else onItemClick(pick.id)
+                        }
                     )
                 }
             }
+        }
 
-            if (isEditMode) {
-                EditModeBottomButton(
-                    deactivateEditMode = deactivateEditMode,
-                )
-            }
+        if (isEditMode) {
+            EditModeBottomButton(
+                deactivateEditMode = deactivateEditMode,
+            )
+        }
         }
     }
 }
