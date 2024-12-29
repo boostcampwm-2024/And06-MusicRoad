@@ -125,6 +125,10 @@ fun PickListScreen(
                             isEditMode = false
                             pickListViewModel.deselectAllPicks()
                         },
+                        onDeletePickClick = {
+                            isEditMode = false
+                            pickListViewModel.deleteSelectedPicks(pickListType)
+                        },
                     )
                 }
 
@@ -164,7 +168,10 @@ private fun PickList(
     onItemClick: (String) -> Unit,
     onEditModeItemClick: (String) -> Unit,
     deactivateEditMode: () -> Unit,
+    onDeletePickClick: () -> Unit,
 ) {
+    var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -249,8 +256,19 @@ private fun PickList(
         if (isEditMode) {
             EditModeBottomButton(
                 deactivateEditMode = deactivateEditMode,
+                showDeletePickDialog = { showDeletePickDialog = true },
             )
         }
+
+        if (showDeletePickDialog) {
+            DeleteSelectedPickDialog(
+                selectedPickCount = selectedPicksId.size,
+                pickListType = pickListType,
+                onDismissRequest = {
+                    showDeletePickDialog = false
+                },
+                onDeletePickClick = onDeletePickClick,
+            )
         }
     }
 }

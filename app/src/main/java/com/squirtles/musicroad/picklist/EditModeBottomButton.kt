@@ -24,6 +24,7 @@ import com.squirtles.musicroad.ui.theme.White
 @Composable
 internal fun EditModeBottomButton(
     deactivateEditMode: () -> Unit,
+    showDeletePickDialog: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -43,7 +44,7 @@ internal fun EditModeBottomButton(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            onClick = { TODO("선택 삭제") },
+            onClick = showDeletePickDialog,
             text = stringResource(R.string.pick_list_delete_selection_button_text)
         )
     }
@@ -79,6 +80,7 @@ private fun EditModeBottomButtonPreview() {
     MusicRoadTheme {
         EditModeBottomButton(
             deactivateEditMode = {},
+            showDeletePickDialog = {},
         )
     }
 }
