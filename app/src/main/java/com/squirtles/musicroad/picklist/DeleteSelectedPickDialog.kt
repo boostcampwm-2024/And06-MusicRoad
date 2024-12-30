@@ -25,7 +25,7 @@ internal fun DeleteSelectedPickDialog(
             stringResource(
                 when (pickListType) {
                     PickListType.FAVORITE -> R.string.delete_selected_favorite_pick_dialog_body
-                    PickListType.CREATED -> R.string.delete_pick_dialog_body
+                    PickListType.CREATED -> R.string.delete_selected_pick_dialog_body
                 },
                 selectedPickCount
             )
