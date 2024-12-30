@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -60,6 +61,13 @@ fun PickListScreen(
 
     var isEditMode by rememberSaveable { mutableStateOf(false) }
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    val deactivateEditMode = remember {
+        {
+            isEditMode = false
+            pickListViewModel.deselectAllPicks()
+        }
+    }
 
     LaunchedEffect(Unit) {
         when (pickListType) {
@@ -121,10 +129,7 @@ fun PickListScreen(
                         onOrderClick = { showOrderBottomSheet = true },
                         onItemClick = onItemClick,
                         onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
-                        deactivateEditMode = {
-                            isEditMode = false
-                            pickListViewModel.deselectAllPicks()
-                        },
+                        deactivateEditMode = deactivateEditMode,
                         onDeletePickClick = {
                             isEditMode = false
                             pickListViewModel.deleteSelectedPicks(pickListType)
