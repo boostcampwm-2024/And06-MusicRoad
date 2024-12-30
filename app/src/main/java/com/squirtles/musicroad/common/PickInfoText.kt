@@ -71,6 +71,7 @@ fun CommentText(
 @Composable
 fun TotalCountText(
     modifier: Modifier = Modifier,
+    prefixText: String = stringResource(R.string.total_count_text),
     totalCount: Int,
     defaultColor: Color = MaterialTheme.colorScheme.onSurface,
     pointColor: Color = MaterialTheme.colorScheme.primary,
@@ -84,7 +85,7 @@ fun TotalCountText(
                     fontWeight = FontWeight.Bold
                 )
             ) {
-                append("전체 ")
+                append("$prefixText ")
             }
             withStyle(
                 SpanStyle(

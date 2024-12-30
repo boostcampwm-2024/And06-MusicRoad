@@ -183,7 +183,10 @@ private fun PickList(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TotalCountText(
-                totalCount = pickList.size,
+                prefixText = stringResource(
+                    if (isEditMode) R.string.selected_count_text else R.string.total_count_text
+                ),
+                totalCount = if (isEditMode) selectedPicksId.size else pickList.size,
                 defaultColor = White,
             )
 
