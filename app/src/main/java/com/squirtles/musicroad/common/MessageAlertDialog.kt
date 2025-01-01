@@ -30,7 +30,7 @@ import com.squirtles.musicroad.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun AlertStringDialog(
+internal fun MessageAlertDialog(
     onDismissRequest: () -> Unit,
     title: String,
     body: String,
@@ -102,7 +102,7 @@ internal fun DialogTextButton(
 @Composable
 private fun DeletePickDialogPreview() {
     MusicRoadTheme {
-        AlertStringDialog(
+        MessageAlertDialog(
             onDismissRequest = {},
             title = stringResource(R.string.delete_pick_dialog_title),
             body = stringResource(R.string.delete_pick_dialog_body),

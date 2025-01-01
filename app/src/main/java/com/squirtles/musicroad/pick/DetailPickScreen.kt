@@ -55,9 +55,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
-import com.squirtles.musicroad.common.AlertStringDialog
 import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.pick.PickViewModel.Companion.DEFAULT_PICK
@@ -277,7 +277,7 @@ fun DetailPickScreen(
     }
 
     if (showDeletePickDialog) {
-        AlertStringDialog(
+        MessageAlertDialog(
             onDismissRequest = {
                 showDeletePickDialog = false
             },

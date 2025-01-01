@@ -4,9 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.squirtles.musicroad.R
-import com.squirtles.musicroad.common.AlertStringDialog
 import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.ui.theme.Primary
 
 @Composable
@@ -16,7 +16,7 @@ internal fun DeleteSelectedPickDialog(
     onDismissRequest: () -> Unit,
     onDeletePickClick: () -> Unit,
 ) {
-    AlertStringDialog(
+    MessageAlertDialog(
         onDismissRequest = onDismissRequest,
         title = stringResource(if (selectedPickCount == 0) R.string.default_alert_dialog_title else R.string.delete_pick_dialog_title),
         body = if (selectedPickCount == 0) {
