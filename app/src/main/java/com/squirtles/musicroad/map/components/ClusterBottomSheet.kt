@@ -28,12 +28,12 @@ import com.squirtles.musicroad.common.AlbumImage
 import com.squirtles.musicroad.common.CommentText
 import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
 import com.squirtles.musicroad.common.Constants.REQUEST_IMAGE_SIZE_DEFAULT
+import com.squirtles.musicroad.common.CountText
 import com.squirtles.musicroad.common.CreatedByOtherUserText
 import com.squirtles.musicroad.common.CreatedBySelfText
 import com.squirtles.musicroad.common.FavoriteCountText
-import com.squirtles.musicroad.common.SongInfoText
-import com.squirtles.musicroad.common.TotalCountText
 import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.SongInfoText
 import com.squirtles.musicroad.common.VerticalSpacer
 import kotlinx.coroutines.launch
 
@@ -57,11 +57,11 @@ fun ClusterBottomSheet(
         containerColor = MaterialTheme.colorScheme.surface
     ) {
         clusterPickList?.let { pickList ->
-            TotalCountText(
+            CountText(
+                totalCount = pickList.size,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = DEFAULT_PADDING),
-                totalCount = pickList.size
+                    .padding(start = DEFAULT_PADDING)
             )
             
             VerticalSpacer(height = 8)

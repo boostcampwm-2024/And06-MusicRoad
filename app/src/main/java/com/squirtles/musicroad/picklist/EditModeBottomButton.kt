@@ -32,29 +32,29 @@ internal fun EditModeBottomButton(
             .height(ButtonHeight)
     ) {
         EditModeButton(
+            text = stringResource(R.string.pick_list_deactivate_edit_mode_button_text),
+            onClick = deactivateEditMode,
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            onClick = deactivateEditMode,
-            text = stringResource(R.string.pick_list_deactivate_edit_mode_button_text),
             buttonColor = Gray
         )
 
         EditModeButton(
+            text = stringResource(R.string.pick_list_delete_selection_button_text),
+            onClick = showDeletePickDialog,
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
-            onClick = showDeletePickDialog,
-            text = stringResource(R.string.pick_list_delete_selection_button_text)
+                .weight(1f)
         )
     }
 }
 
 @Composable
 private fun EditModeButton(
-    modifier: Modifier,
-    onClick: () -> Unit,
     text: String,
+    onClick: () -> Unit,
+    modifier: Modifier,
     textColor: Color = White,
     buttonColor: Color = Primary,
 ) {
