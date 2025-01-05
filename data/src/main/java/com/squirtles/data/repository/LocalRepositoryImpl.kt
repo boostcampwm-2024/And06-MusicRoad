@@ -1,10 +1,10 @@
 package com.squirtles.data.repository
 
 import android.location.Location
-import com.squirtles.domain.datasource.LocalDataSource
+import com.squirtles.domain.local.LocalDataSource
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.User
-import com.squirtles.domain.repository.LocalRepository
+import com.squirtles.domain.local.LocalRepository
 import javax.inject.Inject
 
 class LocalRepositoryImpl @Inject constructor(

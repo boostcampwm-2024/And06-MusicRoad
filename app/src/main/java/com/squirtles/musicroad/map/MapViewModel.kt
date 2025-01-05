@@ -9,9 +9,9 @@ import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.overlay.Marker
 import com.squirtles.domain.model.Pick
-import com.squirtles.domain.usecase.local.FetchLastLocationUseCase
-import com.squirtles.domain.usecase.local.GetCurrentUserUseCase
-import com.squirtles.domain.usecase.local.SaveLastLocationUseCase
+import com.squirtles.domain.usecase.location.GetLastLocationUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
+import com.squirtles.domain.usecase.location.SaveLastLocationUseCase
 import com.squirtles.domain.usecase.pick.FetchPickInAreaUseCase
 import com.squirtles.musicroad.map.marker.MarkerKey
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ data class MarkerState(
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    fetchLastLocationUseCase: FetchLastLocationUseCase,
+    getLastLocationUseCase: GetLastLocationUseCase,
     private val saveLastLocationUseCase: SaveLastLocationUseCase,
     private val fetchPickInAreaUseCase: FetchPickInAreaUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
@@ -53,7 +53,7 @@ class MapViewModel @Inject constructor(
 
     // LocalDataSource에 저장되는 위치 정보
     // Firestore 데이터 쿼리 작업 최소화 및 위치데이터 공유 용도
-    val lastLocation: StateFlow<Location?> = fetchLastLocationUseCase()
+    val lastLocation: StateFlow<Location?> = getLastLocationUseCase()
 
     fun getUserId() = getCurrentUserUseCase().userId
 

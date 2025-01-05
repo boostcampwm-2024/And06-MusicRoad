@@ -3,10 +3,10 @@ package com.squirtles.musicroad.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.User
-import com.squirtles.domain.usecase.local.GetCurrentUserUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserByIdUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
-import com.squirtles.domain.usecase.user.UpdateUserNameUserCase
+import com.squirtles.domain.usecase.user.UpdateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ class ProfileViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
     private val fetchUserByIdUseCase: FetchUserByIdUseCase,
-    private val updateUserNameUserCase: UpdateUserNameUserCase
+    private val updateUserNameUseCase: UpdateUserNameUseCase
 ) : ViewModel() {
 
     private val _profileUser = MutableStateFlow(DEFAULT_USER)
@@ -45,7 +45,7 @@ class ProfileViewModel @Inject constructor(
     fun updateUsername(newUserName: String) {
         viewModelScope.launch {
             val result = runCatching {
-                updateUserNameUserCase(currentUser.userId, newUserName).getOrThrow()
+                updateUserNameUseCase(currentUser.userId, newUserName).getOrThrow()
                 fetchUserUseCase(currentUser.userId).getOrThrow()
             }
             _updateSuccess.emit(result.isSuccess)

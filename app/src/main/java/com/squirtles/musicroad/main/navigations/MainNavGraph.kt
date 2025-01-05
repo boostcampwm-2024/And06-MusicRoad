@@ -16,7 +16,7 @@ import com.squirtles.musicroad.create.SearchMusicScreen
 import com.squirtles.musicroad.map.MapScreen
 import com.squirtles.musicroad.map.MapViewModel
 import com.squirtles.musicroad.media.PlayerServiceViewModel
-import com.squirtles.musicroad.pick.DetailPickScreen
+import com.squirtles.musicroad.detail.DetailPickScreen
 import com.squirtles.musicroad.picklist.PickListScreen
 import com.squirtles.musicroad.picklist.PickListType
 import com.squirtles.musicroad.profile.ProfileScreen

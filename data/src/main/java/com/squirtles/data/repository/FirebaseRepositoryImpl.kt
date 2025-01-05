@@ -1,10 +1,10 @@
 package com.squirtles.data.repository
 
-import com.squirtles.domain.datasource.FirebaseRemoteDataSource
-import com.squirtles.domain.exception.FirebaseException
+import com.squirtles.domain.firebase.FirebaseRemoteDataSource
+import com.squirtles.domain.firebase.FirebaseException
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.User
-import com.squirtles.domain.repository.FirebaseRepository
+import com.squirtles.domain.firebase.FirebaseRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

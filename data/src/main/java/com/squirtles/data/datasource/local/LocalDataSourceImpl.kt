@@ -5,7 +5,7 @@ import android.location.Location
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.squirtles.domain.datasource.LocalDataSource
+import com.squirtles.domain.local.LocalDataSource
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.User
 import kotlinx.coroutines.flow.Flow

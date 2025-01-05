@@ -2,9 +2,9 @@ package com.squirtles.musicroad.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.squirtles.domain.exception.FirebaseException
-import com.squirtles.domain.usecase.local.GetUserIdFromLocalStorageUseCase
-import com.squirtles.domain.usecase.user.CreateUserUseCase
+import com.squirtles.domain.firebase.FirebaseException
+import com.squirtles.domain.usecase.user.GetUserIdFromLocalStorageUseCase
+import com.squirtles.domain.usecase.user.CreateNewUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ sealed class LoadingState {
 class MainViewModel @Inject constructor(
     getUserIdFromLocalStorageUseCase: GetUserIdFromLocalStorageUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
-    private val createUserUseCase: CreateUserUseCase
+    private val createNewUserUseCase: CreateNewUserUseCase
 ) : ViewModel() {
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loading)
@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun createUser() {
-        createUserUseCase()
+        createNewUserUseCase()
             .onSuccess {
                 _loadingState.emit(LoadingState.Success(it.userId))
             }

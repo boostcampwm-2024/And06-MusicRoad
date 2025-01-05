@@ -10,10 +10,10 @@ import com.squirtles.domain.model.Creator
 import com.squirtles.domain.model.LocationPoint
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.usecase.local.FetchLastLocationUseCase
-import com.squirtles.domain.usecase.local.GetCurrentUserUseCase
+import com.squirtles.domain.usecase.location.GetLastLocationUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.music.FetchMusicVideoUseCase
-import com.squirtles.domain.usecase.music.SearchSongsUseCase
+import com.squirtles.domain.usecase.music.FetchSongsUseCase
 import com.squirtles.domain.usecase.mypick.CreatePickUseCase
 import com.squirtles.musicroad.common.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,8 +30,8 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class CreatePickViewModel @Inject constructor(
-    fetchLastLocationUseCase: FetchLastLocationUseCase,
-    private val searchSongsUseCase: SearchSongsUseCase,
+    getLastLocationUseCase: GetLastLocationUseCase,
+    private val fetchSongsUseCase: FetchSongsUseCase,
     private val fetchMusicVideoUseCase: FetchMusicVideoUseCase,
     private val createPickUseCase: CreatePickUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
@@ -65,7 +65,7 @@ class CreatePickViewModel @Inject constructor(
     init {
         // 데이터소스의 위치값을 계속 collect하며 curLocation 변수에 저장
         viewModelScope.launch {
-            fetchLastLocationUseCase().collect { location ->
+            getLastLocationUseCase().collect { location ->
                 lastLocation = location
             }
         }
@@ -94,7 +94,7 @@ class CreatePickViewModel @Inject constructor(
     }
 
     private suspend fun searchSongs(searchKeyword: String) {
-        searchSongsUseCase(searchKeyword)
+        fetchSongsUseCase(searchKeyword)
             .cachedIn(viewModelScope)
             .collectLatest {
                 _searchResult.emit(it)

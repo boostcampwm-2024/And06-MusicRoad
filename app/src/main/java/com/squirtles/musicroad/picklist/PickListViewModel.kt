@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.Pick
-import com.squirtles.domain.usecase.favoritepick.FetchFavoritePicksUseCase
-import com.squirtles.domain.usecase.local.GetFavoriteListOrderUseCase
-import com.squirtles.domain.usecase.local.GetMyListOrderUseCase
-import com.squirtles.domain.usecase.local.SaveFavoriteListOrderUseCase
-import com.squirtles.domain.usecase.local.SaveMyListOrderUseCase
+import com.squirtles.domain.usecase.favorite.FetchFavoritePicksUseCase
+import com.squirtles.domain.usecase.order.GetFavoriteListOrderUseCase
+import com.squirtles.domain.usecase.order.GetMyListOrderUseCase
+import com.squirtles.domain.usecase.order.SaveFavoriteListOrderUseCase
+import com.squirtles.domain.usecase.order.SaveMyListOrderUseCase
 import com.squirtles.domain.usecase.mypick.FetchMyPicksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
