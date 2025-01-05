@@ -8,4 +8,7 @@ class FetchPickUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(pickId: String) =
         firebaseRepository.fetchPick(pickId)
+
+    suspend operator fun invoke(lat: Double, lng: Double, radiusInM: Double) =
+        firebaseRepository.fetchPicksInArea(lat, lng, radiusInM)
 }

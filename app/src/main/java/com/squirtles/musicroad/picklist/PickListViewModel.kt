@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.usecase.favorite.FetchFavoritePicksUseCase
-import com.squirtles.domain.usecase.order.GetFavoriteListOrderUseCase
-import com.squirtles.domain.usecase.order.GetMyListOrderUseCase
-import com.squirtles.domain.usecase.order.SaveFavoriteListOrderUseCase
-import com.squirtles.domain.usecase.order.SaveMyListOrderUseCase
 import com.squirtles.domain.usecase.mypick.FetchMyPicksUseCase
+import com.squirtles.domain.usecase.order.GetFavoriteListOrderUseCase
+import com.squirtles.domain.usecase.order.GetMyPickListOrderUseCase
+import com.squirtles.domain.usecase.order.SaveFavoriteListOrderUseCase
+import com.squirtles.domain.usecase.order.SaveMyPickListOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,9 +21,9 @@ class PickListViewModel @Inject constructor(
     private val fetchFavoritePicksUseCase: FetchFavoritePicksUseCase,
     private val fetchMyPicksUseCase: FetchMyPicksUseCase,
     private val getFavoriteListOrderUseCase: GetFavoriteListOrderUseCase,
-    private val getMyListOrderUseCase: GetMyListOrderUseCase,
+    private val getMyPickListOrderUseCase: GetMyPickListOrderUseCase,
     private val saveFavoriteListOrderUseCase: SaveFavoriteListOrderUseCase,
-    private val saveMyListOrderUseCase: SaveMyListOrderUseCase,
+    private val saveMyPickListOrderUseCase: SaveMyPickListOrderUseCase,
 ) : ViewModel() {
 
     private var defaultList: List<Pick>? = null
@@ -49,7 +49,7 @@ class PickListViewModel @Inject constructor(
             fetchMyPicksUseCase(userId)
                 .onSuccess { myPicks ->
                     defaultList = myPicks
-                    setList(getMyListOrderUseCase())
+                    setList(getMyPickListOrderUseCase())
                 }
                 .onFailure {
                     _pickListUiState.emit(PickListUiState.Error)
@@ -61,7 +61,7 @@ class PickListViewModel @Inject constructor(
         viewModelScope.launch {
             when (type) {
                 PickListType.FAVORITE -> saveFavoriteListOrderUseCase(order)
-                PickListType.CREATED -> saveMyListOrderUseCase(order)
+                PickListType.CREATED -> saveMyPickListOrderUseCase(order)
             }
             setList(order)
         }

@@ -10,9 +10,9 @@ import com.naver.maps.map.clustering.Clusterer
 import com.naver.maps.map.overlay.Marker
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.usecase.location.GetLastLocationUseCase
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.location.SaveLastLocationUseCase
-import com.squirtles.domain.usecase.pick.FetchPickInAreaUseCase
+import com.squirtles.domain.usecase.pick.FetchPickUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.musicroad.map.marker.MarkerKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,7 @@ data class MarkerState(
 class MapViewModel @Inject constructor(
     getLastLocationUseCase: GetLastLocationUseCase,
     private val saveLastLocationUseCase: SaveLastLocationUseCase,
-    private val fetchPickInAreaUseCase: FetchPickInAreaUseCase,
+    private val fetchPickUseCase: FetchPickUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
@@ -136,7 +136,7 @@ class MapViewModel @Inject constructor(
                 (leftTop.longitude + rightBottom.longitude) / 2
             )
             val radiusInM = leftTop.distanceTo(rightBottom)
-            val fetchPicks = fetchPickInAreaUseCase(center.latitude, center.longitude, radiusInM)
+            val fetchPicks = fetchPickUseCase(center.latitude, center.longitude, radiusInM)
 
             fetchPicks.onSuccess { pickList ->
                 val newKeyTagMap: MutableMap<MarkerKey, String> = mutableMapOf()
@@ -163,7 +163,7 @@ class MapViewModel @Inject constructor(
 
     fun requestPickNotificationArea(location: Location, notiRadius: Double) {
         viewModelScope.launch {
-            fetchPickInAreaUseCase(location.latitude, location.longitude, notiRadius)
+            fetchPickUseCase(location.latitude, location.longitude, notiRadius)
                 .onSuccess {
                     _nearPicks.emit(it)
                 }.onFailure {
