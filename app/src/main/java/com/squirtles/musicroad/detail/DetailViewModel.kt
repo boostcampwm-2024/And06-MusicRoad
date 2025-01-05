@@ -9,10 +9,10 @@ import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
 import com.squirtles.domain.usecase.favorite.CreateFavoriteUseCase
 import com.squirtles.domain.usecase.favorite.DeleteFavoriteUseCase
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.mypick.DeletePickUseCase
 import com.squirtles.domain.usecase.pick.FetchIsFavoriteUseCase
 import com.squirtles.domain.usecase.pick.FetchPickUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.musicroad.common.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -26,9 +26,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val fetchPickUseCase: FetchPickUseCase,
+    private val fetchIsFavoriteUseCase: FetchIsFavoriteUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val deletePickUseCase: DeletePickUseCase,
-    private val fetchIsFavoriteUseCase: FetchIsFavoriteUseCase,
     private val createFavoriteUseCase: CreateFavoriteUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
 ) : ViewModel() {
