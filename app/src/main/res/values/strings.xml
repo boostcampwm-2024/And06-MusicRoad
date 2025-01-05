@@ -110,4 +110,7 @@
     <string name="setting_profile_confirm_icon_description">변경 사항 적용</string>
     <string name="setting_profile_update_nickname_success">변경 사항이 적용되었습니다.</string>
     <string name="setting_profile_update_nickname_failure">일시적인 오류가 발생했습니다.</string>
+
+    <string name="setting_profile_sign_in_google">Sign in with Google</string>
+    <string name="setting_profile_google_icon">Google Logo</string>
 </resources>
