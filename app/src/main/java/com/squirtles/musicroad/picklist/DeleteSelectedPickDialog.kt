@@ -18,39 +18,28 @@ internal fun DeleteSelectedPickDialog(
 ) {
     MessageAlertDialog(
         onDismissRequest = onDismissRequest,
-        title = stringResource(if (selectedPickCount == 0) R.string.default_alert_dialog_title else R.string.delete_pick_dialog_title),
-        body = if (selectedPickCount == 0) {
-            stringResource(R.string.no_selected_pick_dialog_body)
-        } else {
-            stringResource(
-                when (pickListType) {
-                    PickListType.FAVORITE -> R.string.delete_selected_favorite_pick_dialog_body
-                    PickListType.CREATED -> R.string.delete_selected_pick_dialog_body
-                },
-                selectedPickCount
-            )
-        },
+        title = stringResource(R.string.delete_pick_dialog_title),
+        body = stringResource(
+            when (pickListType) {
+                PickListType.FAVORITE -> R.string.delete_selected_favorite_pick_dialog_body
+                PickListType.CREATED -> R.string.delete_selected_pick_dialog_body
+            },
+            selectedPickCount
+        ),
         buttons = {
-            if (selectedPickCount == 0) {
-                DialogTextButton(
-                    onClick = onDismissRequest,
-                    text = stringResource(R.string.confirm_text)
-                )
-            } else {
-                DialogTextButton(
-                    onClick = onDismissRequest,
-                    text = stringResource(R.string.delete_pick_dialog_cancel)
-                )
+            DialogTextButton(
+                onClick = onDismissRequest,
+                text = stringResource(R.string.delete_pick_dialog_cancel)
+            )
 
-                HorizontalSpacer(8)
+            HorizontalSpacer(8)
 
-                DialogTextButton(
-                    onClick = onDeletePickClick,
-                    text = stringResource(R.string.delete_pick_dialog_delete),
-                    textColor = Primary,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            DialogTextButton(
+                onClick = onDeletePickClick,
+                text = stringResource(R.string.delete_pick_dialog_delete),
+                textColor = Primary,
+                fontWeight = FontWeight.Bold
+            )
         },
     )
 }

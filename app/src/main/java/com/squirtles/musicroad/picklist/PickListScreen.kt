@@ -61,11 +61,17 @@ fun PickListScreen(
 
     var isEditMode by rememberSaveable { mutableStateOf(false) }
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var isDeletePickDialogVisible by rememberSaveable { mutableStateOf(false) }
 
     val deactivateEditMode = remember {
         {
             isEditMode = false
             pickListViewModel.deselectAllPicks()
+        }
+    }
+    val showDeletePickDialog = remember {
+        {
+            isDeletePickDialogVisible = true
         }
     }
 
@@ -120,21 +126,31 @@ fun PickListScreen(
                     val pickList = (uiState as PickListUiState.Success).pickList
                     val order = (uiState as PickListUiState.Success).order
 
-                    PickList(
-                        isEditMode = isEditMode,
-                        pickListType = pickListType,
-                        pickList = pickList,
-                        selectedPicksId = selectedPicksId,
-                        order = order,
-                        onOrderClick = { showOrderBottomSheet = true },
-                        onItemClick = onItemClick,
-                        onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
-                        deactivateEditMode = deactivateEditMode,
-                        onDeletePickClick = {
-                            isEditMode = false
-                            pickListViewModel.deleteSelectedPicks(pickListType)
-                        },
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        PickList(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            isEditMode = isEditMode,
+                            pickListType = pickListType,
+                            pickList = pickList,
+                            selectedPicksId = selectedPicksId,
+                            order = order,
+                            onOrderClick = { showOrderBottomSheet = true },
+                            onItemClick = onItemClick,
+                            onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
+                        )
+
+                        if (isEditMode) {
+                            EditModeBottomButton(
+                                enabled = selectedPicksId.isNotEmpty(),
+                                deactivateEditMode = deactivateEditMode,
+                                showDeletePickDialog = showDeletePickDialog,
+                            )
+                        }
+                    }
                 }
 
                 PickListUiState.Error -> {
@@ -160,10 +176,24 @@ fun PickListScreen(
             },
         )
     }
+
+    if (isDeletePickDialogVisible) {
+        DeleteSelectedPickDialog(
+            selectedPickCount = selectedPicksId.size,
+            pickListType = pickListType,
+            onDismissRequest = { isDeletePickDialogVisible = false },
+            onDeletePickClick = {
+                isEditMode = false
+                isDeletePickDialogVisible = false
+                pickListViewModel.deleteSelectedPicks(pickListType)
+            },
+        )
+    }
 }
 
 @Composable
 private fun PickList(
+    modifier: Modifier,
     isEditMode: Boolean,
     pickListType: PickListType,
     pickList: List<Pick>,
@@ -172,111 +202,83 @@ private fun PickList(
     onOrderClick: () -> Unit,
     onItemClick: (String) -> Unit,
     onEditModeItemClick: (String) -> Unit,
-    deactivateEditMode: () -> Unit,
-    onDeletePickClick: () -> Unit,
 ) {
-    var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = DEFAULT_PADDING),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        CountText(
+            totalCount = if (isEditMode) selectedPicksId.size else pickList.size,
+            countLabel = stringResource(
+                if (isEditMode) R.string.selected_count_text else R.string.total_count_text
+            ),
+            defaultColor = White,
+        )
+
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = DEFAULT_PADDING),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .wrapContentSize()
+                .clip(CircleShape)
+                .clickable { onOrderClick() }
         ) {
-            CountText(
-                totalCount = if (isEditMode) selectedPicksId.size else pickList.size,
-                countLabel = stringResource(
-                    if (isEditMode) R.string.selected_count_text else R.string.total_count_text
+            Text(
+                text = getOrderString(
+                    pickListType = pickListType,
+                    order = order
                 ),
-                defaultColor = White,
+                modifier = Modifier.padding(
+                    horizontal = DEFAULT_PADDING / 2,
+                    vertical = DEFAULT_PADDING / 4
+                ),
+                color = White,
+                style = MaterialTheme.typography.bodyMedium
             )
+        }
+    }
 
-            Box(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .clip(CircleShape)
-                    .clickable { onOrderClick() }
-            ) {
-                Text(
-                    text = getOrderString(
-                        pickListType = pickListType,
-                        order = order
-                    ),
-                    modifier = Modifier.padding(
-                        horizontal = DEFAULT_PADDING / 2,
-                        vertical = DEFAULT_PADDING / 4
-                    ),
-                    color = White,
-                    style = MaterialTheme.typography.bodyMedium
+    VerticalSpacer(8)
+
+    if (pickList.isEmpty()) {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(
+                    when (pickListType) {
+                        PickListType.FAVORITE -> R.string.favorite_picks_empty
+                        PickListType.CREATED -> R.string.my_picks_empty
+                    }
+                ),
+                color = White,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(
+                items = pickList,
+                key = { it.id }
+            ) { pick ->
+                PickItem(
+                    isEditMode = isEditMode,
+                    isSelected = selectedPicksId.contains(pick.id),
+                    song = pick.song,
+                    createdByOthers = pickListType == PickListType.FAVORITE,
+                    createUserName = pick.createdBy.userName,
+                    favoriteCount = pick.favoriteCount,
+                    comment = pick.comment,
+                    createdAt = pick.createdAt,
+                    onItemClick = {
+                        if (isEditMode) onEditModeItemClick(pick.id) else onItemClick(pick.id)
+                    }
                 )
             }
-        }
-
-        VerticalSpacer(8)
-
-        if (pickList.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(
-                        when (pickListType) {
-                            PickListType.FAVORITE -> R.string.favorite_picks_empty
-                            PickListType.CREATED -> R.string.my_picks_empty
-                        }
-                    ),
-                    color = White,
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.weight(1f)
-            ) {
-                items(
-                    items = pickList,
-                    key = { it.id }
-                ) { pick ->
-                    PickItem(
-                        isEditMode = isEditMode,
-                        isSelected = selectedPicksId.contains(pick.id),
-                        song = pick.song,
-                        createdByOthers = pickListType == PickListType.FAVORITE,
-                        createUserName = pick.createdBy.userName,
-                        favoriteCount = pick.favoriteCount,
-                        comment = pick.comment,
-                        createdAt = pick.createdAt,
-                        onItemClick = {
-                            if (isEditMode) onEditModeItemClick(pick.id) else onItemClick(pick.id)
-                        }
-                    )
-                }
-            }
-        }
-
-        if (isEditMode) {
-            EditModeBottomButton(
-                deactivateEditMode = deactivateEditMode,
-                showDeletePickDialog = { showDeletePickDialog = true },
-            )
-        }
-
-        if (showDeletePickDialog) {
-            DeleteSelectedPickDialog(
-                selectedPickCount = selectedPicksId.size,
-                pickListType = pickListType,
-                onDismissRequest = {
-                    showDeletePickDialog = false
-                },
-                onDeletePickClick = onDeletePickClick,
-            )
         }
     }
 }

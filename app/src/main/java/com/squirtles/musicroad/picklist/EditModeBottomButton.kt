@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.ui.theme.DarkGray
 import com.squirtles.musicroad.ui.theme.Gray
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import com.squirtles.musicroad.ui.theme.Primary
@@ -23,6 +24,7 @@ import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 internal fun EditModeBottomButton(
+    enabled: Boolean,
     deactivateEditMode: () -> Unit,
     showDeletePickDialog: () -> Unit,
 ) {
@@ -37,7 +39,7 @@ internal fun EditModeBottomButton(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            buttonColor = Gray
+            buttonColor = DarkGray
         )
 
         EditModeButton(
@@ -45,7 +47,8 @@ internal fun EditModeBottomButton(
             onClick = showDeletePickDialog,
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f)
+                .weight(1f),
+            enabled = enabled
         )
     }
 }
@@ -55,16 +58,20 @@ private fun EditModeButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier,
+    enabled: Boolean = true,
     textColor: Color = White,
     buttonColor: Color = Primary,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
         shape = RectangleShape,
         colors = ButtonDefaults.buttonColors().copy(
             containerColor = buttonColor,
-            contentColor = textColor
+            contentColor = textColor,
+            disabledContainerColor = Gray,
+            disabledContentColor = White
         )
     ) {
         Text(
@@ -79,6 +86,7 @@ private fun EditModeButton(
 private fun EditModeBottomButtonPreview() {
     MusicRoadTheme {
         EditModeBottomButton(
+            enabled = true,
             deactivateEditMode = {},
             showDeletePickDialog = {},
         )
