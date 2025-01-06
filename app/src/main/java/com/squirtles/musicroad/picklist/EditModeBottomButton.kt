@@ -39,7 +39,7 @@ internal fun EditModeBottomButton(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            buttonColor = DarkGray
+            buttonColor = Gray
         )
 
         EditModeButton(
@@ -70,7 +70,7 @@ private fun EditModeButton(
         colors = ButtonDefaults.buttonColors().copy(
             containerColor = buttonColor,
             contentColor = textColor,
-            disabledContainerColor = Gray,
+            disabledContainerColor = DarkGray,
             disabledContentColor = White
         )
     ) {
