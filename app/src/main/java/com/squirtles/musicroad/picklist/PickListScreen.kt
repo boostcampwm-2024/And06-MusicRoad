@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,11 +37,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.CircularProgressIndicator
 import com.squirtles.domain.model.Order
+import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
+import com.squirtles.musicroad.common.CountText
 import com.squirtles.musicroad.common.DefaultTopAppBar
-import com.squirtles.musicroad.common.TotalCountText
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
@@ -55,7 +57,23 @@ fun PickListScreen(
 ) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val uiState by pickListViewModel.pickListUiState.collectAsStateWithLifecycle()
+    val selectedPicksId by pickListViewModel.selectedPicksId.collectAsStateWithLifecycle()
+
+    var isEditMode by rememberSaveable { mutableStateOf(false) }
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var isDeletePickDialogVisible by rememberSaveable { mutableStateOf(false) }
+
+    val deactivateEditMode = remember {
+        {
+            isEditMode = false
+            pickListViewModel.deselectAllPicks()
+        }
+    }
+    val showDeletePickDialog = remember {
+        {
+            isDeletePickDialogVisible = true
+        }
+    }
 
     LaunchedEffect(Unit) {
         when (pickListType) {
@@ -73,7 +91,17 @@ fun PickListScreen(
                         PickListType.CREATED -> R.string.my_picks_top_app_bar_title
                     }
                 ),
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                actions = {
+                    EditModeAction(
+                        isEditMode = isEditMode,
+                        enabled = uiState is PickListUiState.Success,
+                        isSelectedEmpty = selectedPicksId.isEmpty(),
+                        activateEditMode = { isEditMode = true },
+                        selectAllPicks = { pickListViewModel.selectAllPicks() },
+                        deselectAllPicks = { pickListViewModel.deselectAllPicks() },
+                    )
+                }
             )
         },
     ) { innerPadding ->
@@ -101,76 +129,26 @@ fun PickListScreen(
                     Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        Row(
+                        PickList(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = DEFAULT_PADDING),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TotalCountText(
-                                totalCount = pickList.size,
-                                defaultColor = White,
+                                .weight(1f),
+                            isEditMode = isEditMode,
+                            pickListType = pickListType,
+                            pickList = pickList,
+                            selectedPicksId = selectedPicksId,
+                            order = order,
+                            onOrderClick = { showOrderBottomSheet = true },
+                            onItemClick = onItemClick,
+                            onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
+                        )
+
+                        if (isEditMode) {
+                            EditModeBottomButton(
+                                enabled = selectedPicksId.isNotEmpty(),
+                                deactivateEditMode = deactivateEditMode,
+                                showDeletePickDialog = showDeletePickDialog,
                             )
-
-                            Box(
-                                modifier = Modifier
-                                    .wrapContentSize()
-                                    .clip(CircleShape)
-                                    .clickable { showOrderBottomSheet = true }
-                            ) {
-                                Text(
-                                    text = getOrderString(
-                                        pickListType = pickListType,
-                                        order = order
-                                    ),
-                                    modifier = Modifier.padding(
-                                        horizontal = DEFAULT_PADDING / 2,
-                                        vertical = DEFAULT_PADDING / 4
-                                    ),
-                                    color = White,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-
-                        VerticalSpacer(8)
-
-                        if (pickList.isEmpty()) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(
-                                        when (pickListType) {
-                                            PickListType.FAVORITE -> R.string.favorite_picks_empty
-                                            PickListType.CREATED -> R.string.my_picks_empty
-                                        }
-                                    ),
-                                    color = White,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                            }
-                        } else {
-                            LazyColumn(
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                items(
-                                    items = pickList,
-                                    key = { it.id }
-                                ) { pick ->
-                                    PickItem(
-                                        song = pick.song,
-                                        createdByOthers = pickListType == PickListType.FAVORITE,
-                                        createUserName = pick.createdBy.userName,
-                                        favoriteCount = pick.favoriteCount,
-                                        comment = pick.comment,
-                                        createdAt = pick.createdAt,
-                                        onItemClick = { onItemClick(pick.id) }
-                                    )
-                                }
-                            }
                         }
                     }
                 }
@@ -197,6 +175,111 @@ fun PickListScreen(
                 pickListViewModel.setListOrder(pickListType, order)
             },
         )
+    }
+
+    if (isDeletePickDialogVisible) {
+        DeleteSelectedPickDialog(
+            selectedPickCount = selectedPicksId.size,
+            pickListType = pickListType,
+            onDismissRequest = { isDeletePickDialogVisible = false },
+            onDeletePickClick = {
+                isEditMode = false
+                isDeletePickDialogVisible = false
+                pickListViewModel.deleteSelectedPicks(pickListType)
+            },
+        )
+    }
+}
+
+@Composable
+private fun PickList(
+    modifier: Modifier,
+    isEditMode: Boolean,
+    pickListType: PickListType,
+    pickList: List<Pick>,
+    selectedPicksId: Set<String>,
+    order: Order,
+    onOrderClick: () -> Unit,
+    onItemClick: (String) -> Unit,
+    onEditModeItemClick: (String) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = DEFAULT_PADDING),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CountText(
+            totalCount = if (isEditMode) selectedPicksId.size else pickList.size,
+            countLabel = stringResource(
+                if (isEditMode) R.string.selected_count_text else R.string.total_count_text
+            ),
+            defaultColor = White,
+        )
+
+        Box(
+            modifier = Modifier
+                .wrapContentSize()
+                .clip(CircleShape)
+                .clickable { onOrderClick() }
+        ) {
+            Text(
+                text = getOrderString(
+                    pickListType = pickListType,
+                    order = order
+                ),
+                modifier = Modifier.padding(
+                    horizontal = DEFAULT_PADDING / 2,
+                    vertical = DEFAULT_PADDING / 4
+                ),
+                color = White,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+
+    VerticalSpacer(8)
+
+    if (pickList.isEmpty()) {
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(
+                    when (pickListType) {
+                        PickListType.FAVORITE -> R.string.favorite_picks_empty
+                        PickListType.CREATED -> R.string.my_picks_empty
+                    }
+                ),
+                color = White,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(
+                items = pickList,
+                key = { it.id }
+            ) { pick ->
+                PickItem(
+                    isEditMode = isEditMode,
+                    isSelected = selectedPicksId.contains(pick.id),
+                    song = pick.song,
+                    createdByOthers = pickListType == PickListType.FAVORITE,
+                    createUserName = pick.createdBy.userName,
+                    favoriteCount = pick.favoriteCount,
+                    comment = pick.comment,
+                    createdAt = pick.createdAt,
+                    onItemClick = {
+                        if (isEditMode) onEditModeItemClick(pick.id) else onItemClick(pick.id)
+                    }
+                )
+            }
+        }
     }
 }
 

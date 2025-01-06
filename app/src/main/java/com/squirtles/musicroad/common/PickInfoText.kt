@@ -69,9 +69,10 @@ fun CommentText(
 }
 
 @Composable
-fun TotalCountText(
-    modifier: Modifier = Modifier,
+fun CountText(
     totalCount: Int,
+    modifier: Modifier = Modifier,
+    countLabel: String = stringResource(R.string.total_count_text),
     defaultColor: Color = MaterialTheme.colorScheme.onSurface,
     pointColor: Color = MaterialTheme.colorScheme.primary,
     style: TextStyle = MaterialTheme.typography.titleMedium
@@ -84,7 +85,7 @@ fun TotalCountText(
                     fontWeight = FontWeight.Bold
                 )
             ) {
-                append("전체 ")
+                append("$countLabel ")
             }
             withStyle(
                 SpanStyle(
