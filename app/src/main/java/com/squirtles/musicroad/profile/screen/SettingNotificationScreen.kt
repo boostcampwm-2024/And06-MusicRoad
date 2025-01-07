@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.setting
+package com.squirtles.musicroad.profile.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

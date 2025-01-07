@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.setting
+package com.squirtles.musicroad.profile.screen
 
 import android.content.Context
 import android.widget.Toast

@@ -19,9 +19,9 @@ import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.detail.DetailPickScreen
 import com.squirtles.musicroad.picklist.PickListScreen
 import com.squirtles.musicroad.picklist.PickListType
-import com.squirtles.musicroad.profile.ProfileScreen
-import com.squirtles.musicroad.setting.SettingNotificationScreen
-import com.squirtles.musicroad.setting.SettingProfileScreen
+import com.squirtles.musicroad.profile.screen.ProfileScreen
+import com.squirtles.musicroad.profile.screen.SettingNotificationScreen
+import com.squirtles.musicroad.profile.screen.SettingProfileScreen
 
 @Composable
 fun MainNavGraph(

@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile
+package com.squirtles.musicroad.profile.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

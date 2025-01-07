@@ -3,7 +3,7 @@ package com.squirtles.musicroad.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface MainRoute {
+sealed interface MainRoute : Route {
     @Serializable
     data object Search : MainRoute
 

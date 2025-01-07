@@ -1,0 +1,37 @@
+package com.squirtles.musicroad.favorite
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.squirtles.musicroad.common.picklist.PickListScreen
+import com.squirtles.musicroad.common.picklist.PickListType
+
+@Composable
+fun FavoriteScreen(
+    userId: String,
+    onBackClick: () -> Unit,
+    onItemClick: (String) -> Unit,
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel()
+) {
+    val uiState by favoriteListViewModel.pickListUiState.collectAsStateWithLifecycle()
+    var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        favoriteListViewModel.fetchFavoritePicks(userId)
+    }
+
+    PickListScreen(
+        showOrderBottomSheet = showOrderBottomSheet,
+        pickListType = PickListType.FAVORITE,
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onItemClick = onItemClick,
+        setListOrder = favoriteListViewModel::setListOrder,
+        setOrderBottomSheetVisibility = { showOrderBottomSheet = it },
+    )
+}
