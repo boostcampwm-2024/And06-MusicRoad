@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface LocalRepository {
     val userId: Flow<String?> // 기기에 저장된 userId
-    val currentUser: User
+    val currentUser: User?
     val lastLocation: StateFlow<Location?>
     val favoriteListOrder: Order // 픽 보관함 정렬 순서
     val myListOrder: Order // 등록한 픽 정렬 순서

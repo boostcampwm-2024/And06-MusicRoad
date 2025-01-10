@@ -43,7 +43,7 @@ fun ClusterBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     clusterPickList: List<Pick>?,
-    userId: String,
+    userId: String?,
     calculateDistance: (Double, Double) -> String,
     onClickItem: (String) -> Unit
 ) {

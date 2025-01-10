@@ -53,28 +53,27 @@ class PickViewModel @Inject constructor(
             actionClick
                 .throttleFirst(1000)
                 .collect { (pickId, isAdding) ->
-                    if (isAdding) {
-                        addToFavoritePicks(pickId)
-                    } else {
-                        deleteFromFavoritePicks(pickId)
+                    getUserId()?.let { userId ->
+                        if (isAdding) {
+                            addToFavoritePicks(pickId, userId)
+                        } else {
+                            deleteFromFavoritePicks(pickId, userId)
+                        }
                     }
                 }
         }
     }
 
-    fun getUserId() = getCurrentUserUseCase().userId
+    fun getUserId() = getCurrentUserUseCase()?.userId
 
     fun fetchPick(pickId: String) {
         viewModelScope.launch {
-            val fetchPick = async {
-                fetchPickUseCase(pickId)
-            }
-            val fetchIsFavorite = async {
-                fetchIsFavoriteUseCase(pickId, getUserId())
-            }
+            val fetchPick = async { fetchPickUseCase(pickId) }
 
+            val fetchIsFavoriteResult: Result<Boolean> = getUserId()?.let {
+                async { fetchIsFavoriteUseCase(pickId, it) }.await()
+            } ?: Result.success(false) // 비회원일시 항상 false
             val fetchPickResult = fetchPick.await()
-            val fetchIsFavoriteResult = fetchIsFavorite.await()
 
             when {
                 fetchPickResult.isSuccess && fetchIsFavoriteResult.isSuccess -> {
@@ -101,20 +100,22 @@ class PickViewModel @Inject constructor(
 
     fun deletePick(pickId: String) {
         viewModelScope.launch {
-            _detailPickUiState.emit(DetailPickUiState.Loading)
-            deletePickUseCase(pickId, getUserId())
-                .onSuccess {
-                    _detailPickUiState.emit(DetailPickUiState.Deleted)
-                }
-                .onFailure {
-                    _detailPickUiState.emit(DetailPickUiState.Error)
-                }
+            getUserId()?.let { userId ->
+                _detailPickUiState.emit(DetailPickUiState.Loading)
+                deletePickUseCase(pickId, userId)
+                    .onSuccess {
+                        _detailPickUiState.emit(DetailPickUiState.Deleted)
+                    }
+                    .onFailure {
+                        _detailPickUiState.emit(DetailPickUiState.Error)
+                    }
+            }
         }
     }
 
-    private fun addToFavoritePicks(pickId: String) {
+    private fun addToFavoritePicks(pickId: String, userId: String) {
         viewModelScope.launch {
-            createFavoriteUseCase(pickId, getUserId())
+            createFavoriteUseCase(pickId, userId)
                 .onSuccess {
                     _favoriteAction.emit(FavoriteAction.ADDED)
                     val currentUiState = _detailPickUiState.value as? DetailPickUiState.Success
@@ -128,9 +129,9 @@ class PickViewModel @Inject constructor(
         }
     }
 
-    private fun deleteFromFavoritePicks(pickId: String) {
+    private fun deleteFromFavoritePicks(pickId: String, userId: String) {
         viewModelScope.launch {
-            deleteFavoriteUseCase(pickId, getUserId())
+            deleteFavoriteUseCase(pickId, userId)
                 .onSuccess {
                     _favoriteAction.emit(FavoriteAction.DELETED)
                     val currentUiState = _detailPickUiState.value as? DetailPickUiState.Success

@@ -188,10 +188,10 @@ fun DetailPickScreen(
                     DETAIL_PICK_TAB -> {
                         DetailPick(
                             pick = pick,
-                            isCreatedBySelf = isCreatedBySelf,
+                            currentUserId = pickViewModel.getUserId(),
                             isFavorite = isFavorite,
-                            userId = pick.createdBy.userId,
-                            userName = pick.createdBy.userName,
+                            pickUserId = pick.createdBy.userId,
+                            pickUserName = pick.createdBy.userName,
                             favoriteCount = favoriteCount,
                             isMusicVideoAvailable = isMusicVideoAvailable,
                             onProfileClick = onProfileClick,
@@ -257,10 +257,10 @@ fun DetailPickScreen(
             // Show default pick
             DetailPick(
                 pick = DEFAULT_PICK,
-                isCreatedBySelf = false,
+                currentUserId = null,
                 isFavorite = false,
-                userId = "",
-                userName = "",
+                pickUserId = "",
+                pickUserName = "",
                 favoriteCount = 0,
                 isMusicVideoAvailable = false,
                 playerServiceViewModel = playerServiceViewModel,
@@ -303,10 +303,10 @@ fun DetailPickScreen(
 @Composable
 private fun DetailPick(
     pick: Pick,
-    isCreatedBySelf: Boolean,
     isFavorite: Boolean,
-    userId: String,
-    userName: String,
+    currentUserId: String?,
+    pickUserId: String,
+    pickUserName: String,
     favoriteCount: Int,
     isMusicVideoAvailable: Boolean,
     playerServiceViewModel: PlayerServiceViewModel,
@@ -314,6 +314,7 @@ private fun DetailPick(
     onBackClick: () -> Unit,
     onActionClick: () -> Unit
 ) {
+    val isCreatedBySelf = remember { currentUserId == pickUserId }
     val scrollState = rememberScrollState()
     val dynamicBackgroundColor = Color(pick.song.bgColor)
     val onDynamicBackgroundColor = if (dynamicBackgroundColor.luminance() >= 0.5f) Black else White
@@ -347,14 +348,18 @@ private fun DetailPick(
                 modifier = Modifier.statusBarsPadding(),
                 isCreatedBySelf = isCreatedBySelf,
                 isFavorite = isFavorite,
-                userId = userId,
-                userName = userName,
+                userId = pickUserId,
+                userName = pickUserName,
                 onDynamicBackgroundColor = onDynamicBackgroundColor,
                 onProfileClick = onProfileClick,
                 onBackClick = {
                     onBackClick()
                 },
-                onActionClick = { onActionClick() }
+                onActionClick = {
+                    if (currentUserId != null) {
+                        onActionClick()
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -461,10 +466,10 @@ fun Context.showShortToast(message: String) {
 private fun DetailPickPreview() {
     DetailPick(
         pick = DEFAULT_PICK,
-        isCreatedBySelf = false,
+        currentUserId = null,
         isFavorite = false,
-        userId = "",
-        userName = "짱구",
+        pickUserId = "",
+        pickUserName = "짱구",
         favoriteCount = 0,
         isMusicVideoAvailable = true,
         onProfileClick = {},

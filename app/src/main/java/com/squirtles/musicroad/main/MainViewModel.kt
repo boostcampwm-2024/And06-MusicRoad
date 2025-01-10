@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 sealed class LoadingState {
     data object Loading : LoadingState()
-    data class Success(val userId: String) : LoadingState()
+    data class Success(val userId: String?) : LoadingState()
     data class NetworkError(val error: String) : LoadingState()
     data class CreatedUserError(val error: String) : LoadingState()
     data class UserNotFoundError(val error: String) : LoadingState()
@@ -38,9 +38,10 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _localUserId.collect { localUid ->
-                if (localUid == null) {
-                    createUser()
+                if (localUid == null) { // 비회원 상태
+                    _loadingState.emit(LoadingState.Success(null))
                 } else {
+                    // TODO 구글 로그인 -> 자동 로그인
                     fetchUser(localUid)
                 }
             }

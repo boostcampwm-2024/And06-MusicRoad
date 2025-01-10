@@ -53,7 +53,7 @@ import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 fun ProfileScreen(
-    userId: String,
+    userId: String?,
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
@@ -66,13 +66,15 @@ fun ProfileScreen(
     val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUserById(userId)
+        userId?.let {
+            profileViewModel.getUserById(userId)
+        }
     }
 
     Scaffold(
         topBar = {
             DefaultTopAppBar(
-                title = user.userName,
+                title = if (userId == null) stringResource(id = R.string.profile_sign_in_title) else user.userName,
                 onBackClick = onBackClick
             )
         }
@@ -83,93 +85,93 @@ fun ProfileScreen(
                 .background(Brush.verticalGradient(colorStops = COLOR_STOPS))
                 .padding(innerPadding),
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(bottom = 96.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                VerticalSpacer(16)
-
-                Image(
-                    painter = painterResource(R.drawable.img_user_default_profile),
-                    contentDescription = stringResource(R.string.user_info_default_profile_image),
-                    modifier = Modifier
-                        .size(180.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
-
-                VerticalSpacer(20)
-
+            if (userId == null) {
                 GoogleSignInButton({})
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(bottom = 96.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    VerticalSpacer(16)
 
-                VerticalSpacer(20)
-
-                ProfileMenus(
-                    title = stringResource(R.string.user_info_pick_category_title),
-                    menus = listOf(
-                        MenuItem(
-                            imageVector = Icons.Outlined.Archive,
-                            contentDescription = stringResource(R.string.user_info_favorite_menu_icon_description),
-                            menuTitle = stringResource(R.string.user_info_favorite_menu_title),
-                            onMenuClick = { onFavoritePicksClick(userId) }
-                        ),
-                        MenuItem(
-                            imageVector = Icons.Default.MusicNote,
-                            contentDescription = stringResource(R.string.user_info_created_by_self_menu_icon_description),
-                            menuTitle = stringResource(R.string.user_info_created_by_self_menu_title),
-                            onMenuClick = { onMyPicksClick(userId) }
-                        )
+                    Image(
+                        painter = painterResource(R.drawable.img_user_default_profile),
+                        contentDescription = stringResource(R.string.user_info_default_profile_image),
+                        modifier = Modifier
+                            .size(180.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
                     )
-                )
 
-                if (userId == profileViewModel.currentUser.userId) {
+                    VerticalSpacer(40)
+
                     ProfileMenus(
-                        title = stringResource(R.string.user_info_setting_category_title),
+                        title = stringResource(R.string.user_info_pick_category_title),
                         menus = listOf(
                             MenuItem(
-                                imageVector = Icons.Outlined.SwitchAccount,
-                                contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
-                                menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
-                                onMenuClick = onSettingProfileClick
+                                imageVector = Icons.Outlined.Archive,
+                                contentDescription = stringResource(R.string.user_info_favorite_menu_icon_description),
+                                menuTitle = stringResource(R.string.user_info_favorite_menu_title),
+                                onMenuClick = { onFavoritePicksClick(userId) }
                             ),
                             MenuItem(
-                                imageVector = Icons.Outlined.Notifications,
-                                contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
-                                menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
-                                onMenuClick = onSettingNotificationClick
+                                imageVector = Icons.Default.MusicNote,
+                                contentDescription = stringResource(R.string.user_info_created_by_self_menu_icon_description),
+                                menuTitle = stringResource(R.string.user_info_created_by_self_menu_title),
+                                onMenuClick = { onMyPicksClick(userId) }
                             )
                         )
                     )
+
+                    if (userId == profileViewModel.currentUser?.userId) {
+                        ProfileMenus(
+                            title = stringResource(R.string.user_info_setting_category_title),
+                            menus = listOf(
+                                MenuItem(
+                                    imageVector = Icons.Outlined.SwitchAccount,
+                                    contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
+                                    menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
+                                    onMenuClick = onSettingProfileClick
+                                ),
+                                MenuItem(
+                                    imageVector = Icons.Outlined.Notifications,
+                                    contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
+                                    menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
+                                    onMenuClick = onSettingNotificationClick
+                                )
+                            )
+                        )
+                    }
                 }
-            }
 
-            ExtendedFloatingActionButton(
-                onClick = onBackToMapClick,
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .padding(horizontal = 8.dp)
-                    .padding(bottom = 48.dp)
-                    .align(Alignment.BottomCenter),
-                shape = CircleShape,
-                containerColor = Primary,
-                contentColor = White,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Map,
-                    contentDescription = stringResource(R.string.user_info_icon_map_description),
-                    tint = White
-                )
+                ExtendedFloatingActionButton(
+                    onClick = onBackToMapClick,
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 48.dp)
+                        .align(Alignment.BottomCenter),
+                    shape = CircleShape,
+                    containerColor = Primary,
+                    contentColor = White,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Map,
+                        contentDescription = stringResource(R.string.user_info_icon_map_description),
+                        tint = White
+                    )
 
-                HorizontalSpacer(8)
+                    HorizontalSpacer(8)
 
-                Text(
-                    text = stringResource(R.string.user_info_back_to_map_button_text),
-                    color = White,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                    Text(
+                        text = stringResource(R.string.user_info_back_to_map_button_text),
+                        color = White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
@@ -189,11 +191,11 @@ private fun GoogleSignInButton(onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.img_google_logo),
-                contentDescription = stringResource(id = R.string.setting_profile_google_icon),
+                contentDescription = stringResource(id = R.string.profile_google_icon),
                 modifier = Modifier.size(24.dp)
             )
             HorizontalSpacer(8)
-            Text(stringResource(id = R.string.setting_profile_sign_in_google), color = Black)
+            Text(stringResource(id = R.string.profile_sign_in_google), color = Black)
         }
     }
 }

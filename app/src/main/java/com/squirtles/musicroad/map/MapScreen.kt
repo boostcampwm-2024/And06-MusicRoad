@@ -38,7 +38,7 @@ fun MapScreen(
     playerServiceViewModel: PlayerServiceViewModel,
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
-    onUserInfoClick: (String) -> Unit,
+    onUserInfoClick: (String?) -> Unit,
     onPickSummaryClick: (String) -> Unit,
 ) {
     val nearPicks by mapViewModel.nearPicks.collectAsStateWithLifecycle()
@@ -127,11 +127,17 @@ fun MapScreen(
                     modifier = Modifier.padding(bottom = 16.dp),
                     lastLocation = lastLocation,
                     onFavoriteClick = {
-                        onFavoriteClick(mapViewModel.getUserId())
+                        mapViewModel.getUserId()?.let { userId ->
+                            onFavoriteClick(userId)
+                        }
+                        // TODO 로그인 안내 메시지
                     },
                     onCenterClick = {
-                        onCenterClick()
-                        mapViewModel.saveCurLocationForced()
+                        mapViewModel.getUserId()?.let {
+                            onCenterClick()
+                            mapViewModel.saveCurLocationForced()
+                        }
+                        // TODO 로그인 안내 메시지
                     },
                     onUserInfoClick = {
                         onUserInfoClick(mapViewModel.getUserId())

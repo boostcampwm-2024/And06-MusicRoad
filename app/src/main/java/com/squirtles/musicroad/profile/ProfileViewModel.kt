@@ -33,8 +33,8 @@ class ProfileViewModel @Inject constructor(
 
     fun getUserById(userId: String) {
         viewModelScope.launch {
-            if (userId == currentUser.userId) {
-                _profileUser.emit(currentUser)
+            if (userId == currentUser?.userId) {
+                _profileUser.emit(currentUser ?: DEFAULT_USER)
             } else {
                 val otherProfileUsr = fetchUserByIdUseCase(userId).getOrDefault(DEFAULT_USER)
                 _profileUser.emit(otherProfileUsr)
@@ -44,11 +44,13 @@ class ProfileViewModel @Inject constructor(
 
     fun updateUsername(newUserName: String) {
         viewModelScope.launch {
-            val result = runCatching {
-                updateUserNameUserCase(currentUser.userId, newUserName).getOrThrow()
-                fetchUserUseCase(currentUser.userId).getOrThrow()
+            currentUser?.let { user ->
+                val result = runCatching {
+                    updateUserNameUserCase(user.userId, newUserName).getOrThrow()
+                    fetchUserUseCase(user.userId).getOrThrow()
+                }
+                _updateSuccess.emit(result.isSuccess)
             }
-            _updateSuccess.emit(result.isSuccess)
         }
     }
 }

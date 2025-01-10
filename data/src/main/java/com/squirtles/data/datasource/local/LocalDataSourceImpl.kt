@@ -20,8 +20,8 @@ class LocalDataSourceImpl @Inject constructor(
 ) : LocalDataSource {
     private val Context.dataStore by preferencesDataStore(name = USER_PREFERENCES_NAME)
 
-    private lateinit var _currentUser: User
-    override val currentUser: User
+    private var _currentUser: User? = null
+    override val currentUser: User?
         get() = _currentUser
 
     private var _currentLocation: MutableStateFlow<Location?> = MutableStateFlow(null)
