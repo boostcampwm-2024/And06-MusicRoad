@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -129,6 +130,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.google.firebase.dynamic.module.support)
+    implementation(libs.firebase.crashlytics)
 
     // Map
     implementation(libs.map.sdk)

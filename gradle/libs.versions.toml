@@ -14,6 +14,7 @@ firebaseBom = "33.5.1"
 firebaseDynamicModuleSupportVersion = "16.0.0-beta03"
 firebaseFirestoreKtx = "25.1.1"
 firebaseFunctionsKtx = "21.1.0"
+firebaseCrashlytics = "3.0.2"
 geofireAndroidCommon = "3.2.0"
 googleServices = "4.4.2"
 hilt = "2.51.1"
@@ -78,6 +79,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-functions-ktx = { group = "com.google.firebase", name = "firebase-functions-ktx", version.ref = "firebaseFunctionsKtx" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 
 # Test
 geofire-android-common = { module = "com.firebase:geofire-android-common", version.ref = "geofireAndroidCommon" }
@@ -129,3 +131,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
