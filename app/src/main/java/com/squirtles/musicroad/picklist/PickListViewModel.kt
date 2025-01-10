@@ -97,26 +97,27 @@ class PickListViewModel @Inject constructor(
 
     fun deleteSelectedPicks(type: PickListType) {
         viewModelScope.launch {
-            _pickListUiState.value = PickListUiState.Loading
+            getUserId()?.let { userId ->
+                _pickListUiState.value = PickListUiState.Loading
 
-            val userId = getUserId()
-            val deleteJobList = _selectedPicksId.value.map { pickId ->
-                when (type) {
-                    PickListType.FAVORITE -> async { deleteFavoriteUseCase(pickId, userId) }
-                    PickListType.CREATED -> async { deletePickUseCase(pickId, userId) }
+                val deleteJobList = _selectedPicksId.value.map { pickId ->
+                    when (type) {
+                        PickListType.FAVORITE -> async { deleteFavoriteUseCase(pickId, userId) }
+                        PickListType.CREATED -> async { deletePickUseCase(pickId, userId) }
+                    }
                 }
-            }
-            val deleteJobResults = deleteJobList.awaitAll()
+                val deleteJobResults = deleteJobList.awaitAll()
 
-            deselectAllPicks()
-            if (deleteJobResults.all { it.isSuccess }) {
-                when (type) {
-                    PickListType.FAVORITE -> fetchFavoritePicks(userId)
-                    PickListType.CREATED -> fetchMyPicks(userId)
+                deselectAllPicks()
+                if (deleteJobResults.all { it.isSuccess }) {
+                    when (type) {
+                        PickListType.FAVORITE -> fetchFavoritePicks(userId)
+                        PickListType.CREATED -> fetchMyPicks(userId)
+                    }
+                } else {
+                    _pickListUiState.value = PickListUiState.Error
+                    Log.e("PickListViewModel", "[픽 목록] 다중 삭제 오류")
                 }
-            } else {
-                _pickListUiState.value = PickListUiState.Error
-                Log.e("PickListViewModel", "[픽 목록] 다중 삭제 오류")
             }
         }
     }
@@ -139,5 +140,5 @@ class PickListViewModel @Inject constructor(
         }
     }
 
-    private fun getUserId() = getCurrentUserUseCase().userId
+    private fun getUserId() = getCurrentUserUseCase()?.userId
 }
