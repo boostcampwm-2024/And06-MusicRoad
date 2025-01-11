@@ -2,6 +2,7 @@ package com.squirtles.musicroad.map
 
 import android.content.Context
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.naver.maps.geometry.LatLng
@@ -34,6 +35,9 @@ class MapViewModel @Inject constructor(
     private val fetchPickInAreaUseCase: FetchPickInAreaUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
+
+    private val _centerLatLng: MutableStateFlow<LatLng?> = MutableStateFlow(null)
+    val centerLatLng = _centerLatLng.asStateFlow()
 
     private var _lastCameraPosition: CameraPosition? = null
     val lastCameraPosition get() = _lastCameraPosition
@@ -97,6 +101,10 @@ class MapViewModel @Inject constructor(
         } ?: -1.0
     }
 
+    fun updateCenterLatLng(latLng: LatLng) {
+        _centerLatLng.value = latLng
+    }
+
     fun setClickedMarker(context: Context, marker: Marker) {
         viewModelScope.launch {
             marker.toggleSizeByClick(context, true)
@@ -129,34 +137,33 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun fetchPicksInBounds(leftTop: LatLng, rightBottom: LatLng, clusterer: Clusterer<MarkerKey>?) {
+    fun fetchPicksInBounds(leftTop: LatLng, clusterer: Clusterer<MarkerKey>?) {
         viewModelScope.launch {
-            val center = LatLng(
-                (leftTop.latitude + rightBottom.latitude) / 2,
-                (leftTop.longitude + rightBottom.longitude) / 2
-            )
-            val radiusInM = leftTop.distanceTo(rightBottom)
-            val fetchPicks = fetchPickInAreaUseCase(center.latitude, center.longitude, radiusInM)
+            _centerLatLng.value?.run {
+                val radiusInM = leftTop.distanceTo(this)
+                val fetchPicks = fetchPickInAreaUseCase(this.latitude, this.longitude, radiusInM)
 
-            fetchPicks.onSuccess { pickList ->
-                val newKeyTagMap: MutableMap<MarkerKey, String> = mutableMapOf()
-                pickList.forEach { pick ->
-                    newKeyTagMap[MarkerKey(pick)] = pick.id
-                    _picks[pick.id] = pick
-                }
-                _clickedMarkerState.value.clusterPickList?.let { clusterPickList -> // 클러스터 마커가 선택되어 있는 경우
-                    val updatedPickList = mutableListOf<Pick>()
-                    clusterPickList.forEach { pick ->
-                        _picks[pick.id]?.let { updatedPick ->
-                            updatedPickList.add(updatedPick)
-                        }
+                fetchPicks.onSuccess { pickList ->
+                    val newKeyTagMap: MutableMap<MarkerKey, String> = mutableMapOf()
+                    pickList.forEach { pick ->
+                        newKeyTagMap[MarkerKey(pick)] = pick.id
+                        _picks[pick.id] = pick
                     }
-                    _clickedMarkerState.emit(_clickedMarkerState.value.copy(clusterPickList = updatedPickList.toList())) // 최신 픽 정보로 clusterPickList 업데이트
+                    _clickedMarkerState.value.clusterPickList?.let { clusterPickList -> // 클러스터 마커가 선택되어 있는 경우
+                        val updatedPickList = mutableListOf<Pick>()
+                        clusterPickList.forEach { pick ->
+                            _picks[pick.id]?.let { updatedPick ->
+                                updatedPickList.add(updatedPick)
+                            }
+                        }
+                        _clickedMarkerState.emit(_clickedMarkerState.value.copy(clusterPickList = updatedPickList.toList())) // 최신 픽 정보로 clusterPickList 업데이트
+                    }
+                    clusterer?.addAll(newKeyTagMap)
                 }
-                clusterer?.addAll(newKeyTagMap)
-            }
-            fetchPicks.onFailure {
-                // TODO: NoSuchPickInRadiusException일 때
+                fetchPicks.onFailure {
+                    // TODO: NoSuchPickInRadiusException일 때
+                    Log.e("MapViewModel", "${it.message}")
+                }
             }
         }
     }
