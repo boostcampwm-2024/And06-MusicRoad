@@ -130,6 +130,9 @@
     <string name="profile_google_icon">Google Logo</string>
 
     <!--SignIn Dialog -->
-    <string name="sign_in_dialog_title">더 많은 기능을 이용하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_default">더 많은 기능을 이용하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_favorite_picks">담은 픽을 확인하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_add_pick">픽을 등록하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_favorite">픽을 담기 위해\n로그인이 필요합니다</string>
     <string name="sign_in_dialog_dismiss">더 둘러보기</string>
 </resources>

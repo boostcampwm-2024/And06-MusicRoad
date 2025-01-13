@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat.getString
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -58,6 +59,7 @@ import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
+import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.pick.PickViewModel.Companion.DEFAULT_PICK
@@ -87,6 +89,8 @@ fun DetailPickScreen(
 ) {
     val context = LocalContext.current
     val uiState by pickViewModel.detailPickUiState.collectAsStateWithLifecycle()
+
+    var showSignInDialogDescription by remember { mutableStateOf<String?>(null) }
     var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
     var showProcessIndicator by rememberSaveable { mutableStateOf(false) }
     var isMusicVideoAvailable by remember { mutableStateOf(false) }
@@ -117,10 +121,15 @@ fun DetailPickScreen(
             val lifecycleOwner = LocalLifecycleOwner.current
             val pick = (uiState as DetailPickUiState.Success).pick
             val isFavorite = (uiState as DetailPickUiState.Success).isFavorite
+            val isNonMember = pickViewModel.getUserId() == null
             val isCreatedBySelf = pickViewModel.getUserId() == pick.createdBy.userId
             var favoriteCount by rememberSaveable { mutableIntStateOf(pick.favoriteCount) }
             val onActionClick: () -> Unit = {
                 when {
+                    isNonMember -> {
+                        showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite)
+                    }
+
                     isCreatedBySelf -> {
                         playerServiceViewModel.onPause()
                         showDeletePickDialog = true
@@ -321,6 +330,14 @@ fun DetailPickScreen(
             CircularProgressIndicator()
         }
     }
+
+    if (showSignInDialogDescription != null) {
+        SignInAlertDialog(
+            onDismissRequest = { showSignInDialogDescription = null },
+            onGoogleSignInClick = { /*TODO*/ },
+            description = showSignInDialogDescription!!
+        )
+    }
 }
 
 @Composable
@@ -379,9 +396,7 @@ private fun DetailPick(
                     onBackClick()
                 },
                 onActionClick = {
-                    if (currentUserId != null) {
-                        onActionClick()
-                    }
+                    onActionClick()
                 }
             )
         }

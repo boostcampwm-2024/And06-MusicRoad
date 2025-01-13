@@ -44,7 +44,7 @@ import com.squirtles.musicroad.ui.theme.White
 internal fun SignInAlertDialog(
     onDismissRequest: () -> Unit,
     onGoogleSignInClick: () -> Unit,
-    description: String = stringResource(id = R.string.sign_in_dialog_title),
+    description: String
 ) {
     BasicAlertDialog(
         onDismissRequest = onDismissRequest,
@@ -67,7 +67,7 @@ internal fun SignInAlertDialog(
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                VerticalSpacer(height = 20)
+                VerticalSpacer(height = 40)
 
                 GoogleSignInButton(onClick = onGoogleSignInClick)
 
@@ -120,7 +120,7 @@ fun GoogleSignInButton(
 @Composable
 private fun LoginAlertDialogPreview() {
     MusicRoadTheme {
-        SignInAlertDialog({}, {})
+        SignInAlertDialog({}, {}, stringResource(id = R.string.sign_in_dialog_title_default))
     }
 }
 

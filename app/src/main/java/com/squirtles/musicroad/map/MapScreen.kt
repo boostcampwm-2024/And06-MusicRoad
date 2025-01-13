@@ -22,7 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.squirtles.musicroad.R
+import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.main.MainActivity
 import com.squirtles.musicroad.map.components.BottomNavigation
@@ -48,6 +51,7 @@ fun MapScreen(
     val playerState by playerServiceViewModel.playerState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+    var showSignInDialogDescription by remember { mutableStateOf<String?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var showLocationLoading by rememberSaveable { mutableStateOf(true) }
     var isPlaying: Boolean by remember { mutableStateOf(false) }
@@ -129,15 +133,17 @@ fun MapScreen(
                     onFavoriteClick = {
                         mapViewModel.getUserId()?.let { userId ->
                             onFavoriteClick(userId)
+                        } ?: run {
+                            showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
                         }
-                        // TODO 로그인 안내 메시지
                     },
                     onCenterClick = {
                         mapViewModel.getUserId()?.let {
                             onCenterClick()
                             mapViewModel.saveCurLocationForced()
+                        } ?: run {
+                            showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
                         }
-                        // TODO 로그인 안내 메시지
                     },
                     onUserInfoClick = {
                         onUserInfoClick(mapViewModel.getUserId())
@@ -185,5 +191,13 @@ fun MapScreen(
                 }
             }
         }
+    }
+
+    if (showSignInDialogDescription != null) {
+        SignInAlertDialog(
+            onDismissRequest = { showSignInDialogDescription = null },
+            onGoogleSignInClick = { /*TODO*/ },
+            description = showSignInDialogDescription!!
+        )
     }
 }
