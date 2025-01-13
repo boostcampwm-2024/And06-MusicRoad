@@ -93,14 +93,16 @@ fun PickListScreen(
                 ),
                 onBackClick = onBackClick,
                 actions = {
-                    EditModeAction(
-                        isEditMode = isEditMode,
-                        enabled = uiState is PickListUiState.Success,
-                        isSelectedEmpty = selectedPicksId.isEmpty(),
-                        activateEditMode = { isEditMode = true },
-                        selectAllPicks = { pickListViewModel.selectAllPicks() },
-                        deselectAllPicks = { pickListViewModel.deselectAllPicks() },
-                    )
+                    if (pickListViewModel.getUserId() == userId) {
+                        EditModeAction(
+                            isEditMode = isEditMode,
+                            enabled = uiState is PickListUiState.Success,
+                            isSelectedEmpty = selectedPicksId.isEmpty(),
+                            activateEditMode = { isEditMode = true },
+                            selectAllPicks = { pickListViewModel.selectAllPicks() },
+                            deselectAllPicks = { pickListViewModel.deselectAllPicks() },
+                        )
+                    }
                 }
             )
         },

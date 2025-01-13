@@ -140,5 +140,5 @@ class PickListViewModel @Inject constructor(
         }
     }
 
-    private fun getUserId() = getCurrentUserUseCase()?.userId
+    fun getUserId() = getCurrentUserUseCase()?.userId
 }
