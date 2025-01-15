@@ -105,6 +105,7 @@ class MapViewModel @Inject constructor(
         _centerLatLng.value = latLng
     }
 
+    // FIXME: 인자로 Context 받는 것 수정하기
     fun setClickedMarker(context: Context, marker: Marker) {
         viewModelScope.launch {
             marker.toggleSizeByClick(context, true)
@@ -141,29 +142,28 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             _centerLatLng.value?.run {
                 val radiusInM = leftTop.distanceTo(this)
-                val fetchPicks = fetchPickInAreaUseCase(this.latitude, this.longitude, radiusInM)
-
-                fetchPicks.onSuccess { pickList ->
-                    val newKeyTagMap: MutableMap<MarkerKey, String> = mutableMapOf()
-                    pickList.forEach { pick ->
-                        newKeyTagMap[MarkerKey(pick)] = pick.id
-                        _picks[pick.id] = pick
-                    }
-                    _clickedMarkerState.value.clusterPickList?.let { clusterPickList -> // 클러스터 마커가 선택되어 있는 경우
-                        val updatedPickList = mutableListOf<Pick>()
-                        clusterPickList.forEach { pick ->
-                            _picks[pick.id]?.let { updatedPick ->
-                                updatedPickList.add(updatedPick)
-                            }
+                fetchPickInAreaUseCase(this.latitude, this.longitude, radiusInM)
+                    .onSuccess { pickList ->
+                        val newKeyTagMap: MutableMap<MarkerKey, String> = mutableMapOf()
+                        pickList.forEach { pick ->
+                            newKeyTagMap[MarkerKey(pick)] = pick.id
+                            _picks[pick.id] = pick
                         }
-                        _clickedMarkerState.emit(_clickedMarkerState.value.copy(clusterPickList = updatedPickList.toList())) // 최신 픽 정보로 clusterPickList 업데이트
+                        _clickedMarkerState.value.clusterPickList?.let { clusterPickList -> // 클러스터 마커가 선택되어 있는 경우
+                            val updatedPickList = mutableListOf<Pick>()
+                            clusterPickList.forEach { pick ->
+                                _picks[pick.id]?.let { updatedPick ->
+                                    updatedPickList.add(updatedPick)
+                                }
+                            }
+                            _clickedMarkerState.emit(_clickedMarkerState.value.copy(clusterPickList = updatedPickList.toList())) // 최신 픽 정보로 clusterPickList 업데이트
+                        }
+                        clusterer?.addAll(newKeyTagMap)
                     }
-                    clusterer?.addAll(newKeyTagMap)
-                }
-                fetchPicks.onFailure {
-                    // TODO: NoSuchPickInRadiusException일 때
-                    Log.e("MapViewModel", "${it.message}")
-                }
+                    .onFailure {
+                        // TODO: NoSuchPickInRadiusException일 때
+                        Log.e("MapViewModel", "${it.message}")
+                    }
             }
         }
     }
