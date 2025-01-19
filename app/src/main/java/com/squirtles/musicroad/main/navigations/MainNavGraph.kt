@@ -16,9 +16,9 @@ import com.squirtles.musicroad.create.SearchMusicScreen
 import com.squirtles.musicroad.map.MapScreen
 import com.squirtles.musicroad.map.MapViewModel
 import com.squirtles.musicroad.media.PlayerServiceViewModel
-import com.squirtles.musicroad.detail.DetailPickScreen
-import com.squirtles.musicroad.picklist.PickListScreen
-import com.squirtles.musicroad.picklist.PickListType
+import com.squirtles.musicroad.detail.PickDetailScreen
+import com.squirtles.musicroad.favorite.FavoriteScreen
+import com.squirtles.musicroad.mypick.MyPickScreen
 import com.squirtles.musicroad.profile.screen.ProfileScreen
 import com.squirtles.musicroad.profile.screen.SettingNotificationScreen
 import com.squirtles.musicroad.profile.screen.SettingProfileScreen
@@ -42,7 +42,7 @@ fun MainNavGraph(
                 playerServiceViewModel = playerServiceViewModel,
                 onFavoriteClick = { userId -> navigationActions.navigateToFavoritePicks(userId) },
                 onCenterClick = navigationActions.navigateToSearch,
-                onUserInfoClick = { userId -> navigationActions.navigateToProfile(userId) },
+                onProfileClick = { userId -> navigationActions.navigateToProfile(userId) },
                 onPickSummaryClick = { pickId -> navigationActions.navigateToPickDetail(pickId) },
             )
         }
@@ -53,9 +53,8 @@ fun MainNavGraph(
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
-            PickListScreen(
+            FavoriteScreen(
                 userId = userId,
-                pickListType = PickListType.FAVORITE,
                 onBackClick = { navController.navigateUp() },
                 onItemClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
             )
@@ -67,9 +66,8 @@ fun MainNavGraph(
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
 
-            PickListScreen(
+            MyPickScreen(
                 userId = userId,
-                pickListType = PickListType.CREATED,
                 onBackClick = { navController.navigateUp() },
                 onItemClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
             )
@@ -119,11 +117,11 @@ fun MainNavGraph(
                 val parentEntry = remember(it) {
                     navController.getBackStackEntry(CreatePickDestinations.CREATE_ROUTE)
                 }
-                CreatePickScreen(
-                    createPickViewModel = hiltViewModel<CreatePickViewModel>(parentEntry),
-                    onBackClick = { navController.navigateUp() },
-                    onCreateClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
-                )
+//                CreatePickScreen(
+//                    createPickViewModel = hiltViewModel<CreatePickViewModel>(parentEntry),
+//                    onBackClick = { navController.navigateUp() },
+//                    onCreateClick = { pickId -> navigationActions.navigateToPickDetail(pickId) }
+//                )
             }
         }
 
@@ -133,7 +131,7 @@ fun MainNavGraph(
         ) { backStackEntry ->
             val pickId = backStackEntry.arguments?.getString("pickId") ?: ""
 
-            DetailPickScreen(
+            PickDetailScreen(
                 pickId = pickId,
                 playerServiceViewModel = playerServiceViewModel,
                 onProfileClick = { userId -> navigationActions.navigateToProfile(userId) },

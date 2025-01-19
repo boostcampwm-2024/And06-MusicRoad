@@ -39,6 +39,7 @@ retrofit = "2.11.0"
 splashscreen = "1.0.1"
 uiViewbinding = "1.7.5"
 pagingComposeAndroid = "3.3.4"
+kotlinxImmutable = "0.3.7"
 
 [libraries]
 # AndroidX
@@ -71,6 +72,7 @@ androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", versi
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinxCoroutinesGuava" }
+kotlinx-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxImmutable" }
 
 # Firebase
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

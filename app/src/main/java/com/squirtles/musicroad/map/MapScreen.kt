@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.main.MainActivity
-import com.squirtles.musicroad.map.components.BottomNavigation
+import com.squirtles.musicroad.map.components.MapBottomBar
 import com.squirtles.musicroad.map.components.ClusterBottomSheet
 import com.squirtles.musicroad.map.components.InfoWindow
 import com.squirtles.musicroad.map.components.LoadingDialog
@@ -38,7 +38,7 @@ fun MapScreen(
     playerServiceViewModel: PlayerServiceViewModel,
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
-    onUserInfoClick: (String) -> Unit,
+    onProfileClick: (String) -> Unit,
     onPickSummaryClick: (String) -> Unit,
 ) {
     val nearPicks by mapViewModel.nearPicks.collectAsStateWithLifecycle()
@@ -123,8 +123,9 @@ fun MapScreen(
 
                 VerticalSpacer(16)
 
-                BottomNavigation(
+                MapBottomBar(
                     modifier = Modifier.padding(bottom = 16.dp),
+                    userId = mapViewModel.getUserId(),
                     lastLocation = lastLocation,
                     onFavoriteClick = {
                         onFavoriteClick(mapViewModel.getUserId())
@@ -133,8 +134,8 @@ fun MapScreen(
                         onCenterClick()
                         mapViewModel.saveCurLocationForced()
                     },
-                    onUserInfoClick = {
-                        onUserInfoClick(mapViewModel.getUserId())
+                    onProfileClick = {
+                        onProfileClick(mapViewModel.getUserId())
                     }
                 )
             }

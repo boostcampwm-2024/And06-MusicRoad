@@ -54,6 +54,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.domain.model.Song
 import com.squirtles.musicroad.R
@@ -66,11 +67,12 @@ import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 fun CreatePickScreen(
-    createPickViewModel: CreatePickViewModel,
+    song: Song,
     onBackClick: () -> Unit,
     onCreateClick: (String) -> Unit,
+    createPickViewModel: CreatePickViewModel = hiltViewModel(),
 ) {
-    val song = createPickViewModel.selectedSong ?: DEFAULT_SONG
+//    val song = createPickViewModel.selectedSong ?: DEFAULT_SONG
     val comment = createPickViewModel.comment.collectAsStateWithLifecycle()
     val uiState by createPickViewModel.createPickUiState.collectAsStateWithLifecycle()
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }

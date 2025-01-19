@@ -72,16 +72,16 @@ import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @Composable
-fun DetailPickScreen(
+fun PickDetailScreen(
     pickId: String,
-    detailViewModel: DetailViewModel = hiltViewModel(),
-    playerServiceViewModel: PlayerServiceViewModel,
     onProfileClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
+    playerServiceViewModel: PlayerServiceViewModel,
+    detailViewModel: DetailViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-    val uiState by detailViewModel.detailPickUiState.collectAsStateWithLifecycle()
+    val uiState by detailViewModel.pickDetailUiState.collectAsStateWithLifecycle()
     var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
     var showProcessIndicator by rememberSaveable { mutableStateOf(false) }
     var isMusicVideoAvailable by remember { mutableStateOf(false) }
@@ -97,7 +97,7 @@ fun DetailPickScreen(
     }
 
     when (uiState) {
-        DetailPickUiState.Loading -> {
+        PickDetailUiState.Loading -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -108,10 +108,10 @@ fun DetailPickScreen(
             }
         }
 
-        is DetailPickUiState.Success -> {
+        is PickDetailUiState.Success -> {
             val lifecycleOwner = LocalLifecycleOwner.current
-            val pick = (uiState as DetailPickUiState.Success).pick
-            val isFavorite = (uiState as DetailPickUiState.Success).isFavorite
+            val pick = (uiState as PickDetailUiState.Success).pick
+            val isFavorite = (uiState as PickDetailUiState.Success).isFavorite
             val isCreatedBySelf = detailViewModel.getUserId() == pick.createdBy.userId
             var favoriteCount by rememberSaveable { mutableIntStateOf(pick.favoriteCount) }
             val onActionClick: () -> Unit = {
@@ -233,7 +233,7 @@ fun DetailPickScreen(
             }
         }
 
-        DetailPickUiState.Deleted -> {
+        PickDetailUiState.Deleted -> {
             LaunchedEffect(Unit) {
                 onBackClick()
                 onDeleted(context)
@@ -245,7 +245,7 @@ fun DetailPickScreen(
             }
         }
 
-        DetailPickUiState.Error -> {
+        PickDetailUiState.Error -> {
             LaunchedEffect(Unit) {
                 Toast.makeText(
                     context,
@@ -318,7 +318,6 @@ private fun DetailPick(
     val dynamicBackgroundColor = Color(pick.song.bgColor)
     val onDynamicBackgroundColor = if (dynamicBackgroundColor.luminance() >= 0.5f) Black else White
     val view = LocalView.current
-    val context = LocalContext.current
 
     val baseVisualizer = remember { BaseVisualizer() }
 

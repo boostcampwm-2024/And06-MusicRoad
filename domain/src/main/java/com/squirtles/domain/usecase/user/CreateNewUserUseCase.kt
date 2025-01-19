@@ -11,11 +11,10 @@ class CreateNewUserUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(): Result<User> {
-        val createdUser = firebaseRepository.createUser()
+        val createdUser = firebaseRepository.createUser() // Firebase에 유저 생성
             .onSuccess { user ->
-                // 생성된 유저의 userId 저장 후 user 반환
-                localRepository.saveUserId(user.userId)
-                localRepository.saveCurrentUser(user)
+                localRepository.writeUserIdDataStore(user.userId) // 생성된 유저의 userId를 DataStore에 저장 후 user 반환
+                localRepository.saveCurrentUser(user) // 생성된 유저를 LocalDataSource currentUser 에 저장
             }
         return createdUser
     }

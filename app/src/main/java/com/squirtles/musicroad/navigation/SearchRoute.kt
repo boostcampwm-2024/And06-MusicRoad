@@ -1,10 +1,10 @@
 package com.squirtles.musicroad.navigation
 
+import com.squirtles.domain.model.Song
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface SearchRoute : Route {
     @Serializable
-    data object Create : SearchRoute
+    data class Create(val song: Song) : SearchRoute
 }
-

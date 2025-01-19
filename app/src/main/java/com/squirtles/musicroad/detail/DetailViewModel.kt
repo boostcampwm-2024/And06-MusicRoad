@@ -1,6 +1,7 @@
 package com.squirtles.musicroad.detail
 
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Creator
@@ -13,7 +14,7 @@ import com.squirtles.domain.usecase.mypick.DeletePickUseCase
 import com.squirtles.domain.usecase.pick.FetchIsFavoriteUseCase
 import com.squirtles.domain.usecase.pick.FetchPickUseCase
 import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
-import com.squirtles.musicroad.common.throttleFirst
+import com.squirtles.musicroad.utils.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,6 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val fetchPickUseCase: FetchPickUseCase,
     private val fetchIsFavoriteUseCase: FetchIsFavoriteUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
@@ -33,8 +35,8 @@ class DetailViewModel @Inject constructor(
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
 ) : ViewModel() {
 
-    private val _detailPickUiState = MutableStateFlow<DetailPickUiState>(DetailPickUiState.Loading)
-    val detailPickUiState = _detailPickUiState.asStateFlow()
+    private val _pickDetailUiState = MutableStateFlow<PickDetailUiState>(PickDetailUiState.Loading)
+    val pickDetailUiState = _pickDetailUiState.asStateFlow()
 
     private var _currentTab = DETAIL_PICK_TAB
     val currentTab get() = _currentTab
@@ -74,8 +76,8 @@ class DetailViewModel @Inject constructor(
 
             when {
                 fetchPickResult.isSuccess && fetchIsFavoriteResult.isSuccess -> {
-                    _detailPickUiState.emit(
-                        DetailPickUiState.Success(
+                    _pickDetailUiState.emit(
+                        PickDetailUiState.Success(
                             pick = fetchPickResult.getOrDefault(DEFAULT_PICK),
                             isFavorite = fetchIsFavoriteResult.getOrDefault(false)
                         )
@@ -83,7 +85,7 @@ class DetailViewModel @Inject constructor(
                 }
 
                 else -> {
-                    _detailPickUiState.emit(DetailPickUiState.Error)
+                    _pickDetailUiState.emit(PickDetailUiState.Error)
                 }
             }
         }
@@ -97,13 +99,13 @@ class DetailViewModel @Inject constructor(
 
     fun deletePick(pickId: String) {
         viewModelScope.launch {
-            _detailPickUiState.emit(DetailPickUiState.Loading)
+            _pickDetailUiState.emit(PickDetailUiState.Loading)
             deletePickUseCase(pickId, getUserId())
                 .onSuccess {
-                    _detailPickUiState.emit(DetailPickUiState.Deleted)
+                    _pickDetailUiState.emit(PickDetailUiState.Deleted)
                 }
                 .onFailure {
-                    _detailPickUiState.emit(DetailPickUiState.Error)
+                    _pickDetailUiState.emit(PickDetailUiState.Error)
                 }
         }
     }
@@ -113,13 +115,13 @@ class DetailViewModel @Inject constructor(
             createFavoriteUseCase(pickId, getUserId())
                 .onSuccess {
                     _favoriteAction.emit(FavoriteAction.ADDED)
-                    val currentUiState = _detailPickUiState.value as? DetailPickUiState.Success
+                    val currentUiState = _pickDetailUiState.value as? PickDetailUiState.Success
                     currentUiState?.let { successState ->
-                        _detailPickUiState.emit(successState.copy(isFavorite = true))
+                        _pickDetailUiState.emit(successState.copy(isFavorite = true))
                     }
                 }
                 .onFailure {
-                    _detailPickUiState.emit(DetailPickUiState.Error)
+                    _pickDetailUiState.emit(PickDetailUiState.Error)
                 }
         }
     }
@@ -129,13 +131,13 @@ class DetailViewModel @Inject constructor(
             deleteFavoriteUseCase(pickId, getUserId())
                 .onSuccess {
                     _favoriteAction.emit(FavoriteAction.DELETED)
-                    val currentUiState = _detailPickUiState.value as? DetailPickUiState.Success
+                    val currentUiState = _pickDetailUiState.value as? PickDetailUiState.Success
                     currentUiState?.let { successState ->
-                        _detailPickUiState.emit(successState.copy(isFavorite = false))
+                        _pickDetailUiState.emit(successState.copy(isFavorite = false))
                     }
                 }
                 .onFailure {
-                    _detailPickUiState.emit(DetailPickUiState.Error)
+                    _pickDetailUiState.emit(PickDetailUiState.Error)
                 }
         }
     }

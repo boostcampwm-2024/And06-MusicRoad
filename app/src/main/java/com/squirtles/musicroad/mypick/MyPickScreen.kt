@@ -8,7 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.squirtles.musicroad.common.picklist.PickListScreen
+import com.squirtles.musicroad.common.picklist.PickListContents
 import com.squirtles.musicroad.common.picklist.PickListType
 
 @Composable
@@ -25,7 +25,7 @@ fun MyPickScreen(
         myPickListViewModel.fetchMyPicks(userId)
     }
 
-    PickListScreen(
+    PickListContents(
         showOrderBottomSheet = showOrderBottomSheet,
         pickListType = PickListType.FAVORITE,
         uiState = uiState,

@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.common
+package com.squirtles.musicroad.utils
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

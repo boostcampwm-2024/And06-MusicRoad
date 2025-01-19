@@ -8,32 +8,32 @@ import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.map.BottomNavigationIconSize
-import com.squirtles.musicroad.navigation.MapRoute
+import com.squirtles.musicroad.navigation.MainRoute
 
-internal sealed class MapTab(
+internal sealed class NavTab(
     @StringRes val contentDescription: Int,
     val icon: ImageVector,
     val iconSize: Int?,
-    val route: MapRoute,
+    val route: MainRoute,
 ) {
-    data class Favorite(val favoriteRoute: MapRoute.Favorite) : MapTab(
+    data class Favorite(val favoriteRoute: MainRoute.Favorite) : NavTab(
         contentDescription = R.string.map_navigation_favorite_icon_description,
         icon = Icons.Default.FavoriteBorder,
         iconSize = null,
         route = favoriteRoute
     )
 
-    data class Profile(val profileRoute: MapRoute.Profile) : MapTab(
+    data class Profile(val profileRoute: MainRoute.Profile) : NavTab(
         contentDescription = R.string.map_navigation_setting_icon_description,
         icon = Icons.Outlined.AccountCircle,
         iconSize = null,
         route = profileRoute
     )
 
-    data object Search : MapTab(
+    data object Search : NavTab(
         contentDescription = R.string.map_navigation_center_icon_description,
         icon = Icons.Outlined.MusicNote,
         iconSize = BottomNavigationIconSize.CENTER_ICON.size,
-        route = MapRoute.Search
+        route = MainRoute.Search
     )
 }

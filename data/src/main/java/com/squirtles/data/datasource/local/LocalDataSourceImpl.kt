@@ -33,14 +33,14 @@ class LocalDataSourceImpl @Inject constructor(
     private var _myListOrder = Order.LATEST
     override val myListOrder get() = _myListOrder
 
-    override fun readUserId(): Flow<String?> {
+    override fun readUserIdDataStore(): Flow<String?> {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         return context.dataStore.data.map { preferences ->
             preferences[dataStoreKey]
         }
     }
 
-    override suspend fun saveUserId(userId: String) {
+    override suspend fun writeUserIdDataStore(userId: String) {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         context.dataStore.edit { preferences ->
             preferences[dataStoreKey] = userId

@@ -10,14 +10,14 @@ import javax.inject.Inject
 class LocalRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : LocalRepository {
-    override val userId get() = localDataSource.readUserId()
+    override val userIdFromDataStore get() = localDataSource.readUserIdDataStore()
     override val currentUser get() = localDataSource.currentUser
     override val lastLocation get() = localDataSource.lastLocation
     override val favoriteListOrder get() = localDataSource.favoriteListOrder
     override val myListOrder get() = localDataSource.myListOrder
 
-    override suspend fun saveUserId(userId: String) {
-        localDataSource.saveUserId(userId)
+    override suspend fun writeUserIdDataStore(userId: String) {
+        localDataSource.writeUserIdDataStore(userId)
     }
 
     override suspend fun saveCurrentUser(user: User) {

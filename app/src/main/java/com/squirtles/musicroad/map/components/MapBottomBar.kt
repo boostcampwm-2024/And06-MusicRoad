@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,20 +17,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.map.BottomNavigationIconSize
+import com.squirtles.musicroad.map.BottomNavigationSize
+import com.squirtles.musicroad.map.navigation.NavTab
+import com.squirtles.musicroad.navigation.MainRoute
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
+import com.squirtles.musicroad.ui.theme.Primary
 
 @Composable
-fun BottomNavigation(
+internal fun MapBottomBar(
     modifier: Modifier = Modifier,
+    userId: String,
     lastLocation: Location?,
     onFavoriteClick: () -> Unit,
     onCenterClick: () -> Unit,
-    onUserInfoClick: () -> Unit
+    onProfileClick: () -> Unit
 ) {
     Box(
         modifier = modifier,
@@ -41,65 +46,72 @@ fun BottomNavigation(
     ) {
         Row(
             modifier = Modifier
-                .size(245.dp, 50.dp)
+                .size(BottomNavigationSize.WIDTH.size.dp, BottomNavigationSize.HEIGHT.size.dp)
                 .clip(CircleShape)
                 .background(color = MaterialTheme.colorScheme.surface)
         ) {
             // 왼쪽 버튼
-            Box(
+            MapBottomNavigationItem(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clickable { onFavoriteClick() },
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = stringResource(R.string.map_navigation_favorite_icon_description),
-                    modifier = Modifier.padding(start = BottomNavigationHorizontalPadding),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+                    .padding(end = BottomNavigationSize.HORIZONTAL_PADDING.size.dp),
+                tab = NavTab.Favorite(MainRoute.Favorite(userId)),
+                painter = null,
+                tint = Primary,
+                onClick = onFavoriteClick
+            )
 
             // 오른쪽 버튼
-            Box(
+            MapBottomNavigationItem(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clickable { onUserInfoClick() },
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.AccountCircle,
-                    contentDescription = stringResource(R.string.map_navigation_setting_icon_description),
-                    modifier = Modifier.padding(end = BottomNavigationHorizontalPadding),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
+                    .padding(start = BottomNavigationSize.HORIZONTAL_PADDING.size.dp),
+                tab = NavTab.Profile(MainRoute.Profile(userId)),
+                painter = null,
+                tint = Primary,
+                onClick = onProfileClick
+            )
         }
 
         // 중앙 버튼
-        Box(
+        MapBottomNavigationItem(
             modifier = Modifier
-                .size(82.dp)
+                .size(BottomNavigationIconSize.CENTER.size.dp)
                 .clip(CircleShape)
                 .background(
                     color = lastLocation?.let {
                         MaterialTheme.colorScheme.primary
                     } ?: Color.Gray
-                )
-                .clickable(enabled = lastLocation != null) {
-                    onCenterClick()
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_musical_note_64),
-                contentDescription = stringResource(R.string.map_navigation_center_icon_description),
-                modifier = Modifier.size(34.dp),
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
+                ),
+            tab = NavTab.Search,
+            painter = painterResource(R.drawable.ic_musical_note_64),
+            tint = MaterialTheme.colorScheme.onPrimary,
+            onClick = onCenterClick
+        )
+    }
+}
+
+@Composable
+private fun MapBottomNavigationItem(
+    modifier: Modifier = Modifier,
+    tab: NavTab,
+    painter: Painter?,
+    tint: Color,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            modifier = if (tab.iconSize != null) Modifier.size(tab.iconSize.dp) else Modifier,
+            painter = painter ?: rememberVectorPainter(tab.icon),
+            contentDescription = stringResource(tab.contentDescription),
+            tint = tint
+        )
     }
 }
 
@@ -107,11 +119,12 @@ fun BottomNavigation(
 @Composable
 fun BottomNavigationLightPreview() {
     MusicRoadTheme {
-        BottomNavigation(
+        MapBottomBar(
+            userId = "",
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
-            onUserInfoClick = {}
+            onProfileClick = {}
         )
     }
 }
@@ -120,13 +133,12 @@ fun BottomNavigationLightPreview() {
 @Composable
 fun BottomNavigationDarkPreview() {
     MusicRoadTheme {
-        BottomNavigation(
+        MapBottomBar(
+            userId = "",
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
-            onUserInfoClick = {}
+            onProfileClick = {}
         )
     }
 }
-
-private val BottomNavigationHorizontalPadding = 32.dp

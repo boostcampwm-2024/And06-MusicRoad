@@ -50,6 +50,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -67,9 +68,9 @@ import com.squirtles.musicroad.ui.theme.White
 
 @Composable
 fun SearchMusicScreen(
-    searchViewModel: SearchViewModel,
-    onBackClick: () -> Boolean,
-    onItemClick: () -> Unit,
+    onBackClick: () -> Unit,
+    onItemClick: (Song) -> Unit,
+    searchViewModel: SearchViewModel = hiltViewModel(),
 ) {
     val focusManager = LocalFocusManager.current
     val searchText by searchViewModel.searchText.collectAsStateWithLifecycle()
@@ -125,7 +126,7 @@ fun SearchMusicScreen(
                         onItemClick = { song ->
                             searchViewModel.onSongItemClick(song)
                             focusManager.clearFocus()
-                            onItemClick()
+                            onItemClick(song)
                         }
                     )
                 }
@@ -138,7 +139,7 @@ fun SearchMusicScreen(
 private fun SearchTopBar(
     keyword: String,
     onValueChange: (String) -> Unit,
-    onBackClick: () -> Boolean,
+    onBackClick: () -> Unit,
     focusManager: FocusManager
 ) {
 

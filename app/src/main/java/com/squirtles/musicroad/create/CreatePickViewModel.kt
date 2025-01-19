@@ -15,7 +15,7 @@ import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.music.FetchMusicVideoUseCase
 import com.squirtles.domain.usecase.music.FetchSongsUseCase
 import com.squirtles.domain.usecase.mypick.CreatePickUseCase
-import com.squirtles.musicroad.common.throttleFirst
+import com.squirtles.musicroad.utils.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
