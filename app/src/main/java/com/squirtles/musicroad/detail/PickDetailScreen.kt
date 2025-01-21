@@ -1,7 +1,5 @@
 package com.squirtles.musicroad.pick
 
-import DialogTextButton
-import MessageAlertDialog
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
@@ -62,7 +60,6 @@ import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.detail.DetailViewModel
-import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.detail.DetailViewModel.Companion.DEFAULT_PICK
 import com.squirtles.musicroad.detail.FavoriteAction
 import com.squirtles.musicroad.detail.PickDetailUiState
@@ -74,6 +71,7 @@ import com.squirtles.musicroad.detail.components.PickInformation
 import com.squirtles.musicroad.detail.components.SongInfo
 import com.squirtles.musicroad.detail.components.music.MusicPlayer
 import com.squirtles.musicroad.detail.components.music.visualizer.BaseVisualizer
+import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.ui.theme.Black
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
@@ -286,10 +284,6 @@ fun PickDetailScreen(
             onDismissRequest = {
                 showDeletePickDialog = false
             },
-            onDeletion = {
-                showDeletePickDialog = false
-                detailViewModel.deletePick(pickId)
-            }
             title = stringResource(R.string.delete_pick_dialog_title),
             body = stringResource(R.string.delete_pick_dialog_body),
             buttons = {
@@ -305,7 +299,7 @@ fun PickDetailScreen(
                 DialogTextButton(
                     onClick = {
                         showDeletePickDialog = false
-                        pickViewModel.deletePick(pickId)
+                        detailViewModel.deletePick(pickId)
                     },
                     text = stringResource(R.string.delete_pick_dialog_delete),
                     textColor = Primary,

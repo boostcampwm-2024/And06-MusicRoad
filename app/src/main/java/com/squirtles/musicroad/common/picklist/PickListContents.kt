@@ -32,8 +32,8 @@ import com.squirtles.domain.model.Order
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
+import com.squirtles.musicroad.common.CountText
 import com.squirtles.musicroad.common.DefaultTopAppBar
-import com.squirtles.musicroad.common.TotalCountText
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
@@ -94,7 +94,7 @@ fun PickListContents(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TotalCountText(
+                            CountText(
                                 totalCount = pickList.size,
                                 defaultColor = White,
                             )

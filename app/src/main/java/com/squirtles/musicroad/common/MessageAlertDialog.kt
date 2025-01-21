@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/com/squirtles/musicroad/detail/components/DeletePickDialog.kt
-package com.squirtles.musicroad.detail.components
-========
 package com.squirtles.musicroad.common
->>>>>>>> develop:app/src/main/java/com/squirtles/musicroad/common/MessageAlertDialog.kt
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

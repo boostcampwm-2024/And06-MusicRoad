@@ -10,15 +10,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.squirtles.musicroad.create.CreatePickScreen
 import com.squirtles.musicroad.create.CreatePickViewModel
 import com.squirtles.musicroad.create.SearchMusicScreen
+import com.squirtles.musicroad.favorite.FavoriteScreen
 import com.squirtles.musicroad.map.MapScreen
 import com.squirtles.musicroad.map.MapViewModel
 import com.squirtles.musicroad.media.PlayerServiceViewModel
-import com.squirtles.musicroad.detail.PickDetailScreen
-import com.squirtles.musicroad.favorite.FavoriteScreen
 import com.squirtles.musicroad.mypick.MyPickScreen
+import com.squirtles.musicroad.pick.PickDetailScreen
 import com.squirtles.musicroad.profile.screen.ProfileScreen
 import com.squirtles.musicroad.profile.screen.SettingNotificationScreen
 import com.squirtles.musicroad.profile.screen.SettingProfileScreen
