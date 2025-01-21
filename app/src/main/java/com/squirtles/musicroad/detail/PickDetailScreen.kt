@@ -1,5 +1,7 @@
-package com.squirtles.musicroad.detail
+package com.squirtles.musicroad.pick
 
+import DialogTextButton
+import MessageAlertDialog
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
@@ -41,6 +43,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -53,12 +57,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.common.DialogTextButton
+import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
+import com.squirtles.musicroad.detail.DetailViewModel
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.detail.DetailViewModel.Companion.DEFAULT_PICK
+import com.squirtles.musicroad.detail.FavoriteAction
+import com.squirtles.musicroad.detail.PickDetailUiState
 import com.squirtles.musicroad.detail.components.CircleAlbumCover
 import com.squirtles.musicroad.detail.components.CommentText
-import com.squirtles.musicroad.detail.components.DeletePickDialog
 import com.squirtles.musicroad.detail.components.DetailPickTopAppBar
 import com.squirtles.musicroad.detail.components.MusicVideoKnob
 import com.squirtles.musicroad.detail.components.PickInformation
@@ -66,6 +75,7 @@ import com.squirtles.musicroad.detail.components.SongInfo
 import com.squirtles.musicroad.detail.components.music.MusicPlayer
 import com.squirtles.musicroad.detail.components.music.visualizer.BaseVisualizer
 import com.squirtles.musicroad.ui.theme.Black
+import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
 import com.squirtles.musicroad.videoplayer.MusicVideoScreen
 import kotlinx.coroutines.launch
@@ -272,7 +282,7 @@ fun PickDetailScreen(
     }
 
     if (showDeletePickDialog) {
-        DeletePickDialog(
+        MessageAlertDialog(
             onDismissRequest = {
                 showDeletePickDialog = false
             },
@@ -280,6 +290,28 @@ fun PickDetailScreen(
                 showDeletePickDialog = false
                 detailViewModel.deletePick(pickId)
             }
+            title = stringResource(R.string.delete_pick_dialog_title),
+            body = stringResource(R.string.delete_pick_dialog_body),
+            buttons = {
+                DialogTextButton(
+                    onClick = {
+                        showDeletePickDialog = false
+                    },
+                    text = stringResource(R.string.delete_pick_dialog_cancel)
+                )
+
+                HorizontalSpacer(8)
+
+                DialogTextButton(
+                    onClick = {
+                        showDeletePickDialog = false
+                        pickViewModel.deletePick(pickId)
+                    },
+                    text = stringResource(R.string.delete_pick_dialog_delete),
+                    textColor = Primary,
+                    fontWeight = FontWeight.Bold
+                )
+            },
         )
     }
 

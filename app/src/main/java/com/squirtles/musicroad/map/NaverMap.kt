@@ -24,6 +24,7 @@ import androidx.core.content.PermissionChecker
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
@@ -68,10 +69,21 @@ fun NaverMap(
     val lifecycleOwner = LocalLifecycleOwner.current
     val coroutineScope = rememberCoroutineScope()
 
+    val centerLatLng by mapViewModel.centerLatLng.collectAsStateWithLifecycle()
+
     LaunchedEffect(lastLocation) {
         // 현재 위치와 마지막 위치가 5미터 이상 차이가 날때만 현위치 기준 반경 100m 픽 정보 개수 불러오기
         lastLocation?.let {
             mapViewModel.requestPickNotificationArea(lastLocation, CIRCLE_RADIUS_METER)
+        }
+    }
+
+    LaunchedEffect(centerLatLng) {
+        naverMap.value?.projection?.fromScreenLocation(PointF(0F, 0F))?.run {
+            mapViewModel.fetchPicksInBounds(
+                leftTop = this,
+                clusterer = clusterer
+            )
         }
     }
 
@@ -121,16 +133,21 @@ fun NaverMap(
                         mapType = NaverMap.MapType.Navi
                         initMapSettings()
                         initDeviceLocation(
-                            context,
-                            circleOverlay,
-                            fusedLocationClient,
-                            mapViewModel.lastCameraPosition
-                        )
+                            context = context,
+                            circleOverlay = circleOverlay,
+                            fusedLocationClient = fusedLocationClient,
+                            lastCameraPosition = mapViewModel.lastCameraPosition
+                        ) {
+                            mapViewModel.fetchPicksInBounds(
+                                leftTop = this.projection.fromScreenLocation(PointF(0F, 0F)),
+                                clusterer = clusterer
+                            )
+                        }
                         initLocationOverlay(locationSource, locationOverlay)
                         setLocationChangeListener(circleOverlay, mapViewModel)
                         setMapClickListener { mapViewModel.resetClickedMarkerState(context) }
-                        setCameraIdleListener { leftTop, rightBottom ->
-                            mapViewModel.fetchPicksInBounds(leftTop, rightBottom, clusterer)
+                        setCameraIdleListener { centerLatLng ->
+                            mapViewModel.updateCenterLatLng(centerLatLng)
                         }
                         clusterer?.map = this
                     }
@@ -172,7 +189,8 @@ private fun NaverMap.initDeviceLocation(
     context: Context,
     circleOverlay: CircleOverlay,
     fusedLocationClient: FusedLocationProviderClient,
-    lastCameraPosition: CameraPosition?
+    lastCameraPosition: CameraPosition?,
+    fetchPicksInBounds: () -> Unit,
 ) {
     if (checkSelfPermission(context)) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
@@ -181,6 +199,7 @@ private fun NaverMap.initDeviceLocation(
                 setCircleOverlay(circleOverlay, location)
                 lastCameraPosition?.let {
                     moveCamera(CameraUpdate.toCameraPosition(it))
+                    fetchPicksInBounds()
                 } ?: run {
                     moveCamera(CameraUpdate.scrollTo(LatLng(location)))
                     moveCamera(CameraUpdate.zoomTo(INITIAL_CAMERA_ZOOM))
@@ -237,13 +256,10 @@ private fun NaverMap.setMapClickListener(
 
 // 카메라 대기 이벤트 설정
 private fun NaverMap.setCameraIdleListener(
-    fetchPicksInBounds: (LatLng, LatLng) -> Unit
+    updateCenterLatLng: (LatLng) -> Unit
 ) {
     addOnCameraIdleListener {
-        val leftTop = projection.fromScreenLocation(PointF(0f, 0f))
-        val rightBottom =
-            projection.fromScreenLocation(PointF(contentWidth.toFloat(), contentHeight.toFloat()))
-        fetchPicksInBounds(leftTop, rightBottom)
+        updateCenterLatLng(cameraPosition.target)
     }
 }
 
