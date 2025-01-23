@@ -8,6 +8,8 @@ import androidx.navigation.toRoute
 import com.squirtles.musicroad.navigation.MainRoute
 import com.squirtles.musicroad.navigation.ProfileRoute
 import com.squirtles.musicroad.profile.screen.ProfileScreen
+import com.squirtles.musicroad.profile.screen.SettingNotificationScreen
+import com.squirtles.musicroad.profile.screen.SettingProfileScreen
 
 fun NavController.navigateProfile(userId: String, navOptions: NavOptions? = null) {
     navigate(MainRoute.Profile(userId), navOptions)
@@ -40,6 +42,18 @@ fun NavGraphBuilder.profileNavGraph(
             onMyPicksClick = onMyPicksClick,
             onSettingProfileClick = onSettingProfileClick,
             onSettingNotificationClick = onSettingNotificationClick,
+        )
+    }
+
+    composable<ProfileRoute.Setting> { backStackEntry ->
+        SettingProfileScreen(
+            onBackClick = onBackClick,
+        )
+    }
+
+    composable<ProfileRoute.Notification> { backStackEntry ->
+        SettingNotificationScreen(
+            onBackClick = onBackClick
         )
     }
 }
