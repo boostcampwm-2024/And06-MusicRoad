@@ -27,18 +27,16 @@ import com.squirtles.musicroad.R
 import com.squirtles.musicroad.map.BottomNavigationIconSize
 import com.squirtles.musicroad.map.BottomNavigationSize
 import com.squirtles.musicroad.map.navigation.NavTab
-import com.squirtles.musicroad.navigation.MainRoute
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import com.squirtles.musicroad.ui.theme.Primary
 
 @Composable
 internal fun MapBottomBar(
     modifier: Modifier = Modifier,
-    userId: String,
     lastLocation: Location?,
     onFavoriteClick: () -> Unit,
     onCenterClick: () -> Unit,
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
 ) {
     Box(
         modifier = modifier,
@@ -56,7 +54,7 @@ internal fun MapBottomBar(
                     .weight(1f)
                     .fillMaxHeight()
                     .padding(end = BottomNavigationSize.HORIZONTAL_PADDING.size.dp),
-                tab = NavTab.Favorite(MainRoute.Favorite(userId)),
+                tab = NavTab.FAVORITE,
                 painter = null,
                 tint = Primary,
                 onClick = onFavoriteClick
@@ -68,7 +66,7 @@ internal fun MapBottomBar(
                     .weight(1f)
                     .fillMaxHeight()
                     .padding(start = BottomNavigationSize.HORIZONTAL_PADDING.size.dp),
-                tab = NavTab.Profile(MainRoute.Profile(userId)),
+                tab = NavTab.PROFILE,
                 painter = null,
                 tint = Primary,
                 onClick = onProfileClick
@@ -85,7 +83,7 @@ internal fun MapBottomBar(
                         MaterialTheme.colorScheme.primary
                     } ?: Color.Gray
                 ),
-            tab = NavTab.Search,
+            tab = NavTab.SEARCH,
             painter = painterResource(R.drawable.ic_musical_note_64),
             tint = MaterialTheme.colorScheme.onPrimary,
             onClick = onCenterClick
@@ -120,7 +118,6 @@ private fun MapBottomNavigationItem(
 fun BottomNavigationLightPreview() {
     MusicRoadTheme {
         MapBottomBar(
-            userId = "",
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
@@ -134,7 +131,6 @@ fun BottomNavigationLightPreview() {
 fun BottomNavigationDarkPreview() {
     MusicRoadTheme {
         MapBottomBar(
-            userId = "",
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},

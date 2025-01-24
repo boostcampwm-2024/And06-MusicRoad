@@ -1,16 +1,14 @@
 package com.squirtles.musicroad.main
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.firebase.FirebaseException
-import com.squirtles.domain.usecase.user.GetUserIdFromDataStoreUseCase
 import com.squirtles.domain.usecase.user.CreateNewUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
+import com.squirtles.domain.usecase.user.GetUserIdFromDataStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,24 +26,9 @@ class MainViewModel @Inject constructor(
     val canRequestPermission get() = _canRequestPermission
 
     init {
-//        viewModelScope.launch {
-//            getUserIdFromDataStoreUseCase()
-//                .catch { e ->
-//                    Log.e("MainViewModel", "Error collecting flow: $e")
-//                }
-//                .collect { localUid ->
-//                Log.d("MainViewModel", "localUid: $localUid")
-//                if (localUid == null) {
-//                    createUser()
-//                } else {
-//                    fetchUser(localUid)
-//                }
-//            }
-//        }
-
         viewModelScope.launch {
             val userId = getUserIdFromDataStoreUseCase()
-            if(userId == null) {
+            if (userId == null) {
                 createUser()
             } else {
                 fetchUser(userId)
