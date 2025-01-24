@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.common.GoogleId
 import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.main.MainActivity
@@ -42,7 +43,7 @@ fun MapScreen(
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
     onUserInfoClick: (String?) -> Unit,
-    onPickSummaryClick: (String) -> Unit,
+    onPickSummaryClick: (String) -> Unit
 ) {
     val nearPicks by mapViewModel.nearPicks.collectAsStateWithLifecycle()
     val lastLocation by mapViewModel.lastLocation.collectAsStateWithLifecycle()
@@ -196,7 +197,7 @@ fun MapScreen(
     if (showSignInDialogDescription != null) {
         SignInAlertDialog(
             onDismissRequest = { showSignInDialogDescription = null },
-            onGoogleSignInClick = { /*TODO*/ },
+            onGoogleSignInClick = { GoogleId(context).signIn() },
             description = showSignInDialogDescription!!
         )
     }

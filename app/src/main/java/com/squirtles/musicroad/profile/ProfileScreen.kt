@@ -1,7 +1,5 @@
 package com.squirtles.musicroad.profile
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,25 +36,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
-import androidx.credentials.exceptions.NoCredentialException
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.squirtles.musicroad.BuildConfig
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
+import com.squirtles.musicroad.common.GoogleId
 import com.squirtles.musicroad.common.GoogleSignInButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -74,17 +64,6 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
     val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
-
-    val credentialManager = CredentialManager.create(context)
-
-    val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-        .setFilterByAuthorizedAccounts(false)
-        .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
-        .build()
-
-    val request = GetCredentialRequest.Builder()
-        .addCredentialOption(googleIdOption)
-        .build()
 
     LaunchedEffect(Unit) {
         userId?.let {
@@ -108,19 +87,7 @@ fun ProfileScreen(
         ) {
             if (userId == null) {
                 GoogleSignInButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            runCatching {
-                                val result = credentialManager.getCredential(context, request)
-                                handleSignIn(result)
-                            }.onFailure { exception ->
-                                when (exception) {
-                                    is NoCredentialException -> Toast.makeText(context, context.getString(R.string.google_id_no_credential_exception_message), Toast.LENGTH_SHORT).show()
-                                }
-                                Log.e("GoogleId", "Google Login Error : $exception")
-                            }
-                        }
-                    },
+                    onClick = { GoogleId(context).signIn() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)
@@ -211,19 +178,6 @@ fun ProfileScreen(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
-            }
-        }
-    }
-}
-
-fun handleSignIn(result: GetCredentialResponse) {
-    when (val data = result.credential) {
-        is CustomCredential -> {
-            if (data.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(data.data)
-                Log.d("GoogleId", "data.type : ${googleIdTokenCredential.id}")
-                Log.d("GoogleId", "data.type : ${googleIdTokenCredential.displayName}")
-                Log.d("GoogleId", "data.type : ${googleIdTokenCredential.profilePictureUri.toString()}")
             }
         }
     }
