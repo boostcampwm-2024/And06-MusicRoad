@@ -31,7 +31,7 @@ import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import com.squirtles.musicroad.ui.theme.Primary
 
 @Composable
-internal fun MapBottomBar(
+internal fun MapBottomNavBar(
     modifier: Modifier = Modifier,
     lastLocation: Location?,
     onFavoriteClick: () -> Unit,
@@ -117,7 +117,7 @@ private fun MapBottomNavigationItem(
 @Composable
 fun BottomNavigationLightPreview() {
     MusicRoadTheme {
-        MapBottomBar(
+        MapBottomNavBar(
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
@@ -130,7 +130,7 @@ fun BottomNavigationLightPreview() {
 @Composable
 fun BottomNavigationDarkPreview() {
     MusicRoadTheme {
-        MapBottomBar(
+        MapBottomNavBar(
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},

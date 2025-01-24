@@ -28,7 +28,7 @@ import com.squirtles.musicroad.main.MainActivity
 import com.squirtles.musicroad.map.components.ClusterBottomSheet
 import com.squirtles.musicroad.map.components.InfoWindow
 import com.squirtles.musicroad.map.components.LoadingDialog
-import com.squirtles.musicroad.map.components.MapBottomBar
+import com.squirtles.musicroad.map.components.MapBottomNavBar
 import com.squirtles.musicroad.map.components.PickNotificationBanner
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 
@@ -123,7 +123,7 @@ fun MapScreen(
 
                 VerticalSpacer(16)
 
-                MapBottomBar(
+                MapBottomNavBar(
                     modifier = Modifier.padding(bottom = 16.dp),
                     lastLocation = lastLocation,
                     onFavoriteClick = {
