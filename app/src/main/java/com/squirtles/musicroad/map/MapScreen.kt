@@ -23,8 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.account.AccountViewModel
 import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
@@ -43,7 +45,8 @@ fun MapScreen(
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
     onUserInfoClick: (String?) -> Unit,
-    onPickSummaryClick: (String) -> Unit
+    onPickSummaryClick: (String) -> Unit,
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val nearPicks by mapViewModel.nearPicks.collectAsStateWithLifecycle()
     val lastLocation by mapViewModel.lastLocation.collectAsStateWithLifecycle()
@@ -199,8 +202,9 @@ fun MapScreen(
             onDismissRequest = { showSignInDialogDescription = null },
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
-                    onSuccess = {
-
+                    onSuccess = { credential ->
+                        accountViewModel.createGoogleIdUser(credential)
+                        showSignInDialogDescription = null
                     }
                 )
             },

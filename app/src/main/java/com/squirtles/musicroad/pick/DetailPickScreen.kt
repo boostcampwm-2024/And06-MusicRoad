@@ -56,8 +56,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
-import com.squirtles.musicroad.common.DialogTextButton
+import com.squirtles.musicroad.account.AccountViewModel
 import com.squirtles.musicroad.account.GoogleId
+import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.SignInAlertDialog
@@ -82,13 +83,15 @@ import kotlin.math.absoluteValue
 @Composable
 fun DetailPickScreen(
     pickId: String,
-    pickViewModel: PickViewModel = hiltViewModel(),
     playerServiceViewModel: PlayerServiceViewModel,
     onProfileClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
+    pickViewModel: PickViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by pickViewModel.detailPickUiState.collectAsStateWithLifecycle()
 
     var showSignInDialogDescription by remember { mutableStateOf<String?>(null) }
@@ -104,6 +107,11 @@ fun DetailPickScreen(
 
     LaunchedEffect(Unit) {
         pickViewModel.fetchPick(pickId)
+        accountViewModel.createSuccess
+            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { isSuccess ->
+                if (isSuccess) pickViewModel.fetchPick(pickId)
+            }
     }
 
     when (uiState) {
@@ -119,7 +127,6 @@ fun DetailPickScreen(
         }
 
         is DetailPickUiState.Success -> {
-            val lifecycleOwner = LocalLifecycleOwner.current
             val pick = (uiState as DetailPickUiState.Success).pick
             val isFavorite = (uiState as DetailPickUiState.Success).isFavorite
             val isNonMember = pickViewModel.getUserId() == null
@@ -337,8 +344,9 @@ fun DetailPickScreen(
             onDismissRequest = { showSignInDialogDescription = null },
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
-                    onSuccess = {
-
+                    onSuccess = { credential ->
+                        accountViewModel.createGoogleIdUser(credential)
+                        showSignInDialogDescription = null
                     }
                 )
             },

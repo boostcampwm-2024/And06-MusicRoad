@@ -90,6 +90,7 @@ fun ProfileScreen(
                         GoogleId(context).signIn(
                             onSuccess = { credential ->
                                 accountViewModel.createGoogleIdUser(credential)
+                                onBackToMapClick()
                             }
                         )
                     },

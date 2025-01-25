@@ -68,6 +68,8 @@ class PickViewModel @Inject constructor(
 
     fun fetchPick(pickId: String) {
         viewModelScope.launch {
+            _detailPickUiState.emit(DetailPickUiState.Loading)
+
             val fetchPick = async { fetchPickUseCase(pickId) }
 
             val fetchIsFavoriteResult: Result<Boolean> = getUserId()?.let {
