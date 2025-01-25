@@ -11,14 +11,21 @@ import com.squirtles.musicroad.navigation.MainRoute
 import com.squirtles.musicroad.navigation.SearchRoute
 import com.squirtles.musicroad.search.SearchMusicScreen
 import com.squirtles.musicroad.utils.serializableType
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import kotlin.reflect.typeOf
 
 fun NavController.navigateSearch(navOptions: NavOptions? = null) {
     navigate(MainRoute.Search, navOptions)
 }
 
-fun NavController.navigateCreate(song: Song,  navOptions: NavOptions? = null) {
-    navigate(SearchRoute.Create(song), navOptions)
+fun NavController.navigateCreate(song: Song, navOptions: NavOptions? = null) {
+    val encodedSong = song.copy(
+        previewUrl = "",
+        externalUrl = "",
+        imageUrl = URLEncoder.encode(song.imageUrl, StandardCharsets.UTF_8.toString())
+    )
+    navigate(SearchRoute.Create(encodedSong), navOptions)
 }
 
 fun NavGraphBuilder.searchNavGraph(
@@ -33,7 +40,7 @@ fun NavGraphBuilder.searchNavGraph(
         )
     }
     composable<SearchRoute.Create>(
-        typeMap = mapOf(typeOf<Song>() to serializableType<Song>())
+        typeMap = SearchRoute.Create.typeMap
     ) { backStackEntry ->
         val song = backStackEntry.toRoute<SearchRoute.Create>().song
 
