@@ -19,9 +19,9 @@ fun NavController.navigateSearch(navOptions: NavOptions? = null) {
 
 fun NavController.navigateCreate(song: Song, navOptions: NavOptions? = null) {
     val encodedSong = song.copy(
-        previewUrl = "",
-        externalUrl = "",
-        genreNames = emptyList(),
+        previewUrl = URLEncoder.encode(song.previewUrl, StandardCharsets.UTF_8.toString()),
+        externalUrl = URLEncoder.encode(song.externalUrl, StandardCharsets.UTF_8.toString()),
+        genreNames = song.genreNames.map { URLEncoder.encode(it, StandardCharsets.UTF_8.toString()) },
         imageUrl = URLEncoder.encode(song.imageUrl, StandardCharsets.UTF_8.toString())
     )
     navigate(SearchRoute.Create(encodedSong), navOptions)

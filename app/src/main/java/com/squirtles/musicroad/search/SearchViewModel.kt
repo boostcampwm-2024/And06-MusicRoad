@@ -23,15 +23,11 @@ class SearchViewModel @Inject constructor(
     private val fetchSongsUseCase: FetchSongsUseCase,
 ) : ViewModel() {
 
-    // SearchMusicScreen
     private val _searchUiState = MutableStateFlow<SearchUiState>(SearchUiState.HotResult)
     val searchUiState = _searchUiState.asStateFlow()
 
     private val _searchResult = MutableStateFlow<PagingData<Song>>(PagingData.empty())
     val searchResult = _searchResult.asStateFlow()
-
-    private var _selectedSong: Song? = null
-    val selectedSong get() = _selectedSong
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -62,12 +58,7 @@ class SearchViewModel @Inject constructor(
             }
     }
 
-    fun onSongItemClick(song: Song) {
-        _selectedSong = song
-    }
-
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
-
 }
