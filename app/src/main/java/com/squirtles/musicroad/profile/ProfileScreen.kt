@@ -1,7 +1,6 @@
 package com.squirtles.musicroad.profile
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +41,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.account.AccountViewModel
 import com.squirtles.musicroad.account.GoogleId
@@ -129,13 +131,18 @@ fun ProfileScreen(
                 ) {
                     VerticalSpacer(16)
 
-                    Image(
-                        painter = painterResource(R.drawable.img_user_default_profile),
-                        contentDescription = stringResource(R.string.user_info_default_profile_image),
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(user.userProfileImage)
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = stringResource(R.string.user_info_profile_image),
                         modifier = Modifier
                             .size(180.dp)
                             .clip(CircleShape),
-                        contentScale = ContentScale.Crop
+                        placeholder = painterResource(R.drawable.img_user_default_profile),
+                        error = painterResource(R.drawable.img_user_default_profile),
+                        contentScale = ContentScale.Crop,
                     )
 
                     VerticalSpacer(40)

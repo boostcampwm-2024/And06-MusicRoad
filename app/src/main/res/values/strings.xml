@@ -97,7 +97,7 @@
 
     <!-- User Info -->
     <string name="user_info_navigate_to_menu">메뉴로 이동하기 아이콘</string>
-    <string name="user_info_default_profile_image">기본 프로필 이미지</string>
+    <string name="user_info_profile_image">프로필 이미지</string>
     <string name="user_info_pick_category_title">Pick</string>
     <string name="user_info_favorite_menu_title">픽 보관함</string>
     <string name="user_info_created_by_self_menu_title">등록한 픽</string>
