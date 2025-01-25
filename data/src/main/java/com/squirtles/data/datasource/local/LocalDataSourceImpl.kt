@@ -51,6 +51,14 @@ class LocalDataSourceImpl @Inject constructor(
         _currentUser = user
     }
 
+    override suspend fun clearUser() {
+        val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
+        context.dataStore.edit { preferences ->
+            preferences.remove(dataStoreKey)
+        }
+        _currentUser = null
+    }
+
     override suspend fun saveCurrentLocation(location: Location) {
         _currentLocation.emit(location)
     }

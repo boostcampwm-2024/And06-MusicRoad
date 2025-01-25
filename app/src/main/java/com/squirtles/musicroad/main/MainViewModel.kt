@@ -39,7 +39,6 @@ class MainViewModel @Inject constructor(
                 if (localUid == null) { // 비회원 상태
                     _loadingState.emit(LoadingState.Success(null))
                 } else {
-                    // TODO 구글 로그인 -> 자동 로그인
                     fetchUser(localUid)
                 }
             }

@@ -3,6 +3,7 @@ package com.squirtles.musicroad.account
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -54,6 +55,14 @@ class GoogleId(private val context: Context) {
                 }
                 Log.e("GoogleId", "Google SignIn Error : $exception")
             }
+        }
+    }
+
+    fun signOut() {
+        CoroutineScope(Dispatchers.Main).launch {
+            credentialManager.clearCredentialState(
+                request = ClearCredentialStateRequest()
+            )
         }
     }
 }

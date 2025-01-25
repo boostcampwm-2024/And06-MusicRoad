@@ -1,5 +1,6 @@
 package com.squirtles.musicroad.profile
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Map
@@ -36,7 +38,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.account.AccountViewModel
 import com.squirtles.musicroad.account.GoogleId
@@ -61,13 +66,28 @@ fun ProfileScreen(
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val scrollState = rememberScrollState()
     val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
+
+    val onSettingSignOutClick: () -> Unit = {
+        GoogleId(context).signOut()
+        accountViewModel.signOut()
+    }
 
     LaunchedEffect(Unit) {
         userId?.let {
             profileViewModel.getUserById(userId)
         }
+
+        accountViewModel.signOutSuccess
+            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { isSuccess ->
+                if (isSuccess) {
+                    onBackToMapClick()
+                    Log.d("SignOut", "로그아웃")
+                }
+            }
     }
 
     Scaffold(
@@ -153,6 +173,12 @@ fun ProfileScreen(
                                     contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
                                     menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
                                     onMenuClick = onSettingNotificationClick
+                                ),
+                                MenuItem(
+                                    imageVector = Icons.AutoMirrored.Outlined.Logout,
+                                    contentDescription = stringResource(R.string.user_info_setting_sign_out_menu_icon_description),
+                                    menuTitle = stringResource(R.string.user_info_setting_sign_out_menu_title),
+                                    onMenuClick = onSettingSignOutClick
                                 )
                             )
                         )

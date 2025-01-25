@@ -91,7 +91,7 @@ fun MainNavGraph(
                 onFavoritePicksClick = { navigationActions.navigateToFavoritePicks(it) },
                 onMyPicksClick = { navigationActions.navigateToMyPicks(it) },
                 onSettingProfileClick = { navController.navigate(ProfileDestination.SETTING_PROFILE_ROUTE) },
-                onSettingNotificationClick = { navController.navigate(ProfileDestination.SETTING_NOTIFICATION_ROUTE) },
+                onSettingNotificationClick = { navController.navigate(ProfileDestination.SETTING_NOTIFICATION_ROUTE) }
             )
         }
 
