@@ -203,7 +203,7 @@ fun MapScreen(
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
                     onSuccess = { credential ->
-                        accountViewModel.createGoogleIdUser(credential)
+                        accountViewModel.signIn(credential)
                         showSignInDialogDescription = null
                     }
                 )

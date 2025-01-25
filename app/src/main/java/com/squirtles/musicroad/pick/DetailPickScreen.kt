@@ -107,7 +107,7 @@ fun DetailPickScreen(
 
     LaunchedEffect(Unit) {
         pickViewModel.fetchPick(pickId)
-        accountViewModel.createSuccess
+        accountViewModel.signInSuccess
             .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .collect { isSuccess ->
                 if (isSuccess) pickViewModel.fetchPick(pickId)
@@ -345,7 +345,7 @@ fun DetailPickScreen(
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
                     onSuccess = { credential ->
-                        accountViewModel.createGoogleIdUser(credential)
+                        accountViewModel.signIn(credential)
                         showSignInDialogDescription = null
                     }
                 )
