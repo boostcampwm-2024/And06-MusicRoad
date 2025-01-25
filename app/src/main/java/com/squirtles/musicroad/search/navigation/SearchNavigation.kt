@@ -1,6 +1,5 @@
 package com.squirtles.musicroad.search.navigation
 
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -25,9 +24,6 @@ fun NavController.navigateCreate(song: Song, navOptions: NavOptions? = null) {
         genreNames = emptyList(),
         imageUrl = URLEncoder.encode(song.imageUrl, StandardCharsets.UTF_8.toString())
     )
-
-    Log.d("SearchNavigation", "original: $song")
-    Log.d("SearchNavigation", "encoded: $encodedSong")
     navigate(SearchRoute.Create(encodedSong), navOptions)
 }
 
@@ -46,8 +42,6 @@ fun NavGraphBuilder.searchNavGraph(
         typeMap = SearchRoute.Create.typeMap
     ) { backStackEntry ->
         val song = backStackEntry.toRoute<SearchRoute.Create>().song
-
-        Log.d("SearchNavigation", "received: $song")
 
         CreatePickScreen(
             song = song,
