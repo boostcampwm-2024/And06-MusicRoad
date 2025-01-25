@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.common
+package com.squirtles.musicroad.account
 
 import android.content.Context
 import android.util.Log
@@ -22,13 +22,14 @@ class GoogleId(private val context: Context) {
     private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(false)
         .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
+        .setAutoSelectEnabled(true)
         .build()
 
     private val request = GetCredentialRequest.Builder()
         .addCredentialOption(googleIdOption)
         .build()
 
-    private fun handleSignIn(result: GetCredentialResponse) {
+    private fun handleSignIn(result: GetCredentialResponse, onSuccess: (GoogleIdTokenCredential) -> Unit) {
         when (val data = result.credential) {
             is CustomCredential -> {
                 if (data.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
@@ -36,16 +37,17 @@ class GoogleId(private val context: Context) {
                     Log.d("GoogleId", "data.type : ${googleIdTokenCredential.id}")
                     Log.d("GoogleId", "data.type : ${googleIdTokenCredential.displayName}")
                     Log.d("GoogleId", "data.type : ${googleIdTokenCredential.profilePictureUri.toString()}")
+                    onSuccess(googleIdTokenCredential)
                 }
             }
         }
     }
 
-    fun signIn() {
+    fun signIn(onSuccess: (GoogleIdTokenCredential) -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {
             runCatching {
                 val result = credentialManager.getCredential(context, request)
-                handleSignIn(result)
+                handleSignIn(result, onSuccess)
             }.onFailure { exception ->
                 when (exception) {
                     is NoCredentialException -> Toast.makeText(context, context.getString(R.string.google_id_no_credential_exception_message), Toast.LENGTH_SHORT).show()

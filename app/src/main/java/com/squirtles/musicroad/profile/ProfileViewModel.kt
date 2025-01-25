@@ -55,5 +55,5 @@ class ProfileViewModel @Inject constructor(
     }
 }
 
-val DEFAULT_USER = User("", "", listOf())
+val DEFAULT_USER = User("", "", null, listOf())
 

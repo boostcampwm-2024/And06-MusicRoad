@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,9 +38,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.account.AccountViewModel
+import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
-import com.squirtles.musicroad.common.GoogleId
 import com.squirtles.musicroad.common.GoogleSignInButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.VerticalSpacer
@@ -57,11 +57,10 @@ fun ProfileScreen(
     onMyPicksClick: (String) -> Unit,
     onSettingProfileClick: () -> Unit,
     onSettingNotificationClick: () -> Unit,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
     val scrollState = rememberScrollState()
     val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
 
@@ -87,7 +86,13 @@ fun ProfileScreen(
         ) {
             if (userId == null) {
                 GoogleSignInButton(
-                    onClick = { GoogleId(context).signIn() },
+                    onClick = {
+                        GoogleId(context).signIn(
+                            onSuccess = { credential ->
+                                accountViewModel.createGoogleIdUser(credential)
+                            }
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)

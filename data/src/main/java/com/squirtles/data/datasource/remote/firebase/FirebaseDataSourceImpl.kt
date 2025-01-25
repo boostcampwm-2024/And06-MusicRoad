@@ -61,6 +61,29 @@ class FirebaseDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun createGoogledIdUser(userId: String, userName: String?, userProfileImage: String?): User? {
+        return suspendCancellableCoroutine { continuation ->
+            val documentReference = db.collection("users").document(userId)
+            documentReference.set(FirebaseUser(name = userName, profileImage = userProfileImage))
+                .addOnSuccessListener {
+                    documentReference.get()
+                        .addOnSuccessListener { documentSnapshot ->
+                            val savedUser = documentSnapshot.toObject<FirebaseUser>()
+                            continuation.resume(
+                                savedUser?.toUser()?.copy(userId = documentReference.id)
+                            )
+                        }
+                        .addOnFailureListener { exception ->
+                            continuation.resumeWithException(exception)
+                        }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("FirebaseDataSourceImpl", exception.message.toString())
+                    continuation.resumeWithException(exception)
+                }
+        }
+    }
+
     override suspend fun fetchUser(userId: String): User? {
         return suspendCancellableCoroutine { continuation ->
             db.collection("users").document(userId).get()

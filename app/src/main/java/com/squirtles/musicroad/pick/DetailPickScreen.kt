@@ -57,7 +57,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.DialogTextButton
-import com.squirtles.musicroad.common.GoogleId
+import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.SignInAlertDialog
@@ -335,7 +335,13 @@ fun DetailPickScreen(
     if (showSignInDialogDescription != null) {
         SignInAlertDialog(
             onDismissRequest = { showSignInDialogDescription = null },
-            onGoogleSignInClick = { GoogleId(context).signIn() },
+            onGoogleSignInClick = {
+                GoogleId(context).signIn(
+                    onSuccess = {
+
+                    }
+                )
+            },
             description = showSignInDialogDescription!!
         )
     }

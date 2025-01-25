@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.exception.FirebaseException
 import com.squirtles.domain.usecase.local.GetUserIdFromLocalStorageUseCase
-import com.squirtles.domain.usecase.user.CreateUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +23,6 @@ sealed class LoadingState {
 class MainViewModel @Inject constructor(
     getUserIdFromLocalStorageUseCase: GetUserIdFromLocalStorageUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
-    private val createUserUseCase: CreateUserUseCase
 ) : ViewModel() {
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loading)
@@ -52,24 +50,6 @@ class MainViewModel @Inject constructor(
         _canRequestPermission = canRequest
     }
 
-    private suspend fun createUser() {
-        createUserUseCase()
-            .onSuccess {
-                _loadingState.emit(LoadingState.Success(it.userId))
-            }
-            .onFailure { exception ->
-                when (exception) {
-                    is FirebaseException.CreatedUserFailedException -> {
-                        _loadingState.emit(LoadingState.CreatedUserError(exception.message))
-                    }
-
-                    else -> {
-                        _loadingState.emit(LoadingState.NetworkError(exception.message.toString()))
-                    }
-                }
-            }
-    }
-
     private suspend fun fetchUser(userId: String) {
         fetchUserUseCase(userId)
             .onSuccess {
@@ -87,5 +67,4 @@ class MainViewModel @Inject constructor(
                 }
             }
     }
-
 }
