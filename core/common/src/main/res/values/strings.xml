@@ -1,0 +1,15 @@
+<resources>
+    <string name="map_album_image_description">앨범 이미지</string>
+
+    <string name="pick_created_by_self_1">내가</string>
+    <string name="pick_created_by_self_2">등록한 픽</string>
+    <string name="map_info_window_pick_user">님의 픽</string>
+
+    <string name="top_app_bar_back_description">상단 바 뒤로 가기 버튼</string>
+
+    <string name="delete_pick_dialog_title">삭제하시겠습니까?</string>
+    <string name="delete_pick_dialog_body">등록하신 픽이 삭제됩니다.</string>
+
+    <string name="map_info_window_favorite_count_icon_description">픽을 담은 개수</string>
+    <string name="total_count_text">전체</string>
+</resources>

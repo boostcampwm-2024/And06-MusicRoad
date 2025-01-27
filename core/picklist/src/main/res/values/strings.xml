@@ -1,0 +1,16 @@
+<resources>
+    <string name="latest_create_order">최근 등록순</string>
+    <string name="latest_favorite_order">최근 담은순</string>
+    <string name="oldest_favorite_order">과거 담은순</string>
+    <string name="oldest_create_order">과거 등록순</string>
+    <string name="favorite_count_desc">담기 많은순</string>
+    <string name="selected_icon_description">체크 아이콘</string>
+    <string name="close_button_text">닫기</string>
+
+    <string name="favorite_picks_top_app_bar_title">픽 보관함</string>
+    <string name="my_picks_top_app_bar_title">등록한 픽</string>
+
+    <string name="favorite_picks_empty">담은 픽이 없습니다</string>
+    <string name="my_picks_empty">등록한 픽이 없습니다</string>
+    <string name="error_loading_pick_list">일시적인 오류가 발생했습니다.</string>
+</resources>

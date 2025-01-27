@@ -22,12 +22,11 @@ hiltNavigationCompose = "1.2.0"
 inject = "1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 kotlinxCoroutinesPlayServices = "1.9.0"
 kotlinxCoroutinesCore = "1.9.0"
-kotlinxCoroutinesGuava = "1.9.0"
 kotlinxSerializationJson = "1.6.0"
-ksp = "1.9.0-1.0.12"
+ksp = "1.9.22-1.0.16"
 lifecycleRuntimeKtx = "2.8.7"
 mapSdk = "3.19.1"
 material = "1.12.0"
@@ -41,6 +40,9 @@ splashscreen = "1.0.1"
 uiViewbinding = "1.7.5"
 pagingComposeAndroid = "3.3.4"
 kotlinxImmutable = "0.3.7"
+jetbrainsKotlinJvm = "1.9.22"
+navigationCommonKtx = "2.8.5"
+runtimeAndroid = "1.7.6"
 
 [libraries]
 # AndroidX
@@ -66,13 +68,12 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
-kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinxCoroutinesGuava" }
 kotlinx-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxImmutable" }
 
 # Firebase
@@ -123,6 +124,8 @@ coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
+androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
+androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 
 # Plugins
 [plugins]
@@ -134,3 +137,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
