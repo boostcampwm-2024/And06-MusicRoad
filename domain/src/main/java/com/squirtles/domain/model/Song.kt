@@ -1,7 +1,5 @@
 package com.squirtles.domain.model
 
-import android.util.Size
-import androidx.annotation.ColorInt
 import kotlinx.serialization.Serializable
 
 /**
@@ -15,13 +13,13 @@ data class Song(
     val albumName: String,
     val imageUrl: String,
     val genreNames: List<String>,
-    @ColorInt val bgColor: Int,
+    val bgColor: Int,
     val externalUrl: String,
     val previewUrl: String,
 ) {
-    fun getImageUrlWithSize(size: Size): String? {
+    fun getImageUrlWithSize(width: Int, height: Int): String? {
         return if (imageUrl.isEmpty()) null
-        else imageUrl.replace("{w}", size.width.toString())
-            .replace("{h}", size.height.toString())
+        else imageUrl.replace("{w}", width.toString())
+            .replace("{h}", height.toString())
     }
 }

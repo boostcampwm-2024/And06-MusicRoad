@@ -109,7 +109,7 @@ fun BottomSheetItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AlbumImage(
-            imageUrl = song.getImageUrlWithSize(REQUEST_IMAGE_SIZE_DEFAULT),
+            imageUrl = song.getImageUrlWithSize(REQUEST_IMAGE_SIZE_DEFAULT.width, REQUEST_IMAGE_SIZE_DEFAULT.height),
             modifier = Modifier
                 .size(45.dp)
                 .clip(RoundedCornerShape(4.dp))

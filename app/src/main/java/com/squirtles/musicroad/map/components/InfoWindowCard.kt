@@ -58,7 +58,7 @@ fun InfoWindow(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             AlbumImage(
-                imageUrl = pick.song.getImageUrlWithSize(RequestImageSize),
+                imageUrl = pick.song.getImageUrlWithSize(RequestImageSize.width, RequestImageSize.height),
                 modifier = Modifier
                     .size(90.dp)
                     .clip(RoundedCornerShape(4.dp))

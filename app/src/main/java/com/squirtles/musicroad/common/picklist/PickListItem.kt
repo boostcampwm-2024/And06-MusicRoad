@@ -55,7 +55,7 @@ fun PickListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AlbumImage(
-            imageUrl = song.getImageUrlWithSize(Constants.REQUEST_IMAGE_SIZE_DEFAULT),
+            imageUrl = song.getImageUrlWithSize(Constants.REQUEST_IMAGE_SIZE_DEFAULT.width, Constants.REQUEST_IMAGE_SIZE_DEFAULT.height),
             modifier = Modifier
                 .size(64.dp)
                 .clip(RoundedCornerShape(8.dp))

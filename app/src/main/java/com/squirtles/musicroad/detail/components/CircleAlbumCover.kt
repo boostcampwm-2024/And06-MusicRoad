@@ -57,7 +57,7 @@ internal fun CircleAlbumCover(
         )
 
         AsyncImage(
-            model = song.getImageUrlWithSize(Size(400, 400)),
+            model = song.getImageUrlWithSize(400, 400),
             contentDescription = song.albumName + stringResource(id = R.string.pick_album_description),
             modifier = Modifier
                 .fillMaxWidth()

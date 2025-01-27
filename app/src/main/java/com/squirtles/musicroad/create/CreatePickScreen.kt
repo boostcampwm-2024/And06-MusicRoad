@@ -219,7 +219,7 @@ private fun CreatePickContent(
         )
 
         AlbumImage(
-            imageUrl = song.getImageUrlWithSize(RequestImageSize),
+            imageUrl = song.getImageUrlWithSize(RequestImageSize.width, RequestImageSize.height),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 30.dp)
