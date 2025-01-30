@@ -12,7 +12,6 @@ import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
 import com.squirtles.domain.usecase.location.GetLastLocationUseCase
 import com.squirtles.domain.usecase.music.FetchMusicVideoUseCase
-import com.squirtles.domain.usecase.music.FetchSongsUseCase
 import com.squirtles.domain.usecase.mypick.CreatePickUseCase
 import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.musicroad.navigation.SearchRoute
@@ -30,7 +29,6 @@ import javax.inject.Inject
 class CreatePickViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getLastLocationUseCase: GetLastLocationUseCase,
-    private val fetchSongsUseCase: FetchSongsUseCase,
     private val fetchMusicVideoUseCase: FetchMusicVideoUseCase,
     private val createPickUseCase: CreatePickUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
