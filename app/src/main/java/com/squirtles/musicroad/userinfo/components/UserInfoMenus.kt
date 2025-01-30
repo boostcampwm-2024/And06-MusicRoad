@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile.components
+package com.squirtles.musicroad.userinfo.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,7 +31,7 @@ import com.squirtles.musicroad.ui.theme.Gray
 import com.squirtles.musicroad.ui.theme.White
 
 @Composable
-internal fun ProfileMenus(
+internal fun UserInfoMenus(
     title: String,
     titleTextColor: Color = White,
     titleTextStyle: TextStyle = MaterialTheme.typography.titleMedium,

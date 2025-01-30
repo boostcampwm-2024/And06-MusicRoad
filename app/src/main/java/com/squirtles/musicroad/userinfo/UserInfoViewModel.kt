@@ -1,11 +1,11 @@
-package com.squirtles.musicroad.profile
+package com.squirtles.musicroad.userinfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.User
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserByIdUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.domain.usecase.user.UpdateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class UserInfoViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
     private val fetchUserByIdUseCase: FetchUserByIdUseCase,

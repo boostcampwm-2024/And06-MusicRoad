@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile.screen
+package com.squirtles.musicroad.userinfo.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,7 @@ import com.squirtles.musicroad.common.DefaultTopAppBar
 import com.squirtles.musicroad.ui.theme.White
 
 @Composable
-internal fun SettingNotificationScreen(
+internal fun EditNotificationSettingScreen(
     onBackClick: () -> Unit
 ) {
     Scaffold(

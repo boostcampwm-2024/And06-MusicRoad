@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile.screen
+package com.squirtles.musicroad.userinfo.screen
 
 import android.content.Context
 import android.widget.Toast
@@ -51,18 +51,18 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
-import com.squirtles.musicroad.profile.ProfileViewModel
 import com.squirtles.musicroad.ui.theme.Black
 import com.squirtles.musicroad.ui.theme.Gray
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import com.squirtles.musicroad.ui.theme.White
+import com.squirtles.musicroad.userinfo.UserInfoViewModel
 import kotlinx.coroutines.delay
 import java.util.regex.Pattern
 
 @Composable
-internal fun SettingProfileScreen(
+internal fun EditProfileScreen(
     onBackClick: () -> Unit,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -184,7 +184,9 @@ private fun SettingProfileAppBar(
 private fun validateUserName(userName: String, context: Context) = when {
     userName.length < 2 -> context.getString(R.string.setting_profile_nickname_message_length_fail_min)
     userName.length > 10 -> context.getString(R.string.setting_profile_nickname_message_length_fail_max)
-    Pattern.matches(USERNAME_PATTERN, userName).not() -> context.getString(R.string.setting_profile_nickname_message_format_fail)
+    Pattern.matches(USERNAME_PATTERN, userName)
+        .not() -> context.getString(R.string.setting_profile_nickname_message_format_fail)
+
     else -> ""
 }
 

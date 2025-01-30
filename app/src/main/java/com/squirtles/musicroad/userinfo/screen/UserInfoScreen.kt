@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile.screen
+package com.squirtles.musicroad.userinfo.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,14 +40,14 @@ import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.VerticalSpacer
-import com.squirtles.musicroad.profile.ProfileViewModel
-import com.squirtles.musicroad.profile.components.MenuItem
-import com.squirtles.musicroad.profile.components.ProfileMenus
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
+import com.squirtles.musicroad.userinfo.UserInfoViewModel
+import com.squirtles.musicroad.userinfo.components.MenuItem
+import com.squirtles.musicroad.userinfo.components.UserInfoMenus
 
 @Composable
-fun ProfileScreen(
+fun UserInfoScreen(
     userId: String,
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
@@ -55,7 +55,7 @@ fun ProfileScreen(
     onMyPicksClick: (String) -> Unit,
     onSettingProfileClick: () -> Unit,
     onSettingNotificationClick: () -> Unit,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
     val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
@@ -98,7 +98,7 @@ fun ProfileScreen(
 
                 VerticalSpacer(40)
 
-                ProfileMenus(
+                UserInfoMenus(
                     title = stringResource(R.string.user_info_pick_category_title),
                     menus = listOf(
                         MenuItem(
@@ -117,7 +117,7 @@ fun ProfileScreen(
                 )
 
                 if (userId == profileViewModel.currentUser.userId) {
-                    ProfileMenus(
+                    UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
                             MenuItem(
