@@ -49,10 +49,15 @@ internal class MainNavigator(
         )
     }
 
-    fun navigatePickDetail(pickId: String) {
+    fun navigatePickDetail(pickId: String, navigateToMap: Boolean = false) {
         navController.navigatePickDetail(
             pickId = pickId,
             navOptions = navOptions {
+                if (navigateToMap) {
+                    popUpTo(startDestination) {
+                        inclusive = false
+                    }
+                }
                 launchSingleTop = true
             }
         )

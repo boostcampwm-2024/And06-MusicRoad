@@ -36,7 +36,9 @@ internal fun MainNavHost(
         searchNavGraph(
             onBackClick = navigator::popBackStackIfNotMap,
             onItemClick = navigator::navigateCreate,
-            onCreateClick = navigator::navigatePickDetail,
+            onCreateClick = { pickId ->
+                navigator.navigatePickDetail(pickId, true)
+            },
         )
 
         favoriteNavGraph(
