@@ -123,8 +123,8 @@ fun PickListContents(
                 }
 
                 is PickListUiState.Success -> {
-                    val pickList = (uiState as PickListUiState.Success).pickList
-                    val order = (uiState as PickListUiState.Success).order
+                    val pickList = uiState.pickList
+                    val order = uiState.order
 
                     Column(
                         modifier = Modifier.fillMaxSize()

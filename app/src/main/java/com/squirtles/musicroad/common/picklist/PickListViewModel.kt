@@ -22,7 +22,7 @@ abstract class PickListViewModel(
     val deletePickListUseCase: DeletePickListUseCaseTemplate
 ) : ViewModel() {
 
-    private var pickList: List<Pick>? = null
+    private var pickList: List<Pick> = emptyList()
 
     private val _pickListUiState = MutableStateFlow<PickListUiState>(PickListUiState.Loading)
     val pickListUiState = _pickListUiState.asStateFlow()
@@ -44,12 +44,10 @@ abstract class PickListViewModel(
     }
 
     private fun sortPickList(order: Order) {
-        pickList?.let {
-            _pickListUiState.value = PickListUiState.Success(
-                pickList = it.setOrderedList(order),
-                order = order
-            )
-        }
+        _pickListUiState.value = PickListUiState.Success(
+            pickList = pickList.setOrderedList(order),
+            order = order
+        )
     }
 
     fun setListOrder(order: Order) {
@@ -66,9 +64,7 @@ abstract class PickListViewModel(
     }
 
     fun selectAllPicks() {
-        pickList?.let { pickList ->
-            _selectedPicksId.value = pickList.map { it.id }.toSet()
-        }
+        _selectedPicksId.value = pickList.map { it.id }.toSet()
     }
 
     fun deselectAllPicks() {
@@ -84,6 +80,7 @@ abstract class PickListViewModel(
             }.awaitAll()
 
             deselectAllPicks()
+
             if (deleteJobList.all { it.isSuccess }) {
                 fetchPickList(userId)
             } else {
@@ -94,7 +91,8 @@ abstract class PickListViewModel(
     }
 
     private fun List<Pick>.setOrderedList(order: Order): List<Pick> {
-        return when (order) {
+        return if (pickList.isEmpty()) this
+        else when (order) {
             Order.LATEST -> this
             Order.OLDEST -> this.reversed()
             Order.FAVORITE_DESC -> this.sortedByDescending { it.favoriteCount }
