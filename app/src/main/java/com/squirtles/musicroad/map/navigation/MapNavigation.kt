@@ -26,7 +26,7 @@ fun NavGraphBuilder.mapNavGraph(
     playerServiceViewModel: PlayerServiceViewModel,
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
-    onProfileClick: (String) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onPickSummaryClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
@@ -37,7 +37,7 @@ fun NavGraphBuilder.mapNavGraph(
             playerServiceViewModel = playerServiceViewModel,
             onFavoriteClick = onFavoriteClick,
             onCenterClick = onCenterClick,
-            onProfileClick = onProfileClick,
+            onUserInfoClick = onUserInfoClick,
             onPickSummaryClick = onPickSummaryClick,
         )
     }
@@ -48,7 +48,7 @@ fun NavGraphBuilder.mapNavGraph(
         PickDetailScreen(
             pickId = pickId,
             playerServiceViewModel = playerServiceViewModel,
-            onProfileClick = onProfileClick,
+            onUserInfoClick = onUserInfoClick,
             onBackClick = onBackClick,
             onDeleted = onDeleted,
         )

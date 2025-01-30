@@ -23,13 +23,13 @@ fun NavController.navigateEditNotificationSetting(navOptions: NavOptions? = null
     navigate(UserInfoRoute.EditNotification, navOptions)
 }
 
-fun NavGraphBuilder.profileNavGraph(
+fun NavGraphBuilder.userInfoNavGraph(
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
-    onSettingProfileClick: () -> Unit,
-    onSettingNotificationClick: () -> Unit,
+    onEditProfileClick: () -> Unit,
+    onEditNotificationClick: () -> Unit,
 ) {
     composable<MainRoute.UserInfo> { backStackEntry ->
         val userId = backStackEntry.toRoute<MainRoute.UserInfo>().userId
@@ -40,18 +40,18 @@ fun NavGraphBuilder.profileNavGraph(
             onBackToMapClick = onBackToMapClick,
             onFavoritePicksClick = onFavoritePicksClick,
             onMyPicksClick = onMyPicksClick,
-            onSettingProfileClick = onSettingProfileClick,
-            onSettingNotificationClick = onSettingNotificationClick,
+            onEditProfileClick = onEditProfileClick,
+            onEditNotificationClick = onEditNotificationClick,
         )
     }
 
-    composable<UserInfoRoute.EditProfile> { backStackEntry ->
+    composable<UserInfoRoute.EditProfile> {
         EditProfileScreen(
             onBackClick = onBackClick,
         )
     }
 
-    composable<UserInfoRoute.EditNotification> { backStackEntry ->
+    composable<UserInfoRoute.EditNotification> {
         EditNotificationSettingScreen(
             onBackClick = onBackClick
         )

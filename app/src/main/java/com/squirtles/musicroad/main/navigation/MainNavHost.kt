@@ -10,7 +10,7 @@ import com.squirtles.musicroad.map.navigation.mapNavGraph
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.mypick.navigation.myPickNavGraph
 import com.squirtles.musicroad.search.navigation.searchNavGraph
-import com.squirtles.musicroad.userinfo.navigation.profileNavGraph
+import com.squirtles.musicroad.userinfo.navigation.userInfoNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -28,7 +28,7 @@ internal fun MainNavHost(
             playerServiceViewModel = playerServiceViewModel,
             onFavoriteClick = navigator::navigateFavorite,
             onCenterClick = navigator::navigateSearch,
-            onProfileClick = navigator::navigateUserInfo,
+            onUserInfoClick = navigator::navigateUserInfo,
             onPickSummaryClick = navigator::navigatePickDetail,
             onBackClick = navigator::navigateMap,
             onDeleted = mapViewModel::resetClickedMarkerState
@@ -45,13 +45,13 @@ internal fun MainNavHost(
             onItemClick = navigator::navigatePickDetail
         )
 
-        profileNavGraph(
+        userInfoNavGraph(
             onBackClick = navigator::popBackStackIfNotMap,
             onBackToMapClick = navigator::navigateMap,
             onFavoritePicksClick = navigator::navigateFavorite,
             onMyPicksClick = navigator::navigateMyPicks,
-            onSettingProfileClick = navigator::navigateEditProfile,
-            onSettingNotificationClick = navigator::navigateEditNotificationSetting,
+            onEditProfileClick = navigator::navigateEditProfile,
+            onEditNotificationClick = navigator::navigateEditNotificationSetting,
         )
 
         myPickNavGraph(

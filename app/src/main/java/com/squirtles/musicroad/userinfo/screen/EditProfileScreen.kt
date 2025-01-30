@@ -62,19 +62,19 @@ import java.util.regex.Pattern
 @Composable
 internal fun EditProfileScreen(
     onBackClick: () -> Unit,
-    profileViewModel: UserInfoViewModel = hiltViewModel()
+    userInfoViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
-    val userName = remember { mutableStateOf(profileViewModel.currentUser.userName) }
+    val userName = remember { mutableStateOf(userInfoViewModel.currentUser.userName) }
     val nickNameErrorMessage = remember { mutableStateOf("") }
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }
 
     BackHandler(enabled = showCreateIndicator) { }
 
     LaunchedEffect(Unit) {
-        profileViewModel.updateSuccess
+        userInfoViewModel.updateSuccess
             .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .collect { isSuccess ->
                 focusManager.clearFocus()
@@ -99,12 +99,12 @@ internal fun EditProfileScreen(
 
     Scaffold(
         topBar = {
-            SettingProfileAppBar(
+            EditProfileAppBar(
                 confirmEnabled = nickNameErrorMessage.value.isEmpty() &&
-                        profileViewModel.currentUser.userName != userName.value,
+                        userInfoViewModel.currentUser.userName != userName.value,
                 onConfirmClick = {
                     showCreateIndicator = true
-                    profileViewModel.updateUsername(userName.value)
+                    userInfoViewModel.updateUsername(userName.value)
                 },
                 onBackClick = onBackClick
             )
@@ -116,7 +116,7 @@ internal fun EditProfileScreen(
                 .background(Brush.verticalGradient(colorStops = COLOR_STOPS))
                 .padding(innerPadding)
         ) {
-            SettingProfileContent(userName, nickNameErrorMessage)
+            EditProfileContents(userName, nickNameErrorMessage)
         }
     }
 
@@ -139,7 +139,7 @@ internal fun EditProfileScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingProfileAppBar(
+private fun EditProfileAppBar(
     confirmEnabled: Boolean,
     onConfirmClick: () -> Unit,
     onBackClick: () -> Unit
@@ -191,7 +191,7 @@ private fun validateUserName(userName: String, context: Context) = when {
 }
 
 @Composable
-private fun SettingProfileContent(
+private fun EditProfileContents(
     userName: MutableState<String>,
     nickNameErrorMessage: MutableState<String>
 ) {
@@ -238,15 +238,15 @@ private const val USERNAME_PATTERN = "^[ㄱ-ㅎ|ㅏ-ㅣ가-힣a-zA-Z0-9]+$"
 
 @Preview
 @Composable
-private fun SettingProfileAppBarPreview() {
-    SettingProfileAppBar(false, {}, {})
+private fun EditProfileAppBarPreview() {
+    EditProfileAppBar(false, {}, {})
 }
 
 @Preview
 @Composable
-private fun SettingProfileContentPreview() {
+private fun EditProfileContentPreview() {
     MusicRoadTheme {
-        SettingProfileContent(
+        EditProfileContents(
             remember { mutableStateOf("짱구") },
             remember { mutableStateOf("") }
         )

@@ -53,15 +53,15 @@ fun UserInfoScreen(
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
-    onSettingProfileClick: () -> Unit,
-    onSettingNotificationClick: () -> Unit,
-    profileViewModel: UserInfoViewModel = hiltViewModel()
+    onEditProfileClick: () -> Unit,
+    onEditNotificationClick: () -> Unit,
+    userInfoViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
+    val user by userInfoViewModel.profileUser.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUserById(userId)
+        userInfoViewModel.getUserById(userId)
     }
 
     Scaffold(
@@ -116,7 +116,7 @@ fun UserInfoScreen(
                     )
                 )
 
-                if (userId == profileViewModel.currentUser.userId) {
+                if (userId == userInfoViewModel.currentUser.userId) {
                     UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
@@ -124,13 +124,13 @@ fun UserInfoScreen(
                                 imageVector = Icons.Outlined.SwitchAccount,
                                 contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
-                                onMenuClick = onSettingProfileClick
+                                onMenuClick = onEditProfileClick
                             ),
                             MenuItem(
                                 imageVector = Icons.Outlined.Notifications,
                                 contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
-                                onMenuClick = onSettingNotificationClick
+                                onMenuClick = onEditNotificationClick
                             )
                         )
                     )

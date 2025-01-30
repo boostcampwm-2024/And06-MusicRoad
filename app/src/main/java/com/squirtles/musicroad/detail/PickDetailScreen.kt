@@ -82,7 +82,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun PickDetailScreen(
     pickId: String,
-    onProfileClick: (String) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
     playerServiceViewModel: PlayerServiceViewModel,
@@ -194,7 +194,7 @@ fun PickDetailScreen(
             ) { page ->
                 when (page) {
                     DETAIL_PICK_TAB -> {
-                        DetailPick(
+                        PickDetailContents(
                             pick = pick,
                             isCreatedBySelf = isCreatedBySelf,
                             isFavorite = isFavorite,
@@ -202,7 +202,7 @@ fun PickDetailScreen(
                             userName = pick.createdBy.userName,
                             favoriteCount = favoriteCount,
                             isMusicVideoAvailable = isMusicVideoAvailable,
-                            onProfileClick = onProfileClick,
+                            onUserInfoClick = onUserInfoClick,
                             playerServiceViewModel = playerServiceViewModel,
                             onBackClick = {
                                 onBackClick()
@@ -263,7 +263,7 @@ fun PickDetailScreen(
             }
 
             // Show default pick
-            DetailPick(
+            PickDetailContents(
                 pick = DEFAULT_PICK,
                 isCreatedBySelf = false,
                 isFavorite = false,
@@ -272,7 +272,7 @@ fun PickDetailScreen(
                 favoriteCount = 0,
                 isMusicVideoAvailable = false,
                 playerServiceViewModel = playerServiceViewModel,
-                onProfileClick = onProfileClick,
+                onUserInfoClick = onUserInfoClick,
                 onBackClick = onBackClick,
                 onActionClick = { }
             )
@@ -327,7 +327,7 @@ fun PickDetailScreen(
 }
 
 @Composable
-private fun DetailPick(
+private fun PickDetailContents(
     pick: Pick,
     isCreatedBySelf: Boolean,
     isFavorite: Boolean,
@@ -336,7 +336,7 @@ private fun DetailPick(
     favoriteCount: Int,
     isMusicVideoAvailable: Boolean,
     playerServiceViewModel: PlayerServiceViewModel,
-    onProfileClick: (String) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onActionClick: () -> Unit
 ) {
@@ -375,7 +375,7 @@ private fun DetailPick(
                 userId = userId,
                 userName = userName,
                 onDynamicBackgroundColor = onDynamicBackgroundColor,
-                onProfileClick = onProfileClick,
+                onUserInfoClick = onUserInfoClick,
                 onBackClick = {
                     onBackClick()
                 },
@@ -483,8 +483,8 @@ fun Context.showShortToast(message: String) {
 
 @Preview
 @Composable
-private fun DetailPickPreview() {
-    DetailPick(
+private fun PickDetailPreview() {
+    PickDetailContents(
         pick = DEFAULT_PICK,
         isCreatedBySelf = false,
         isFavorite = false,
@@ -492,7 +492,7 @@ private fun DetailPickPreview() {
         userName = "짱구",
         favoriteCount = 0,
         isMusicVideoAvailable = true,
-        onProfileClick = {},
+        onUserInfoClick = {},
         playerServiceViewModel = hiltViewModel(),
         onBackClick = {},
         onActionClick = {},

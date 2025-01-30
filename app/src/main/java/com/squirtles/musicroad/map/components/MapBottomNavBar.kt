@@ -36,7 +36,7 @@ internal fun MapBottomNavBar(
     lastLocation: Location?,
     onFavoriteClick: () -> Unit,
     onCenterClick: () -> Unit,
-    onProfileClick: () -> Unit,
+    onUserInfoClick: () -> Unit,
 ) {
     Box(
         modifier = modifier,
@@ -66,10 +66,10 @@ internal fun MapBottomNavBar(
                     .weight(1f)
                     .fillMaxHeight()
                     .padding(start = BottomNavigationSize.HORIZONTAL_PADDING.size.dp),
-                tab = NavTab.PROFILE,
+                tab = NavTab.MYPAGE,
                 painter = null,
                 tint = Primary,
-                onClick = onProfileClick
+                onClick = onUserInfoClick
             )
         }
 
@@ -121,7 +121,7 @@ fun BottomNavigationLightPreview() {
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
-            onProfileClick = {}
+            onUserInfoClick = {}
         )
     }
 }
@@ -134,7 +134,7 @@ fun BottomNavigationDarkPreview() {
             onFavoriteClick = {},
             lastLocation = null,
             onCenterClick = {},
-            onProfileClick = {}
+            onUserInfoClick = {}
         )
     }
 }
