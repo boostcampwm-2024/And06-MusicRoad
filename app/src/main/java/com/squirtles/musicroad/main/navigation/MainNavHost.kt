@@ -30,7 +30,7 @@ internal fun MainNavHost(
             onCenterClick = navigator::navigateSearch,
             onUserInfoClick = navigator::navigateUserInfo,
             onPickSummaryClick = navigator::navigatePickDetail,
-            onBackClick = navigator::navigateMap,
+            onBackClick = navigator::popBackStackIfNotMap,
             onDeleted = mapViewModel::resetClickedMarkerState
         )
 
