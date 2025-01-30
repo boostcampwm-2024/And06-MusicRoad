@@ -13,6 +13,7 @@ class FetchUserUseCase @Inject constructor(
         // userId가 있으면 Firestore에서 유저 가져오기
         val user = firebaseRepository.fetchUser(userId)
             .onSuccess { user ->
+                localRepository.saveUserId(user.userId)
                 localRepository.saveCurrentUser(user)
             }
         return user
