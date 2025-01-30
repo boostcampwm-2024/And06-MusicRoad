@@ -14,7 +14,6 @@ import com.squirtles.domain.usecase.mypick.DeletePickUseCase
 import com.squirtles.domain.usecase.pick.FetchIsFavoriteUseCase
 import com.squirtles.domain.usecase.pick.FetchPickUseCase
 import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
-import com.squirtles.musicroad.pick.DETAIL_PICK_TAB
 import com.squirtles.musicroad.utils.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async

@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.pick
+package com.squirtles.musicroad.detail
 
 import android.app.Activity
 import android.content.Context
@@ -59,10 +59,7 @@ import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
-import com.squirtles.musicroad.detail.DetailViewModel
 import com.squirtles.musicroad.detail.DetailViewModel.Companion.DEFAULT_PICK
-import com.squirtles.musicroad.detail.FavoriteAction
-import com.squirtles.musicroad.detail.PickDetailUiState
 import com.squirtles.musicroad.detail.components.CircleAlbumCover
 import com.squirtles.musicroad.detail.components.CommentText
 import com.squirtles.musicroad.detail.components.DetailPickTopAppBar
