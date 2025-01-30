@@ -55,10 +55,13 @@ fun MapScreen(
     val playerState by playerServiceViewModel.playerState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-    var showSignInDialogDescription by remember { mutableStateOf<String?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
     var showLocationLoading by rememberSaveable { mutableStateOf(true) }
     var isPlaying: Boolean by remember { mutableStateOf(false) }
+
+    // Sign In Dialog
+    var showSignInDialog by remember { mutableStateOf(false) }
+    var signInDialogDescription by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         playerServiceViewModel.readyPlayer()
@@ -138,7 +141,8 @@ fun MapScreen(
                         mapViewModel.getUserId()?.let { userId ->
                             onFavoriteClick(userId)
                         } ?: run {
-                            showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
+                            showSignInDialog = true
                         }
                     },
                     onCenterClick = {
@@ -146,7 +150,8 @@ fun MapScreen(
                             onCenterClick()
                             mapViewModel.saveCurLocationForced()
                         } ?: run {
-                            showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
+                            showSignInDialog = true
                         }
                     },
                     onUserInfoClick = {
@@ -197,18 +202,18 @@ fun MapScreen(
         }
     }
 
-    if (showSignInDialogDescription != null) {
+    if (showSignInDialog) {
         SignInAlertDialog(
-            onDismissRequest = { showSignInDialogDescription = null },
+            onDismissRequest = { showSignInDialog = false },
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
                     onSuccess = { credential ->
                         accountViewModel.signIn(credential)
-                        showSignInDialogDescription = null
+                        showSignInDialog = false
                     }
                 )
             },
-            description = showSignInDialogDescription!!
+            description = signInDialogDescription
         )
     }
 }

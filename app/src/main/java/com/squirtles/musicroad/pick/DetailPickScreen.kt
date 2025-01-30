@@ -93,11 +93,13 @@ fun DetailPickScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by pickViewModel.detailPickUiState.collectAsStateWithLifecycle()
-
-    var showSignInDialogDescription by remember { mutableStateOf<String?>(null) }
     var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
     var showProcessIndicator by rememberSaveable { mutableStateOf(false) }
     var isMusicVideoAvailable by remember { mutableStateOf(false) }
+
+    // Sign In Dialog
+    var showSignInDialog by remember { mutableStateOf(false) }
+    var signInDialogDescription by remember { mutableStateOf("") }
 
     BackHandler {
         if (showProcessIndicator.not()) {
@@ -135,7 +137,8 @@ fun DetailPickScreen(
             val onActionClick: () -> Unit = {
                 when {
                     isNonMember -> {
-                        showSignInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite)
+                        signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite)
+                        showSignInDialog = true
                     }
 
                     isCreatedBySelf -> {
@@ -339,18 +342,18 @@ fun DetailPickScreen(
         }
     }
 
-    if (showSignInDialogDescription != null) {
+    if (showSignInDialog) {
         SignInAlertDialog(
-            onDismissRequest = { showSignInDialogDescription = null },
+            onDismissRequest = { showSignInDialog = false },
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
                     onSuccess = { credential ->
                         accountViewModel.signIn(credential)
-                        showSignInDialogDescription = null
+                        showSignInDialog = false
                     }
                 )
             },
-            description = showSignInDialogDescription!!
+            description = signInDialogDescription
         )
     }
 }
