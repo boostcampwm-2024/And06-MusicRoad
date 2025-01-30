@@ -36,8 +36,8 @@ class ProfileViewModel @Inject constructor(
             if (userId == currentUser?.userId) {
                 _profileUser.emit(currentUser ?: DEFAULT_USER)
             } else {
-                val otherProfileUsr = fetchUserByIdUseCase(userId).getOrDefault(DEFAULT_USER)
-                _profileUser.emit(otherProfileUsr)
+                val otherProfileUser = fetchUserByIdUseCase(userId).getOrDefault(DEFAULT_USER)
+                _profileUser.emit(otherProfileUser)
             }
         }
     }

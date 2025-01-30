@@ -19,9 +19,9 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createGoogledIdUser(userId: String, userName: String?, userProfileImage: String?): Result<User> {
+    override suspend fun createGoogleIdUser(userId: String, userName: String?, userProfileImage: String?): Result<User> {
         return handleResult(FirebaseException.CreatedUserFailedException()) {
-            firebaseRemoteDataSource.createGoogledIdUser(userId, userName, userProfileImage)
+            firebaseRemoteDataSource.createGoogleIdUser(userId, userName, userProfileImage)
         }
     }
 

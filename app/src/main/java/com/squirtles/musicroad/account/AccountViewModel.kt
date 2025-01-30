@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.squirtles.domain.usecase.user.CreateGoogledIdUserUseCase
+import com.squirtles.domain.usecase.user.CreateGoogleIdUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
 import com.squirtles.domain.usecase.user.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val fetchUserUseCase: FetchUserUseCase,
-    private val createGoogledIdUserUseCase: CreateGoogledIdUserUseCase,
+    private val createGoogleIdUserUseCase: CreateGoogleIdUserUseCase,
     private val signOutUseCase: SignOutUseCase,
 ) : ViewModel() {
 
@@ -41,7 +41,7 @@ class AccountViewModel @Inject constructor(
 
     private fun createGoogleIdUser(credential: GoogleIdTokenCredential) {
         viewModelScope.launch {
-            createGoogledIdUserUseCase(
+            createGoogleIdUserUseCase(
                 userId = credential.id,
                 userName = credential.displayName,
                 userProfileImage = credential.profilePictureUri.toString()
