@@ -44,18 +44,9 @@ abstract class PickListViewModel(
     }
 
     private fun sortPickList(order: Order) {
-        pickList?.let { pickList ->
-            val sortedList = when (order) {
-                Order.LATEST -> pickList
-
-                Order.OLDEST -> pickList.reversed()
-
-                Order.FAVORITE_DESC ->
-                    pickList.sortedByDescending { it.favoriteCount }
-            }
-
+        pickList?.let {
             _pickListUiState.value = PickListUiState.Success(
-                pickList = sortedList,
+                pickList = it.setOrderedList(order),
                 order = order
             )
         }
@@ -99,6 +90,14 @@ abstract class PickListViewModel(
                 _pickListUiState.value = PickListUiState.Error
                 Log.e("PickListViewModel", "[픽 목록] 다중 삭제 오류")
             }
+        }
+    }
+
+    private fun List<Pick>.setOrderedList(order: Order): List<Pick> {
+        return when (order) {
+            Order.LATEST -> this
+            Order.OLDEST -> this.reversed()
+            Order.FAVORITE_DESC -> this.sortedByDescending { it.favoriteCount }
         }
     }
 }

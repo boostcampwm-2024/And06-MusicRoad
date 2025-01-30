@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.common.picklist
+package com.squirtles.musicroad.common.picklist.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

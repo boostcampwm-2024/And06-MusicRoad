@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.common.picklist
+package com.squirtles.musicroad.common.picklist.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -7,6 +7,7 @@ import com.squirtles.musicroad.R
 import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
+import com.squirtles.musicroad.common.picklist.PickListType
 import com.squirtles.musicroad.ui.theme.Primary
 
 @Composable
