@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.squirtles.musicroad.mypick.MyPickScreen
 import com.squirtles.musicroad.navigation.MainRoute
 import com.squirtles.musicroad.navigation.UserInfoRoute
 import com.squirtles.musicroad.userinfo.screen.EditNotificationSettingScreen
@@ -23,8 +24,13 @@ fun NavController.navigateEditNotificationSetting(navOptions: NavOptions? = null
     navigate(UserInfoRoute.EditNotification, navOptions)
 }
 
+fun NavController.navigateMyPicks(userId: String, navOptions: NavOptions) {
+    navigate(UserInfoRoute.MyPicks(userId), navOptions)
+}
+
 fun NavGraphBuilder.userInfoNavGraph(
     onBackClick: () -> Unit,
+    onItemClick: (String) -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
@@ -54,6 +60,16 @@ fun NavGraphBuilder.userInfoNavGraph(
     composable<UserInfoRoute.EditNotification> {
         EditNotificationSettingScreen(
             onBackClick = onBackClick
+        )
+    }
+
+    composable<UserInfoRoute.MyPicks> { backStackEntry ->
+        val userId = backStackEntry.toRoute<UserInfoRoute.MyPicks>().userId
+
+        MyPickScreen(
+            userId = userId,
+            onBackClick = onBackClick,
+            onItemClick = onItemClick
         )
     }
 }
