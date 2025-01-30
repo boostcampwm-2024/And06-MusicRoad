@@ -19,19 +19,26 @@ fun FavoriteScreen(
     favoriteListViewModel: FavoriteListViewModel = hiltViewModel()
 ) {
     val uiState by favoriteListViewModel.pickListUiState.collectAsStateWithLifecycle()
+    val selectedPicksId by favoriteListViewModel.selectedPicksId.collectAsStateWithLifecycle()
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        favoriteListViewModel.fetchFavoritePicks(userId)
+        favoriteListViewModel.fetchPickList(userId)
     }
 
     PickListContents(
+        userId = userId,
         showOrderBottomSheet = showOrderBottomSheet,
+        selectedPicksId = selectedPicksId,
         pickListType = PickListType.FAVORITE,
         uiState = uiState,
         onBackClick = onBackClick,
         onItemClick = onItemClick,
         setListOrder = favoriteListViewModel::setListOrder,
         setOrderBottomSheetVisibility = { showOrderBottomSheet = it },
+        selectAllPicks = favoriteListViewModel::selectAllPicks,
+        deselectAllPicks = favoriteListViewModel::deselectAllPicks,
+        toggleSelectedPick = favoriteListViewModel::toggleSelectedPick,
+        deleteSelectedPicks = favoriteListViewModel::deleteSelectedPicks
     )
 }
