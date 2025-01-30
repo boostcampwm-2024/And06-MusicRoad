@@ -38,29 +38,6 @@ class FirebaseDataSourceImpl @Inject constructor(
 
     private val cloudFunctionHelper = CloudFunctionHelper()
 
-    override suspend fun createUser(): User? {
-        return suspendCancellableCoroutine { continuation ->
-            val randomNum = (1..100).random()
-            db.collection("users").add(FirebaseUser("유저$randomNum"))
-                .addOnSuccessListener { documentReference ->
-                    documentReference.get()
-                        .addOnSuccessListener { documentSnapshot ->
-                            val savedUser = documentSnapshot.toObject<FirebaseUser>()
-                            continuation.resume(
-                                savedUser?.toUser()?.copy(userId = documentReference.id)
-                            )
-                        }
-                        .addOnFailureListener { exception ->
-                            continuation.resumeWithException(exception)
-                        }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("FirebaseDataSourceImpl", exception.message.toString())
-                    continuation.resumeWithException(exception)
-                }
-        }
-    }
-
     override suspend fun createGoogleIdUser(userId: String, userName: String?, userProfileImage: String?): User? {
         return suspendCancellableCoroutine { continuation ->
             val documentReference = db.collection("users").document(userId)
