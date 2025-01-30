@@ -50,7 +50,7 @@ import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
 
 @Composable
-fun PickListContents(
+fun PickListScreenContents(
     userId: String,
     showOrderBottomSheet: Boolean,
     selectedPicksId: Set<String>,
