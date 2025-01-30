@@ -15,8 +15,8 @@ class MyPickListViewModel @Inject constructor(
     saveMyPickListOrderUseCase: SaveMyPickListOrderUseCase,
     deletePickUseCase: DeletePickUseCase,
 ) : PickListViewModel(
-    fetchMyPicksUseCase,
-    getMyPickListOrderUseCase,
-    saveMyPickListOrderUseCase,
-    deletePickUseCase
+    fetchPickListUseCase = fetchMyPicksUseCase,
+    getPickListOrderUseCase = getMyPickListOrderUseCase,
+    savePickListOrderUseCase = saveMyPickListOrderUseCase,
+    removePickUseCase = deletePickUseCase
 )

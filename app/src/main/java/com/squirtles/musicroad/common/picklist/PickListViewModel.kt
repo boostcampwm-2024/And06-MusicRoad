@@ -19,7 +19,7 @@ abstract class PickListViewModel(
     val fetchPickListUseCase: FetchPickListUseCaseTemplate,
     val getPickListOrderUseCase: GetPickListOrderUseCaseTemplate,
     val savePickListOrderUseCase: SavePickListOrderUseCaseTemplate,
-    val deletePickListUseCase: DeletePickListUseCaseTemplate
+    val removePickUseCase: DeletePickListUseCaseTemplate
 ) : ViewModel() {
 
     private var pickList: List<Pick> = emptyList()
@@ -76,7 +76,7 @@ abstract class PickListViewModel(
             _pickListUiState.value = PickListUiState.Loading
 
             val deleteJobList = _selectedPicksId.value.map { pickId ->
-                async { deletePickListUseCase(pickId, userId) }
+                async { removePickUseCase(pickId, userId) }
             }.awaitAll()
 
             deselectAllPicks()

@@ -15,8 +15,8 @@ class FavoriteListViewModel @Inject constructor(
     saveFavoriteListOrderUseCase: SaveFavoriteListOrderUseCase,
     deleteFavoriteUseCase: DeleteFavoriteUseCase
 ) : PickListViewModel(
-    fetchFavoritePicksUseCase,
-    getFavoriteListOrderUseCase,
-    saveFavoriteListOrderUseCase,
-    deleteFavoriteUseCase
+    fetchPickListUseCase = fetchFavoritePicksUseCase,
+    getPickListOrderUseCase = getFavoriteListOrderUseCase,
+    savePickListOrderUseCase = saveFavoriteListOrderUseCase,
+    removePickUseCase = deleteFavoriteUseCase
 )
