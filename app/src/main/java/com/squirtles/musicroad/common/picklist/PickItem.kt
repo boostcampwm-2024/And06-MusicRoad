@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.picklist
+package com.squirtles.musicroad.common.picklist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -66,7 +66,10 @@ internal fun PickItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AlbumImage(
-            imageUrl = song.getImageUrlWithSize(Constants.REQUEST_IMAGE_SIZE_DEFAULT.width, Constants.REQUEST_IMAGE_SIZE_DEFAULT.height),
+            imageUrl = song.getImageUrlWithSize(
+                Constants.REQUEST_IMAGE_SIZE_DEFAULT.width,
+                Constants.REQUEST_IMAGE_SIZE_DEFAULT.height
+            ),
             modifier = Modifier
                 .size(64.dp)
                 .clip(RoundedCornerShape(8.dp))

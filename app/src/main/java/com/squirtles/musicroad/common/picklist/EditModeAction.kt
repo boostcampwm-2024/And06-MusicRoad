@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.picklist
+package com.squirtles.musicroad.common.picklist
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit

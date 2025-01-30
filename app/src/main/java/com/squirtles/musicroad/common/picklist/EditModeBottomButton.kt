@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.picklist
+package com.squirtles.musicroad.common.picklist
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight

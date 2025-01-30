@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.picklist
+package com.squirtles.musicroad.common.picklist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
