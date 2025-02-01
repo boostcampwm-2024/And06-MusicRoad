@@ -67,7 +67,7 @@ internal fun SettingProfileScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
-    val userName = remember { mutableStateOf(profileViewModel.currentUser.userName) }
+    val userName = remember { mutableStateOf(profileViewModel.currentUser?.userName ?: "") }
     val nickNameErrorMessage = remember { mutableStateOf("") }
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }
 
@@ -101,7 +101,7 @@ internal fun SettingProfileScreen(
         topBar = {
             SettingProfileAppBar(
                 confirmEnabled = nickNameErrorMessage.value.isEmpty() &&
-                        profileViewModel.currentUser.userName != userName.value,
+                        profileViewModel.currentUser?.userName != userName.value,
                 onConfirmClick = {
                     showCreateIndicator = true
                     profileViewModel.updateUsername(userName.value)

@@ -19,7 +19,7 @@ object ProfileDestination {
     const val SETTING_PROFILE_ROUTE = "setting/profile"
     const val SETTING_NOTIFICATION_ROUTE = "setting/notification"
 
-    fun profile(userId: String) = "$PROFILE_ROUTE/$userId"
+    fun profile(userId: String?) = "$PROFILE_ROUTE/$userId"
     fun favoritePicks(userId: String) = "$FAVORITE_PICKS_ROUTE/$userId"
     fun myPicks(userId: String) = "$MY_PICKS_ROUTE/$userId"
 }

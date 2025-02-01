@@ -29,10 +29,8 @@ import com.squirtles.musicroad.main.navigations.MainNavGraph
 import com.squirtles.musicroad.main.navigations.MainNavigationActions
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -93,40 +91,33 @@ class MainActivity : AppCompatActivity() {
     private fun setKeepOnScreenCondition(splashScreen: SplashScreen) {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                try {
-                    withTimeout(30_000L) {
-                        mainViewModel.loadingState.collect { state ->
-                            when (state) {
-                                is LoadingState.Loading -> {
-                                    splashScreen.setKeepOnScreenCondition { true }
-                                }
+                mainViewModel.loadingState.collect { state ->
+                    when (state) {
+                        is LoadingState.Loading -> {
+                            splashScreen.setKeepOnScreenCondition { true }
+                        }
 
-                                is LoadingState.Success -> {
-                                    Log.d("MainActivity", "Success: ${state.userId}")
-                                    splashScreen.setKeepOnScreenCondition { false }
-                                    cancel()
-                                }
+                        is LoadingState.Success -> {
+                            Log.d("MainActivity", "Success: ${state.userId}")
+                            splashScreen.setKeepOnScreenCondition { false }
+                            cancel()
+                        }
 
-                                is LoadingState.NetworkError -> {
-                                    showToast(getString(R.string.main_network_error_message))
-                                    finish()
-                                }
+                        is LoadingState.NetworkError -> {
+                            showToast(getString(R.string.main_network_error_message))
+                            finish()
+                        }
 
-                                is LoadingState.UserNotFoundError -> {
-                                    showToast(getString(R.string.main_user_not_found_message))
-                                    finish()
-                                }
+                        is LoadingState.UserNotFoundError -> {
+                            showToast(getString(R.string.main_user_not_found_message))
+                            finish()
+                        }
 
-                                is LoadingState.CreatedUserError -> {
-                                    showToast(getString(R.string.main_create_user_fail_message))
-                                    finish()
-                                }
-                            }
+                        is LoadingState.CreatedUserError -> {
+                            showToast(getString(R.string.main_create_user_fail_message))
+                            finish()
                         }
                     }
-                } catch (e: TimeoutCancellationException) {
-                    showToast(getString(R.string.main_network_error_message))
-                    finish()
                 }
             }
         }

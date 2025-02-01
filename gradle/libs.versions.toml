@@ -8,6 +8,7 @@ composeBom = "2024.10.01"
 composeMaterial = "1.4.0"
 constraintlayout = "2.2.0"
 coreKtx = "1.13.1"
+credentials = "1.3.0"
 datastorePreferences = "1.1.1"
 espressoCore = "3.6.1"
 firebaseBom = "33.5.1"
@@ -16,6 +17,7 @@ firebaseFirestoreKtx = "25.1.1"
 firebaseFunctionsKtx = "21.1.0"
 firebaseCrashlytics = "3.0.2"
 geofireAndroidCommon = "3.2.0"
+googleid = "1.1.1"
 googleServices = "4.4.2"
 hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
@@ -45,6 +47,8 @@ pagingComposeAndroid = "3.3.4"
 # AndroidX
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-hilt-navigation-fragment = { module = "androidx.hilt:hilt-navigation-fragment", version.ref = "hiltNavigationCompose" }
@@ -70,6 +74,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashscreen" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
+googleid = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "googleid" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinxCoroutinesGuava" }
 

@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat.getString
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -55,9 +56,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.squirtles.domain.model.Pick
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.account.AccountViewModel
+import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
+import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 import com.squirtles.musicroad.pick.PickViewModel.Companion.DEFAULT_PICK
@@ -79,17 +83,23 @@ import kotlin.math.absoluteValue
 @Composable
 fun DetailPickScreen(
     pickId: String,
-    pickViewModel: PickViewModel = hiltViewModel(),
     playerServiceViewModel: PlayerServiceViewModel,
     onProfileClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
+    pickViewModel: PickViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by pickViewModel.detailPickUiState.collectAsStateWithLifecycle()
     var showDeletePickDialog by rememberSaveable { mutableStateOf(false) }
     var showProcessIndicator by rememberSaveable { mutableStateOf(false) }
     var isMusicVideoAvailable by remember { mutableStateOf(false) }
+
+    // Sign In Dialog
+    var showSignInDialog by remember { mutableStateOf(false) }
+    var signInDialogDescription by remember { mutableStateOf("") }
 
     BackHandler {
         if (showProcessIndicator.not()) {
@@ -99,6 +109,11 @@ fun DetailPickScreen(
 
     LaunchedEffect(Unit) {
         pickViewModel.fetchPick(pickId)
+        accountViewModel.signInSuccess
+            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { isSuccess ->
+                if (isSuccess) pickViewModel.fetchPick(pickId)
+            }
     }
 
     when (uiState) {
@@ -114,13 +129,18 @@ fun DetailPickScreen(
         }
 
         is DetailPickUiState.Success -> {
-            val lifecycleOwner = LocalLifecycleOwner.current
             val pick = (uiState as DetailPickUiState.Success).pick
             val isFavorite = (uiState as DetailPickUiState.Success).isFavorite
+            val isNonMember = pickViewModel.getUserId() == null
             val isCreatedBySelf = pickViewModel.getUserId() == pick.createdBy.userId
             var favoriteCount by rememberSaveable { mutableIntStateOf(pick.favoriteCount) }
             val onActionClick: () -> Unit = {
                 when {
+                    isNonMember -> {
+                        signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite)
+                        showSignInDialog = true
+                    }
+
                     isCreatedBySelf -> {
                         playerServiceViewModel.onPause()
                         showDeletePickDialog = true
@@ -193,10 +213,10 @@ fun DetailPickScreen(
                     DETAIL_PICK_TAB -> {
                         DetailPick(
                             pick = pick,
-                            isCreatedBySelf = isCreatedBySelf,
+                            currentUserId = pickViewModel.getUserId(),
                             isFavorite = isFavorite,
-                            userId = pick.createdBy.userId,
-                            userName = pick.createdBy.userName,
+                            pickUserId = pick.createdBy.userId,
+                            pickUserName = pick.createdBy.userName,
                             favoriteCount = favoriteCount,
                             isMusicVideoAvailable = isMusicVideoAvailable,
                             onProfileClick = onProfileClick,
@@ -262,10 +282,10 @@ fun DetailPickScreen(
             // Show default pick
             DetailPick(
                 pick = DEFAULT_PICK,
-                isCreatedBySelf = false,
+                currentUserId = null,
                 isFavorite = false,
-                userId = "",
-                userName = "",
+                pickUserId = "",
+                pickUserName = "",
                 favoriteCount = 0,
                 isMusicVideoAvailable = false,
                 playerServiceViewModel = playerServiceViewModel,
@@ -321,15 +341,30 @@ fun DetailPickScreen(
             CircularProgressIndicator()
         }
     }
+
+    if (showSignInDialog) {
+        SignInAlertDialog(
+            onDismissRequest = { showSignInDialog = false },
+            onGoogleSignInClick = {
+                GoogleId(context).signIn(
+                    onSuccess = { credential ->
+                        accountViewModel.signIn(credential)
+                        showSignInDialog = false
+                    }
+                )
+            },
+            description = signInDialogDescription
+        )
+    }
 }
 
 @Composable
 private fun DetailPick(
     pick: Pick,
-    isCreatedBySelf: Boolean,
     isFavorite: Boolean,
-    userId: String,
-    userName: String,
+    currentUserId: String?,
+    pickUserId: String,
+    pickUserName: String,
     favoriteCount: Int,
     isMusicVideoAvailable: Boolean,
     playerServiceViewModel: PlayerServiceViewModel,
@@ -337,6 +372,7 @@ private fun DetailPick(
     onBackClick: () -> Unit,
     onActionClick: () -> Unit
 ) {
+    val isCreatedBySelf = remember { currentUserId == pickUserId }
     val scrollState = rememberScrollState()
     val dynamicBackgroundColor = Color(pick.song.bgColor)
     val onDynamicBackgroundColor = if (dynamicBackgroundColor.luminance() >= 0.5f) Black else White
@@ -370,14 +406,16 @@ private fun DetailPick(
                 modifier = Modifier.statusBarsPadding(),
                 isCreatedBySelf = isCreatedBySelf,
                 isFavorite = isFavorite,
-                userId = userId,
-                userName = userName,
+                userId = pickUserId,
+                userName = pickUserName,
                 onDynamicBackgroundColor = onDynamicBackgroundColor,
                 onProfileClick = onProfileClick,
                 onBackClick = {
                     onBackClick()
                 },
-                onActionClick = { onActionClick() }
+                onActionClick = {
+                    onActionClick()
+                }
             )
         }
     ) { innerPadding ->
@@ -484,10 +522,10 @@ fun Context.showShortToast(message: String) {
 private fun DetailPickPreview() {
     DetailPick(
         pick = DEFAULT_PICK,
-        isCreatedBySelf = false,
+        currentUserId = null,
         isFavorite = false,
-        userId = "",
-        userName = "짱구",
+        pickUserId = "",
+        pickUserName = "짱구",
         favoriteCount = 0,
         isMusicVideoAvailable = true,
         onProfileClick = {},

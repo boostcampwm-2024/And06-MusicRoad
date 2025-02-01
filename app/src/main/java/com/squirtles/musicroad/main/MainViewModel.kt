@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.exception.FirebaseException
 import com.squirtles.domain.usecase.local.GetUserIdFromLocalStorageUseCase
-import com.squirtles.domain.usecase.user.CreateUserUseCase
 import com.squirtles.domain.usecase.user.FetchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,7 @@ import javax.inject.Inject
 
 sealed class LoadingState {
     data object Loading : LoadingState()
-    data class Success(val userId: String) : LoadingState()
+    data class Success(val userId: String?) : LoadingState()
     data class NetworkError(val error: String) : LoadingState()
     data class CreatedUserError(val error: String) : LoadingState()
     data class UserNotFoundError(val error: String) : LoadingState()
@@ -24,7 +23,6 @@ sealed class LoadingState {
 class MainViewModel @Inject constructor(
     getUserIdFromLocalStorageUseCase: GetUserIdFromLocalStorageUseCase,
     private val fetchUserUseCase: FetchUserUseCase,
-    private val createUserUseCase: CreateUserUseCase
 ) : ViewModel() {
 
     private val _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loading)
@@ -38,8 +36,8 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _localUserId.collect { localUid ->
-                if (localUid == null) {
-                    createUser()
+                if (localUid == null) { // 비회원 상태
+                    _loadingState.emit(LoadingState.Success(null))
                 } else {
                     fetchUser(localUid)
                 }
@@ -49,24 +47,6 @@ class MainViewModel @Inject constructor(
 
     fun setCanRequestPermission(canRequest: Boolean) {
         _canRequestPermission = canRequest
-    }
-
-    private suspend fun createUser() {
-        createUserUseCase()
-            .onSuccess {
-                _loadingState.emit(LoadingState.Success(it.userId))
-            }
-            .onFailure { exception ->
-                when (exception) {
-                    is FirebaseException.CreatedUserFailedException -> {
-                        _loadingState.emit(LoadingState.CreatedUserError(exception.message))
-                    }
-
-                    else -> {
-                        _loadingState.emit(LoadingState.NetworkError(exception.message.toString()))
-                    }
-                }
-            }
     }
 
     private suspend fun fetchUser(userId: String) {
@@ -86,5 +66,4 @@ class MainViewModel @Inject constructor(
                 }
             }
     }
-
 }
