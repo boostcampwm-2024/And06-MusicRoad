@@ -22,12 +22,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class MarkerState(
-    val prevClickedMarker: Marker? = null, // 이전에 클릭한 마커(클러스터 마커 & 단말 마커)
-    val clusterPickList: List<Pick>? = null, // 클러스터 마커의 픽 정보
-    val curPickId: String? = null // 현재 선택한 마커의 pick id
-)
-
 @HiltViewModel
 class MapViewModel @Inject constructor(
     getLastLocationUseCase: GetLastLocationUseCase,
@@ -53,7 +47,6 @@ class MapViewModel @Inject constructor(
 
     // FIXME : 네이버맵의 LocationChangeListener에서 실시간으로 변하는 위치 정보 -> 더 나은 방법이 있으면 고쳐주세요
     private var _currentLocation: Location? = null
-    val curLocation get() = _currentLocation
 
     // LocalDataSource에 저장되는 위치 정보
     // Firestore 데이터 쿼리 작업 최소화 및 위치데이터 공유 용도
@@ -194,3 +187,9 @@ class MapViewModel @Inject constructor(
         private const val MARKER_SCALE = 1.5
     }
 }
+
+data class MarkerState(
+    val prevClickedMarker: Marker? = null, // 이전에 클릭한 마커(클러스터 마커 & 단말 마커)
+    val clusterPickList: List<Pick>? = null, // 클러스터 마커의 픽 정보
+    val curPickId: String? = null // 현재 선택한 마커의 pick id
+)
