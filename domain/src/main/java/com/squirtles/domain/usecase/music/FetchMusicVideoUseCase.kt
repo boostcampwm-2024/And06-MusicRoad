@@ -2,7 +2,7 @@ package com.squirtles.domain.usecase.music
 
 import com.squirtles.domain.model.MusicVideo
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.applemusic.AppleMusicRepository
+import com.squirtles.domain.remote.applemusic.AppleMusicRepository
 import javax.inject.Inject
 
 class FetchMusicVideoUseCase @Inject constructor(

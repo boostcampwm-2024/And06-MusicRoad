@@ -12,7 +12,7 @@ import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
 import com.squirtles.domain.usecase.location.GetLastLocationUseCase
 import com.squirtles.domain.usecase.music.FetchMusicVideoUseCase
-import com.squirtles.domain.usecase.mypick.CreatePickUseCase
+import com.squirtles.domain.usecase.pick.CreatePickUseCase
 import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.musicroad.navigation.SearchRoute
 import com.squirtles.musicroad.utils.throttleFirst

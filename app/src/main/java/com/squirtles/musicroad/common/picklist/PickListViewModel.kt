@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.Pick
-import com.squirtles.domain.usecase.picklist.DeletePickListUseCaseInterface
 import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
 import com.squirtles.domain.usecase.picklist.GetPickListOrderUseCaseInterface
+import com.squirtles.domain.usecase.picklist.RemovePickUseCaseInterface
 import com.squirtles.domain.usecase.picklist.SavePickListOrderUseCaseInterface
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -19,7 +19,7 @@ abstract class PickListViewModel(
     val fetchPickListUseCase: FetchPickListUseCaseInterface,
     val getPickListOrderUseCase: GetPickListOrderUseCaseInterface,
     val savePickListOrderUseCase: SavePickListOrderUseCaseInterface,
-    val removePickUseCase: DeletePickListUseCaseInterface
+    val removePickUseCase: RemovePickUseCaseInterface
 ) : ViewModel() {
 
     private var pickList: List<Pick> = emptyList()

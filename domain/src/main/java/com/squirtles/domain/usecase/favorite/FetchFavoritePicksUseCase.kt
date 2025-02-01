@@ -1,11 +1,11 @@
 package com.squirtles.domain.usecase.favorite
 
-import com.squirtles.domain.firebase.FirebaseRepository
+import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
 import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
 import javax.inject.Inject
 
 class FetchFavoritePicksUseCase @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val favoriteRepository: FirebaseFavoriteRepository
 ) : FetchPickListUseCaseInterface {
-    override suspend operator fun invoke(userId: String) = firebaseRepository.fetchFavoritePicks(userId)
+    override suspend operator fun invoke(userId: String) = favoriteRepository.fetchFavoritePicks(userId)
 }

@@ -10,8 +10,8 @@ import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
 import com.squirtles.domain.usecase.favorite.CreateFavoriteUseCase
 import com.squirtles.domain.usecase.favorite.DeleteFavoriteUseCase
-import com.squirtles.domain.usecase.mypick.DeletePickUseCase
-import com.squirtles.domain.usecase.pick.FetchIsFavoriteUseCase
+import com.squirtles.domain.usecase.favorite.FetchIsFavoriteUseCase
+import com.squirtles.domain.usecase.pick.DeletePickUseCase
 import com.squirtles.domain.usecase.pick.FetchPickUseCase
 import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import com.squirtles.musicroad.utils.throttleFirst

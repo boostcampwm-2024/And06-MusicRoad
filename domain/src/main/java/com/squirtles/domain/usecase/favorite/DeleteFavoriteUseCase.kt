@@ -1,12 +1,12 @@
 package com.squirtles.domain.usecase.favorite
 
-import com.squirtles.domain.firebase.FirebaseRepository
-import com.squirtles.domain.usecase.picklist.DeletePickListUseCaseInterface
+import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
+import com.squirtles.domain.usecase.picklist.RemovePickUseCaseInterface
 import javax.inject.Inject
 
 class DeleteFavoriteUseCase @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
-) : DeletePickListUseCaseInterface {
+    private val favoriteRepository: FirebaseFavoriteRepository
+) : RemovePickUseCaseInterface {
     override suspend operator fun invoke(pickId: String, userId: String) =
-        firebaseRepository.deleteFavorite(pickId, userId)
+        favoriteRepository.deleteFavorite(pickId, userId)
 }

@@ -1,4 +1,4 @@
-package com.squirtles.domain.applemusic
+package com.squirtles.domain.remote.applemusic
 
 import androidx.paging.PagingData
 import com.squirtles.domain.model.MusicVideo

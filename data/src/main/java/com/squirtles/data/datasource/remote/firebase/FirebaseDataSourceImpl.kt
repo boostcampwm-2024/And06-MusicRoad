@@ -18,9 +18,9 @@ import com.squirtles.data.datasource.remote.firebase.model.FirebaseUser
 import com.squirtles.data.mapper.toFirebasePick
 import com.squirtles.data.mapper.toPick
 import com.squirtles.data.mapper.toUser
-import com.squirtles.domain.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.User
+import com.squirtles.domain.remote.firebase.FirebaseRemoteDataSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -7,14 +7,20 @@ import com.squirtles.data.datasource.remote.applemusic.AppleMusicDataSourceImpl
 import com.squirtles.data.datasource.remote.applemusic.api.AppleMusicApi
 import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl
 import com.squirtles.data.repository.AppleMusicRepositoryImpl
+import com.squirtles.data.repository.FirebaseFavoriteRepositoryImpl
+import com.squirtles.data.repository.FirebasePickRepositoryImpl
 import com.squirtles.data.repository.FirebaseRepositoryImpl
+import com.squirtles.data.repository.FirebaseUserRepositoryImpl
 import com.squirtles.data.repository.LocalRepositoryImpl
-import com.squirtles.domain.applemusic.AppleMusicRemoteDataSource
-import com.squirtles.domain.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.local.LocalDataSource
-import com.squirtles.domain.applemusic.AppleMusicRepository
-import com.squirtles.domain.firebase.FirebaseRepository
 import com.squirtles.domain.local.LocalRepository
+import com.squirtles.domain.remote.applemusic.AppleMusicRemoteDataSource
+import com.squirtles.domain.remote.applemusic.AppleMusicRepository
+import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
+import com.squirtles.domain.remote.firebase.FirebasePickRepository
+import com.squirtles.domain.remote.firebase.FirebaseRemoteDataSource
+import com.squirtles.domain.remote.firebase.FirebaseRepository
+import com.squirtles.domain.remote.firebase.FirebaseUserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,6 +46,22 @@ internal object DataModule {
     @Singleton
     fun provideFirebaseRepository(firebaseRemoteDataSource: FirebaseRemoteDataSource): FirebaseRepository =
         FirebaseRepositoryImpl(firebaseRemoteDataSource)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseFavoriteRepository(firebaseRemoteDataSource: FirebaseRemoteDataSource): FirebaseFavoriteRepository =
+        FirebaseFavoriteRepositoryImpl(firebaseRemoteDataSource)
+
+    @Provides
+    @Singleton
+    fun provideFirebaseUserRepository(firebaseRemoteDataSource: FirebaseRemoteDataSource): FirebaseUserRepository =
+        FirebaseUserRepositoryImpl(firebaseRemoteDataSource)
+
+    @Provides
+    @Singleton
+    fun provideFirebasePickRepository(firebaseRemoteDataSource: FirebaseRemoteDataSource): FirebasePickRepository =
+        FirebasePickRepositoryImpl(firebaseRemoteDataSource)
+
 
     @Provides
     @Singleton

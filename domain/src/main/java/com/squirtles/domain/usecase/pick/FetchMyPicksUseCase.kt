@@ -1,12 +1,12 @@
-package com.squirtles.domain.usecase.mypick
+package com.squirtles.domain.usecase.pick
 
-import com.squirtles.domain.firebase.FirebaseRepository
+import com.squirtles.domain.remote.firebase.FirebasePickRepository
 import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
 import javax.inject.Inject
 
 class FetchMyPicksUseCase @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val pickRepository: FirebasePickRepository
 ) : FetchPickListUseCaseInterface {
     override suspend operator fun invoke(userId: String) =
-        firebaseRepository.fetchMyPicks(userId)
+        pickRepository.fetchMyPicks(userId)
 }
