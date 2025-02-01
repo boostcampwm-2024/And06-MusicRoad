@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.firebase.crashlytics)
 }
 
@@ -117,6 +118,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.kotlinx.immutable)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -150,4 +152,7 @@ dependencies {
     // Paging
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose.android)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

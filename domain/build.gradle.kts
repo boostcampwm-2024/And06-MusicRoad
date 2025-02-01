@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -51,4 +52,7 @@ dependencies {
 
     implementation(libs.androidx.media3.common)
     implementation(libs.androidx.media3.session)
+
+    // Serialization
+    implementation(libs.kotlinx.serialization.json)
 }

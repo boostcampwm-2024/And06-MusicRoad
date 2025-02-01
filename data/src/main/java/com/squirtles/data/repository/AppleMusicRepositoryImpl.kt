@@ -1,11 +1,11 @@
 package com.squirtles.data.repository
 
 import androidx.paging.PagingData
-import com.squirtles.domain.datasource.AppleMusicRemoteDataSource
-import com.squirtles.domain.exception.AppleMusicException
+import com.squirtles.domain.applemusic.AppleMusicRemoteDataSource
+import com.squirtles.domain.applemusic.AppleMusicException
 import com.squirtles.domain.model.MusicVideo
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.repository.AppleMusicRepository
+import com.squirtles.domain.applemusic.AppleMusicRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

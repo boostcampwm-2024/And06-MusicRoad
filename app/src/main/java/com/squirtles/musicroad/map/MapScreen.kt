@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.main.MainActivity
-import com.squirtles.musicroad.map.components.BottomNavigation
 import com.squirtles.musicroad.map.components.ClusterBottomSheet
 import com.squirtles.musicroad.map.components.InfoWindow
 import com.squirtles.musicroad.map.components.LoadingDialog
+import com.squirtles.musicroad.map.components.MapBottomNavBar
 import com.squirtles.musicroad.map.components.PickNotificationBanner
 import com.squirtles.musicroad.media.PlayerServiceViewModel
 
@@ -123,7 +123,7 @@ fun MapScreen(
 
                 VerticalSpacer(16)
 
-                BottomNavigation(
+                MapBottomNavBar(
                     modifier = Modifier.padding(bottom = 16.dp),
                     lastLocation = lastLocation,
                     onFavoriteClick = {

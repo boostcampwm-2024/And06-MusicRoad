@@ -72,7 +72,7 @@ class LeafMarkerIconView(
 
     fun setLeafMarkerIcon(pick: Pick, onImageLoaded: () -> Unit) {
         val song = pick.song
-        loadImage(song.getImageUrlWithSize(REQUEST_IMAGE_SIZE_DEFAULT)) {
+        loadImage(song.getImageUrlWithSize(REQUEST_IMAGE_SIZE_DEFAULT.width, REQUEST_IMAGE_SIZE_DEFAULT.height)) {
             onImageLoaded()
         }
     }
