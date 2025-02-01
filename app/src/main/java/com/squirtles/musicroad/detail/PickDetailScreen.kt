@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.pick
+package com.squirtles.musicroad.detail
 
 import android.app.Activity
 import android.content.Context
@@ -59,10 +59,7 @@ import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
-import com.squirtles.musicroad.detail.DetailViewModel
 import com.squirtles.musicroad.detail.DetailViewModel.Companion.DEFAULT_PICK
-import com.squirtles.musicroad.detail.FavoriteAction
-import com.squirtles.musicroad.detail.PickDetailUiState
 import com.squirtles.musicroad.detail.components.CircleAlbumCover
 import com.squirtles.musicroad.detail.components.CommentText
 import com.squirtles.musicroad.detail.components.DetailPickTopAppBar
@@ -82,7 +79,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun PickDetailScreen(
     pickId: String,
-    onProfileClick: (String) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onDeleted: (Context) -> Unit,
     playerServiceViewModel: PlayerServiceViewModel,
@@ -194,7 +191,7 @@ fun PickDetailScreen(
             ) { page ->
                 when (page) {
                     DETAIL_PICK_TAB -> {
-                        DetailPick(
+                        PickDetailContents(
                             pick = pick,
                             isCreatedBySelf = isCreatedBySelf,
                             isFavorite = isFavorite,
@@ -202,7 +199,7 @@ fun PickDetailScreen(
                             userName = pick.createdBy.userName,
                             favoriteCount = favoriteCount,
                             isMusicVideoAvailable = isMusicVideoAvailable,
-                            onProfileClick = onProfileClick,
+                            onUserInfoClick = onUserInfoClick,
                             playerServiceViewModel = playerServiceViewModel,
                             onBackClick = {
                                 onBackClick()
@@ -263,7 +260,7 @@ fun PickDetailScreen(
             }
 
             // Show default pick
-            DetailPick(
+            PickDetailContents(
                 pick = DEFAULT_PICK,
                 isCreatedBySelf = false,
                 isFavorite = false,
@@ -272,7 +269,7 @@ fun PickDetailScreen(
                 favoriteCount = 0,
                 isMusicVideoAvailable = false,
                 playerServiceViewModel = playerServiceViewModel,
-                onProfileClick = onProfileClick,
+                onUserInfoClick = onUserInfoClick,
                 onBackClick = onBackClick,
                 onActionClick = { }
             )
@@ -327,7 +324,7 @@ fun PickDetailScreen(
 }
 
 @Composable
-private fun DetailPick(
+private fun PickDetailContents(
     pick: Pick,
     isCreatedBySelf: Boolean,
     isFavorite: Boolean,
@@ -336,7 +333,7 @@ private fun DetailPick(
     favoriteCount: Int,
     isMusicVideoAvailable: Boolean,
     playerServiceViewModel: PlayerServiceViewModel,
-    onProfileClick: (String) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onBackClick: () -> Unit,
     onActionClick: () -> Unit
 ) {
@@ -375,7 +372,7 @@ private fun DetailPick(
                 userId = userId,
                 userName = userName,
                 onDynamicBackgroundColor = onDynamicBackgroundColor,
-                onProfileClick = onProfileClick,
+                onUserInfoClick = onUserInfoClick,
                 onBackClick = {
                     onBackClick()
                 },
@@ -483,8 +480,8 @@ fun Context.showShortToast(message: String) {
 
 @Preview
 @Composable
-private fun DetailPickPreview() {
-    DetailPick(
+private fun PickDetailPreview() {
+    PickDetailContents(
         pick = DEFAULT_PICK,
         isCreatedBySelf = false,
         isFavorite = false,
@@ -492,7 +489,7 @@ private fun DetailPickPreview() {
         userName = "짱구",
         favoriteCount = 0,
         isMusicVideoAvailable = true,
-        onProfileClick = {},
+        onUserInfoClick = {},
         playerServiceViewModel = hiltViewModel(),
         onBackClick = {},
         onActionClick = {},

@@ -12,13 +12,13 @@ import com.squirtles.domain.model.Song
 import com.squirtles.musicroad.favorite.navigation.navigateFavorite
 import com.squirtles.musicroad.map.navigation.navigateMap
 import com.squirtles.musicroad.map.navigation.navigatePickDetail
-import com.squirtles.musicroad.mypick.navigation.navigateMyPicks
 import com.squirtles.musicroad.navigation.Route
-import com.squirtles.musicroad.profile.navigation.navigateProfile
-import com.squirtles.musicroad.profile.navigation.navigateSettingNotification
-import com.squirtles.musicroad.profile.navigation.navigateSettingProfile
 import com.squirtles.musicroad.search.navigation.navigateCreate
 import com.squirtles.musicroad.search.navigation.navigateSearch
+import com.squirtles.musicroad.userinfo.navigation.navigateEditNotificationSetting
+import com.squirtles.musicroad.userinfo.navigation.navigateEditProfile
+import com.squirtles.musicroad.userinfo.navigation.navigateMyPicks
+import com.squirtles.musicroad.userinfo.navigation.navigateUserInfo
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -49,10 +49,15 @@ internal class MainNavigator(
         )
     }
 
-    fun navigatePickDetail(pickId: String) {
+    fun navigatePickDetail(pickId: String, navigateToMap: Boolean = false) {
         navController.navigatePickDetail(
             pickId = pickId,
             navOptions = navOptions {
+                if (navigateToMap) {
+                    popUpTo(startDestination) {
+                        inclusive = false
+                    }
+                }
                 launchSingleTop = true
             }
         )
@@ -65,21 +70,21 @@ internal class MainNavigator(
         )
     }
 
-    fun navigateProfile(userId: String) {
-        navController.navigateProfile(
+    fun navigateUserInfo(userId: String) {
+        navController.navigateUserInfo(
             userId = userId,
             navOptions = navOptions { launchSingleTop = true }
         )
     }
 
-    fun navigateSettingProfile(){
-        navController.navigateSettingProfile(
+    fun navigateEditProfile() {
+        navController.navigateEditProfile(
             navOptions = navOptions { launchSingleTop = true }
         )
     }
 
-    fun navigateSettingNotification(){
-        navController.navigateSettingNotification(
+    fun navigateEditNotificationSetting() {
+        navController.navigateEditNotificationSetting(
             navOptions = navOptions { launchSingleTop = true }
         )
     }

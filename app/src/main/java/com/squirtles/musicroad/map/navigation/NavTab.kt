@@ -20,7 +20,7 @@ internal enum class NavTab(
         iconSize = null,
     ),
 
-    PROFILE(
+    MYPAGE(
         contentDescription = R.string.map_navigation_setting_icon_description,
         icon = Icons.Outlined.AccountCircle,
         iconSize = null,

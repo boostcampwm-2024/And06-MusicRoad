@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.picklist
+package com.squirtles.musicroad.common.picklist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,8 +32,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.CircularProgressIndicator
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.Pick
@@ -44,41 +41,44 @@ import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
 import com.squirtles.musicroad.common.CountText
 import com.squirtles.musicroad.common.DefaultTopAppBar
 import com.squirtles.musicroad.common.VerticalSpacer
+import com.squirtles.musicroad.common.picklist.components.DeleteSelectedPickDialog
+import com.squirtles.musicroad.common.picklist.components.EditModeAction
+import com.squirtles.musicroad.common.picklist.components.EditModeBottomButton
+import com.squirtles.musicroad.common.picklist.components.OrderBottomSheet
+import com.squirtles.musicroad.common.picklist.components.PickItem
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
 
 @Composable
-fun PickListScreen(
+fun PickListScreenContents(
     userId: String,
+    showOrderBottomSheet: Boolean,
+    selectedPicksId: Set<String>,
     pickListType: PickListType,
+    uiState: PickListUiState,
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
-    pickListViewModel: PickListViewModel = hiltViewModel()
+    setListOrder: (Order) -> Unit,
+    setOrderBottomSheetVisibility: (Boolean) -> Unit,
+    selectAllPicks: () -> Unit,
+    deselectAllPicks: () -> Unit,
+    toggleSelectedPick: (String) -> Unit,
+    deleteSelectedPicks: (String) -> Unit
 ) {
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val uiState by pickListViewModel.pickListUiState.collectAsStateWithLifecycle()
-    val selectedPicksId by pickListViewModel.selectedPicksId.collectAsStateWithLifecycle()
 
     var isEditMode by rememberSaveable { mutableStateOf(false) }
-    var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
     var isDeletePickDialogVisible by rememberSaveable { mutableStateOf(false) }
 
     val deactivateEditMode = remember {
         {
             isEditMode = false
-            pickListViewModel.deselectAllPicks()
+            deselectAllPicks()
         }
     }
     val showDeletePickDialog = remember {
         {
             isDeletePickDialogVisible = true
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        when (pickListType) {
-            PickListType.FAVORITE -> pickListViewModel.fetchFavoritePicks(userId)
-            PickListType.CREATED -> pickListViewModel.fetchMyPicks(userId)
         }
     }
 
@@ -98,8 +98,8 @@ fun PickListScreen(
                         enabled = uiState is PickListUiState.Success,
                         isSelectedEmpty = selectedPicksId.isEmpty(),
                         activateEditMode = { isEditMode = true },
-                        selectAllPicks = { pickListViewModel.selectAllPicks() },
-                        deselectAllPicks = { pickListViewModel.deselectAllPicks() },
+                        selectAllPicks = { selectAllPicks() },
+                        deselectAllPicks = { deselectAllPicks() },
                     )
                 }
             )
@@ -123,8 +123,8 @@ fun PickListScreen(
                 }
 
                 is PickListUiState.Success -> {
-                    val pickList = (uiState as PickListUiState.Success).pickList
-                    val order = (uiState as PickListUiState.Success).order
+                    val pickList = uiState.pickList
+                    val order = uiState.order
 
                     Column(
                         modifier = Modifier.fillMaxSize()
@@ -138,9 +138,11 @@ fun PickListScreen(
                             pickList = pickList,
                             selectedPicksId = selectedPicksId,
                             order = order,
-                            onOrderClick = { showOrderBottomSheet = true },
+                            onOrderClick = {
+                                setOrderBottomSheetVisibility(true)
+                            },
                             onItemClick = onItemClick,
-                            onEditModeItemClick = { pickListViewModel.toggleSelectedPick(it) },
+                            onEditModeItemClick = toggleSelectedPick,
                         )
 
                         if (isEditMode) {
@@ -170,10 +172,8 @@ fun PickListScreen(
         OrderBottomSheet(
             isFavoritePicks = pickListType == PickListType.FAVORITE,
             currentOrder = (uiState as PickListUiState.Success).order,
-            onDismissRequest = { showOrderBottomSheet = false },
-            onOrderClick = { order ->
-                pickListViewModel.setListOrder(pickListType, order)
-            },
+            onDismissRequest = { setOrderBottomSheetVisibility(false) },
+            onOrderClick = setListOrder,
         )
     }
 
@@ -185,7 +185,7 @@ fun PickListScreen(
             onDeletePickClick = {
                 isEditMode = false
                 isDeletePickDialogVisible = false
-                pickListViewModel.deleteSelectedPicks(pickListType)
+                deleteSelectedPicks(userId)
             },
         )
     }

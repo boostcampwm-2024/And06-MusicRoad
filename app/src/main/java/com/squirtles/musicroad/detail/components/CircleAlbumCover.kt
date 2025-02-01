@@ -1,6 +1,5 @@
 package com.squirtles.musicroad.detail.components
 
-import android.util.Size
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize

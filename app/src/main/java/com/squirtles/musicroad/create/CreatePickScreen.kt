@@ -72,7 +72,7 @@ fun CreatePickScreen(
     onCreateClick: (String) -> Unit,
     createPickViewModel: CreatePickViewModel = hiltViewModel(),
 ) {
-//    val song = createPickViewModel.selectedSong ?: DEFAULT_SONG
+
     val comment = createPickViewModel.comment.collectAsStateWithLifecycle()
     val uiState by createPickViewModel.createPickUiState.collectAsStateWithLifecycle()
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }

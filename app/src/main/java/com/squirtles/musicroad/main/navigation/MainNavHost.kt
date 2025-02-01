@@ -8,9 +8,8 @@ import com.squirtles.musicroad.favorite.navigation.favoriteNavGraph
 import com.squirtles.musicroad.map.MapViewModel
 import com.squirtles.musicroad.map.navigation.mapNavGraph
 import com.squirtles.musicroad.media.PlayerServiceViewModel
-import com.squirtles.musicroad.mypick.navigation.myPickNavGraph
-import com.squirtles.musicroad.profile.navigation.profileNavGraph
 import com.squirtles.musicroad.search.navigation.searchNavGraph
+import com.squirtles.musicroad.userinfo.navigation.userInfoNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -28,35 +27,33 @@ internal fun MainNavHost(
             playerServiceViewModel = playerServiceViewModel,
             onFavoriteClick = navigator::navigateFavorite,
             onCenterClick = navigator::navigateSearch,
-            onProfileClick = navigator::navigateProfile,
+            onUserInfoClick = navigator::navigateUserInfo,
             onPickSummaryClick = navigator::navigatePickDetail,
-            onBackClick = navigator::navigateMap,
+            onBackClick = navigator::popBackStackIfNotMap,
             onDeleted = mapViewModel::resetClickedMarkerState
         )
 
         searchNavGraph(
             onBackClick = navigator::popBackStackIfNotMap,
             onItemClick = navigator::navigateCreate,
-            onCreateClick = navigator::navigatePickDetail,
+            onCreateClick = { pickId ->
+                navigator.navigatePickDetail(pickId, true)
+            },
         )
 
         favoriteNavGraph(
             onBackClick = navigator::popBackStackIfNotMap,
             onItemClick = navigator::navigatePickDetail
         )
-        
-        profileNavGraph(
+
+        userInfoNavGraph(
             onBackClick = navigator::popBackStackIfNotMap,
+            onItemClick = navigator::navigatePickDetail,
             onBackToMapClick = navigator::navigateMap,
             onFavoritePicksClick = navigator::navigateFavorite,
             onMyPicksClick = navigator::navigateMyPicks,
-            onSettingProfileClick = navigator::navigateSettingProfile,
-            onSettingNotificationClick = navigator::navigateSettingNotification,
-        )
-
-        myPickNavGraph(
-            onBackClick = navigator::popBackStackIfNotMap,
-            onItemClick = navigator::navigatePickDetail
+            onEditProfileClick = navigator::navigateEditProfile,
+            onEditNotificationClick = navigator::navigateEditNotificationSetting,
         )
     }
 }

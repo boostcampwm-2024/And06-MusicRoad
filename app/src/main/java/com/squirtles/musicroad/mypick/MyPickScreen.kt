@@ -8,7 +8,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.squirtles.musicroad.common.picklist.PickListContents
+import com.squirtles.musicroad.common.picklist.PickListScreenContents
 import com.squirtles.musicroad.common.picklist.PickListType
 
 @Composable
@@ -19,19 +19,26 @@ fun MyPickScreen(
     myPickListViewModel: MyPickListViewModel = hiltViewModel()
 ) {
     val uiState by myPickListViewModel.pickListUiState.collectAsStateWithLifecycle()
+    val selectedPicksId by myPickListViewModel.selectedPicksId.collectAsStateWithLifecycle()
     var showOrderBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        myPickListViewModel.fetchMyPicks(userId)
+        myPickListViewModel.fetchPickList(userId)
     }
 
-    PickListContents(
+    PickListScreenContents(
+        userId = userId,
         showOrderBottomSheet = showOrderBottomSheet,
-        pickListType = PickListType.FAVORITE,
+        selectedPicksId = selectedPicksId,
+        pickListType = PickListType.CREATED,
         uiState = uiState,
         onBackClick = onBackClick,
         onItemClick = onItemClick,
         setListOrder = myPickListViewModel::setListOrder,
         setOrderBottomSheetVisibility = { showOrderBottomSheet = it },
+        selectAllPicks = myPickListViewModel::selectAllPicks,
+        deselectAllPicks = myPickListViewModel::deselectAllPicks,
+        toggleSelectedPick = myPickListViewModel::toggleSelectedPick,
+        deleteSelectedPicks = myPickListViewModel::deleteSelectedPicks
     )
 }

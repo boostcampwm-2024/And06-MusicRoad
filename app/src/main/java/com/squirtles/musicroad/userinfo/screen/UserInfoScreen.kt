@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.profile.screen
+package com.squirtles.musicroad.userinfo.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,28 +40,28 @@ import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.VerticalSpacer
-import com.squirtles.musicroad.profile.ProfileViewModel
-import com.squirtles.musicroad.profile.components.MenuItem
-import com.squirtles.musicroad.profile.components.ProfileMenus
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
+import com.squirtles.musicroad.userinfo.UserInfoViewModel
+import com.squirtles.musicroad.userinfo.components.MenuItem
+import com.squirtles.musicroad.userinfo.components.UserInfoMenus
 
 @Composable
-fun ProfileScreen(
+fun UserInfoScreen(
     userId: String,
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
-    onSettingProfileClick: () -> Unit,
-    onSettingNotificationClick: () -> Unit,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    onEditProfileClick: () -> Unit,
+    onEditNotificationClick: () -> Unit,
+    userInfoViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val user by profileViewModel.profileUser.collectAsStateWithLifecycle()
+    val user by userInfoViewModel.profileUser.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        profileViewModel.getUserById(userId)
+        userInfoViewModel.getUserById(userId)
     }
 
     Scaffold(
@@ -98,7 +98,7 @@ fun ProfileScreen(
 
                 VerticalSpacer(40)
 
-                ProfileMenus(
+                UserInfoMenus(
                     title = stringResource(R.string.user_info_pick_category_title),
                     menus = listOf(
                         MenuItem(
@@ -116,21 +116,21 @@ fun ProfileScreen(
                     )
                 )
 
-                if (userId == profileViewModel.currentUser.userId) {
-                    ProfileMenus(
+                if (userId == userInfoViewModel.currentUser.userId) {
+                    UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
                             MenuItem(
                                 imageVector = Icons.Outlined.SwitchAccount,
                                 contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
-                                onMenuClick = onSettingProfileClick
+                                onMenuClick = onEditProfileClick
                             ),
                             MenuItem(
                                 imageVector = Icons.Outlined.Notifications,
                                 contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
-                                onMenuClick = onSettingNotificationClick
+                                onMenuClick = onEditNotificationClick
                             )
                         )
                     )
