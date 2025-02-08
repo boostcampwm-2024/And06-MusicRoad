@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = getUserIdFromDataStoreUseCase()
             if (userId == null) {
-                createUser()
+                _loadingState.emit(LoadingState.Success(null))
             } else {
                 fetchUser(userId)
             }
@@ -75,5 +75,4 @@ class MainViewModel @Inject constructor(
                 }
             }
     }
-
 }

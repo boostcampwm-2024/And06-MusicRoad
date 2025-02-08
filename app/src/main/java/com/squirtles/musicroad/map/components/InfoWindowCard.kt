@@ -40,7 +40,7 @@ import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 @Composable
 fun InfoWindow(
     pick: Pick,
-    userId: String,
+    userId: String?,
     navigateToPick: (String) -> Unit,
     calculateDistance: (Double, Double) -> String
 ) {

@@ -22,7 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.squirtles.musicroad.R
+import com.squirtles.musicroad.account.AccountViewModel
+import com.squirtles.musicroad.account.GoogleId
+import com.squirtles.musicroad.common.SignInAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.main.MainActivity
 import com.squirtles.musicroad.map.components.ClusterBottomSheet
@@ -38,8 +44,9 @@ fun MapScreen(
     playerServiceViewModel: PlayerServiceViewModel,
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
-    onUserInfoClick: (String) -> Unit,
+    onUserInfoClick: (String?) -> Unit,
     onPickSummaryClick: (String) -> Unit,
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     val nearPicks by mapViewModel.nearPicks.collectAsStateWithLifecycle()
     val lastLocation by mapViewModel.lastLocation.collectAsStateWithLifecycle()
@@ -51,6 +58,10 @@ fun MapScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     var showLocationLoading by rememberSaveable { mutableStateOf(true) }
     var isPlaying: Boolean by remember { mutableStateOf(false) }
+
+    // Sign In Dialog
+    var showSignInDialog by remember { mutableStateOf(false) }
+    var signInDialogDescription by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         playerServiceViewModel.readyPlayer()
@@ -127,11 +138,21 @@ fun MapScreen(
                     modifier = Modifier.padding(bottom = 16.dp),
                     lastLocation = lastLocation,
                     onFavoriteClick = {
-                        onFavoriteClick(mapViewModel.getUserId())
+                        mapViewModel.getUserId()?.let { userId ->
+                            onFavoriteClick(userId)
+                        } ?: run {
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
+                            showSignInDialog = true
+                        }
                     },
                     onCenterClick = {
-                        onCenterClick()
-                        mapViewModel.saveCurLocationForced()
+                        mapViewModel.getUserId()?.let {
+                            onCenterClick()
+                            mapViewModel.saveCurLocationForced()
+                        } ?: run {
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
+                            showSignInDialog = true
+                        }
                     },
                     onUserInfoClick = {
                         onUserInfoClick(mapViewModel.getUserId())
@@ -179,5 +200,20 @@ fun MapScreen(
                 }
             }
         }
+    }
+
+    if (showSignInDialog) {
+        SignInAlertDialog(
+            onDismissRequest = { showSignInDialog = false },
+            onGoogleSignInClick = {
+                GoogleId(context).signIn(
+                    onSuccess = { credential ->
+                        accountViewModel.signIn(credential)
+                        showSignInDialog = false
+                    }
+                )
+            },
+            description = signInDialogDescription
+        )
     }
 }

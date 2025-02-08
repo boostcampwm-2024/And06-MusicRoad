@@ -33,25 +33,27 @@ class UserInfoViewModel @Inject constructor(
 
     fun getUserById(userId: String) {
         viewModelScope.launch {
-            if (userId == currentUser.userId) {
-                _profileUser.emit(currentUser)
+            if (userId == currentUser?.userId) {
+                _profileUser.emit(currentUser ?: DEFAULT_USER)
             } else {
-                val otherProfileUsr = fetchUserByIdUseCase(userId).getOrDefault(DEFAULT_USER)
-                _profileUser.emit(otherProfileUsr)
+                val otherProfileUser = fetchUserByIdUseCase(userId).getOrDefault(DEFAULT_USER)
+                _profileUser.emit(otherProfileUser)
             }
         }
     }
 
     fun updateUsername(newUserName: String) {
         viewModelScope.launch {
-            val result = runCatching {
-                updateUserNameUseCase(currentUser.userId, newUserName).getOrThrow()
-                fetchUserUseCase(currentUser.userId).getOrThrow()
+            currentUser?.let { user ->
+                val result = runCatching {
+                    updateUserNameUseCase(user.userId, newUserName).getOrThrow()
+                    fetchUserUseCase(user.userId).getOrThrow()
+                }
+                _updateSuccess.emit(result.isSuccess)
             }
-            _updateSuccess.emit(result.isSuccess)
         }
     }
 }
 
-val DEFAULT_USER = User("", "", listOf())
+val DEFAULT_USER = User("", "", null, listOf())
 

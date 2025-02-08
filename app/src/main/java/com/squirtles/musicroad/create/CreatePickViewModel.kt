@@ -71,6 +71,10 @@ class CreatePickViewModel @Inject constructor(
         _comment.value = ""
     }
 
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
     fun onCreatePickClick() {
         viewModelScope.launch {
             createPickClick.emit(Unit)

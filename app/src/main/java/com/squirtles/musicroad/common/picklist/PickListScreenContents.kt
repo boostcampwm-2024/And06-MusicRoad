@@ -1,4 +1,4 @@
-package com.squirtles.musicroad.common.picklist
+package com.squirtles.musicroad.picklist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -41,6 +41,8 @@ import com.squirtles.musicroad.common.Constants.DEFAULT_PADDING
 import com.squirtles.musicroad.common.CountText
 import com.squirtles.musicroad.common.DefaultTopAppBar
 import com.squirtles.musicroad.common.VerticalSpacer
+import com.squirtles.musicroad.common.picklist.PickListType
+import com.squirtles.musicroad.common.picklist.PickListUiState
 import com.squirtles.musicroad.common.picklist.components.DeleteSelectedPickDialog
 import com.squirtles.musicroad.common.picklist.components.EditModeAction
 import com.squirtles.musicroad.common.picklist.components.EditModeBottomButton
@@ -56,6 +58,7 @@ fun PickListScreenContents(
     selectedPicksId: Set<String>,
     pickListType: PickListType,
     uiState: PickListUiState,
+    getUserId: () -> String,
     onBackClick: () -> Unit,
     onItemClick: (String) -> Unit,
     setListOrder: (Order) -> Unit,
@@ -93,14 +96,16 @@ fun PickListScreenContents(
                 ),
                 onBackClick = onBackClick,
                 actions = {
-                    EditModeAction(
-                        isEditMode = isEditMode,
-                        enabled = uiState is PickListUiState.Success,
-                        isSelectedEmpty = selectedPicksId.isEmpty(),
-                        activateEditMode = { isEditMode = true },
-                        selectAllPicks = { selectAllPicks() },
-                        deselectAllPicks = { deselectAllPicks() },
-                    )
+                    if(getUserId() == userId){
+                        EditModeAction(
+                            isEditMode = isEditMode,
+                            enabled = uiState is PickListUiState.Success,
+                            isSelectedEmpty = selectedPicksId.isEmpty(),
+                            activateEditMode = { isEditMode = true },
+                            selectAllPicks = { selectAllPicks() },
+                            deselectAllPicks = { deselectAllPicks() },
+                        )
+                    }
                 }
             )
         },

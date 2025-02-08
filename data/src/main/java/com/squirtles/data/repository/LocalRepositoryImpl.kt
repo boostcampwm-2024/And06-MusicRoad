@@ -29,6 +29,15 @@ class LocalRepositoryImpl @Inject constructor(
         localDataSource.saveCurrentUser(user)
     }
 
+    override suspend fun clearUser(): Result<Unit> {
+        return try {
+            localDataSource.clearUser()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun saveCurrentLocation(location: Location) {
         localDataSource.saveCurrentLocation(location)
     }

@@ -4,7 +4,8 @@ import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.User
 
 interface FirebaseRemoteDataSource {
-    suspend fun createUser(): User?
+    suspend fun createGoogleIdUser(userId: String, userName: String?, userProfileImage: String?): User?
+
     suspend fun fetchUser(userId: String): User?
     suspend fun updateUserName(userId: String, newUserName: String): Boolean
 
