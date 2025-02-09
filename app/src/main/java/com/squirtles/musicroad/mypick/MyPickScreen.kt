@@ -8,8 +8,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.squirtles.musicroad.common.picklist.PickListScreenContents
 import com.squirtles.musicroad.common.picklist.PickListType
+import com.squirtles.musicroad.picklist.PickListScreenContents
 
 @Composable
 fun MyPickScreen(
@@ -39,6 +39,7 @@ fun MyPickScreen(
         selectAllPicks = myPickListViewModel::selectAllPicks,
         deselectAllPicks = myPickListViewModel::deselectAllPicks,
         toggleSelectedPick = myPickListViewModel::toggleSelectedPick,
-        deleteSelectedPicks = myPickListViewModel::deleteSelectedPicks
+        deleteSelectedPicks = myPickListViewModel::deleteSelectedPicks,
+        getUserId = { myPickListViewModel.getUserId().toString() },
     )
 }

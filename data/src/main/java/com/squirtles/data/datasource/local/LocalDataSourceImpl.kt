@@ -40,7 +40,7 @@ class LocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun writeUserIdDataStore(userId: String) {
+    override suspend fun saveUserIdDataStore(userId: String) {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         context.dataStore.edit { preferences ->
             preferences[dataStoreKey] = userId

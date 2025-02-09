@@ -1,6 +1,6 @@
 package com.squirtles.domain.usecase.user
 
-import com.squirtles.domain.repository.LocalRepository
+import com.squirtles.domain.local.LocalRepository
 import javax.inject.Inject
 
 class ClearUserUseCase @Inject constructor(

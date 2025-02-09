@@ -13,7 +13,7 @@ interface LocalDataSource {
     val myListOrder: Order
 
     fun readUserIdDataStore(): Flow<String?>
-    suspend fun writeUserIdDataStore(userId: String)
+    suspend fun saveUserIdDataStore(userId: String)
     suspend fun saveCurrentUser(user: User)
     suspend fun clearUser()
     suspend fun saveCurrentLocation(location: Location)

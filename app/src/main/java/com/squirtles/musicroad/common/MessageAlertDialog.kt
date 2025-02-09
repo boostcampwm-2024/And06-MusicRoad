@@ -31,9 +31,10 @@ import com.squirtles.musicroad.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MessageAlertDialog(
-    onDismissRequest: () -> Unit,
     title: String,
     body: String,
+    onDismissRequest: () -> Unit,
+    showBody: Boolean = true,
     buttons: @Composable RowScope.() -> Unit,
 ) {
     BasicAlertDialog(
@@ -55,13 +56,15 @@ internal fun MessageAlertDialog(
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                VerticalSpacer(8)
+                if (showBody) {
+                    VerticalSpacer(8)
 
-                Text(
-                    text = body,
-                    color = Black,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                    Text(
+                        text = body,
+                        color = Black,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
 
                 VerticalSpacer(24)
 
