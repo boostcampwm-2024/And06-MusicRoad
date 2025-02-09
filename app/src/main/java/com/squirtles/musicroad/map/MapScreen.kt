@@ -44,7 +44,7 @@ fun MapScreen(
     playerServiceViewModel: PlayerServiceViewModel,
     onFavoriteClick: (String) -> Unit,
     onCenterClick: () -> Unit,
-    onUserInfoClick: (String?) -> Unit,
+    onUserInfoClick: (String) -> Unit,
     onPickSummaryClick: (String) -> Unit,
     accountViewModel: AccountViewModel = hiltViewModel()
 ) {
@@ -141,7 +141,7 @@ fun MapScreen(
                         mapViewModel.getUserId()?.let { userId ->
                             onFavoriteClick(userId)
                         } ?: run {
-                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog)
                             showSignInDialog = true
                         }
                     },
@@ -150,12 +150,17 @@ fun MapScreen(
                             onCenterClick()
                             mapViewModel.saveCurLocationForced()
                         } ?: run {
-                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog)
                             showSignInDialog = true
                         }
                     },
                     onUserInfoClick = {
-                        onUserInfoClick(mapViewModel.getUserId())
+                        mapViewModel.getUserId()?.let {
+                            onUserInfoClick(it)
+                        } ?: run {
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog)
+                            showSignInDialog = true
+                        }
                     }
                 )
             }

@@ -26,19 +26,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -50,8 +52,10 @@ import com.squirtles.musicroad.account.AccountViewModel
 import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
+import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.GoogleSignInButton
 import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
@@ -75,6 +79,8 @@ fun UserInfoScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val scrollState = rememberScrollState()
     val user by userInfoViewModel.profileUser.collectAsStateWithLifecycle()
+
+    var showLogOutDialog by remember { mutableStateOf(false) }
 
     val onSignOutClick: () -> Unit = {
         GoogleId(context).signOut()
@@ -188,7 +194,7 @@ fun UserInfoScreen(
                                     imageVector = Icons.AutoMirrored.Outlined.Logout,
                                     contentDescription = stringResource(R.string.user_info_setting_sign_out_menu_icon_description),
                                     menuTitle = stringResource(R.string.user_info_setting_sign_out_menu_title),
-                                    onMenuClick = onSignOutClick
+                                    onMenuClick = { showLogOutDialog = true }
                                 )
                             )
                         )
@@ -219,6 +225,36 @@ fun UserInfoScreen(
                         color = White,
                         style = MaterialTheme.typography.bodyLarge
                     )
+                }
+
+                if (showLogOutDialog) {
+                    MessageAlertDialog(
+                        onDismissRequest = {
+                            showLogOutDialog = false
+                        },
+                        title = stringResource(R.string.sign_out_dialog_title),
+                        body = "",
+                        showBody = false
+                    ) {
+                        DialogTextButton(
+                            onClick = {
+                                showLogOutDialog = false
+                            },
+                            text = stringResource(R.string.sign_out_dialog_dismiss)
+                        )
+
+                        HorizontalSpacer(8)
+
+                        DialogTextButton(
+                            onClick = {
+                                showLogOutDialog = false
+                                onSignOutClick()
+                            },
+                            text = stringResource(R.string.sign_out_dialog_confirm),
+                            textColor = Primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
