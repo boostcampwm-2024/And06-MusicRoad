@@ -9,6 +9,7 @@ import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
 import com.squirtles.domain.usecase.picklist.GetPickListOrderUseCaseInterface
 import com.squirtles.domain.usecase.picklist.RemovePickUseCaseInterface
 import com.squirtles.domain.usecase.picklist.SavePickListOrderUseCaseInterface
+import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ abstract class PickListViewModel(
     val fetchPickListUseCase: FetchPickListUseCaseInterface,
     val getPickListOrderUseCase: GetPickListOrderUseCaseInterface,
     val savePickListOrderUseCase: SavePickListOrderUseCaseInterface,
-    val removePickUseCase: RemovePickUseCaseInterface
+    val removePickUseCase: RemovePickUseCaseInterface,
+    val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private var pickList: List<Pick> = emptyList()
@@ -98,4 +100,6 @@ abstract class PickListViewModel(
             Order.FAVORITE_DESC -> this.sortedByDescending { it.favoriteCount }
         }
     }
+
+    fun getUserId() = getCurrentUserUseCase()?.userId
 }

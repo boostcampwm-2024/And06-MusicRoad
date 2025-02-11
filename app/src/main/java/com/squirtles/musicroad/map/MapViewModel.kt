@@ -52,7 +52,7 @@ class MapViewModel @Inject constructor(
     // Firestore 데이터 쿼리 작업 최소화 및 위치데이터 공유 용도
     val lastLocation: StateFlow<Location?> = getLastLocationUseCase()
 
-    fun getUserId() = getCurrentUserUseCase().userId
+    fun getUserId() = getCurrentUserUseCase()?.userId
 
     fun setLastCameraPosition(cameraPosition: CameraPosition) {
         _lastCameraPosition = cameraPosition

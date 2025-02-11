@@ -15,18 +15,26 @@ class LocalRepositoryImpl @Inject constructor(
     override val lastLocation get() = localDataSource.lastLocation
     override val favoriteListOrder get() = localDataSource.favoriteListOrder
     override val myListOrder get() = localDataSource.myListOrder
-    override var userIdFromDataStore: String? = null
 
     override fun readUserIdDataStore(): Flow<String?> {
         return localDataSource.readUserIdDataStore()
     }
 
-    override suspend fun writeUserIdDataStore(userId: String) {
-        localDataSource.writeUserIdDataStore(userId)
+    override suspend fun saveUserIdDataStore(userId: String) {
+        localDataSource.saveUserIdDataStore(userId)
     }
 
     override suspend fun saveCurrentUser(user: User) {
         localDataSource.saveCurrentUser(user)
+    }
+
+    override suspend fun clearUser(): Result<Unit> {
+        return try {
+            localDataSource.clearUser()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun saveCurrentLocation(location: Location) {

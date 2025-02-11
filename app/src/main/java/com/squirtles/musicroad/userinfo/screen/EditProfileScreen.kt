@@ -67,7 +67,7 @@ internal fun EditProfileScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
-    val userName = remember { mutableStateOf(userInfoViewModel.currentUser.userName) }
+    val userName = remember { mutableStateOf(userInfoViewModel.currentUser?.userName ?: "") }
     val nickNameErrorMessage = remember { mutableStateOf("") }
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }
 
@@ -101,7 +101,7 @@ internal fun EditProfileScreen(
         topBar = {
             EditProfileAppBar(
                 confirmEnabled = nickNameErrorMessage.value.isEmpty() &&
-                        userInfoViewModel.currentUser.userName != userName.value,
+                        userInfoViewModel.currentUser?.userName != userName.value,
                 onConfirmClick = {
                     showCreateIndicator = true
                     userInfoViewModel.updateUsername(userName.value)
@@ -184,9 +184,7 @@ private fun EditProfileAppBar(
 private fun validateUserName(userName: String, context: Context) = when {
     userName.length < 2 -> context.getString(R.string.setting_profile_nickname_message_length_fail_min)
     userName.length > 10 -> context.getString(R.string.setting_profile_nickname_message_length_fail_max)
-    Pattern.matches(USERNAME_PATTERN, userName)
-        .not() -> context.getString(R.string.setting_profile_nickname_message_format_fail)
-
+    Pattern.matches(USERNAME_PATTERN, userName).not() -> context.getString(R.string.setting_profile_nickname_message_format_fail)
     else -> ""
 }
 

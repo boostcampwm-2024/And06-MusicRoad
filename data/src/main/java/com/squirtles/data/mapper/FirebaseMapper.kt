@@ -75,6 +75,7 @@ internal fun Pick.toFirebasePick(): FirebasePick = FirebasePick(
 internal fun FirebaseUser.toUser(): User = User(
     userId = "",
     userName = name ?: "",
+    userProfileImage = profileImage,
     myPicks = myPicks
 )
 

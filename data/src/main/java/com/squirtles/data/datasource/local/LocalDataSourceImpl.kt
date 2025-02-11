@@ -20,8 +20,8 @@ class LocalDataSourceImpl @Inject constructor(
 ) : LocalDataSource {
     private val Context.dataStore by preferencesDataStore(name = USER_PREFERENCES_NAME)
 
-    private lateinit var _currentUser: User
-    override val currentUser: User
+    private var _currentUser: User? = null
+    override val currentUser: User?
         get() = _currentUser
 
     private var _currentLocation: MutableStateFlow<Location?> = MutableStateFlow(null)
@@ -40,7 +40,7 @@ class LocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun writeUserIdDataStore(userId: String) {
+    override suspend fun saveUserIdDataStore(userId: String) {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         context.dataStore.edit { preferences ->
             preferences[dataStoreKey] = userId
@@ -49,6 +49,14 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun saveCurrentUser(user: User) {
         _currentUser = user
+    }
+
+    override suspend fun clearUser() {
+        val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
+        context.dataStore.edit { preferences ->
+            preferences.remove(dataStoreKey)
+        }
+        _currentUser = null
     }
 
     override suspend fun saveCurrentLocation(location: Location) {

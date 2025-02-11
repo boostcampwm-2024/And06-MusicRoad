@@ -97,7 +97,7 @@
 
     <!-- User Info -->
     <string name="user_info_navigate_to_menu">메뉴로 이동하기 아이콘</string>
-    <string name="user_info_default_profile_image">기본 프로필 이미지</string>
+    <string name="user_info_profile_image">프로필 이미지</string>
     <string name="user_info_pick_category_title">Pick</string>
     <string name="user_info_favorite_menu_title">픽 보관함</string>
     <string name="user_info_created_by_self_menu_title">등록한 픽</string>
@@ -106,8 +106,10 @@
     <string name="user_info_setting_category_title">Settings</string>
     <string name="user_info_setting_profile_menu_title">프로필</string>
     <string name="user_info_setting_notification_menu_title">알림</string>
+    <string name="user_info_setting_sign_out_menu_title">로그아웃</string>
     <string name="user_info_setting_profile_menu_icon_description">프로필 설정 메뉴 아이콘</string>
     <string name="user_info_setting_notification_menu_icon_description">알림 메뉴 아이콘</string>
+    <string name="user_info_setting_sign_out_menu_icon_description">로그아웃 메뉴 아이콘</string>
     <string name="user_info_icon_map_description">지도 아이콘</string>
     <string name="user_info_back_to_map_button_text">지도로 돌아가기</string>
 
@@ -123,4 +125,24 @@
     <string name="setting_profile_confirm_icon_description">변경 사항 적용</string>
     <string name="setting_profile_update_nickname_success">변경 사항이 적용되었습니다.</string>
     <string name="setting_profile_update_nickname_failure">일시적인 오류가 발생했습니다.</string>
+
+    <!-- Account -->
+    <string name="profile_sign_in_title">로그인</string>
+    <string name="profile_sign_in_google">Sign in with Google</string>
+    <string name="profile_google_icon">Google Logo</string>
+
+    <!--SignIn -->
+    <string name="sign_in_dialog_title_default">더 많은 기능을 이용하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_favorite_picks">담은 픽을 확인하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_add_pick">픽을 등록하기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_favorite">픽을 담기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_user_info">픽을 담기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog">로그인이 필요합니다</string>
+    <string name="sign_in_dialog_dismiss">취소</string>
+    <string name="google_id_no_credential_exception_message">기기에 로그인된 구글 계정이 없습니다</string>
+
+    <!--SignOut-->
+    <string name="sign_out_dialog_title">로그아웃 하시겠습니까?</string>
+    <string name="sign_out_dialog_dismiss">취소</string>
+    <string name="sign_out_dialog_confirm">로그아웃</string>
 </resources>

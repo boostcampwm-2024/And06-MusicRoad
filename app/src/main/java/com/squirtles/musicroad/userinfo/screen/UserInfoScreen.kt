@@ -1,6 +1,5 @@
 package com.squirtles.musicroad.userinfo.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.Map
@@ -25,20 +25,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.squirtles.musicroad.R
+import com.squirtles.musicroad.account.AccountViewModel
+import com.squirtles.musicroad.account.GoogleId
 import com.squirtles.musicroad.common.Constants.COLOR_STOPS
 import com.squirtles.musicroad.common.DefaultTopAppBar
+import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
+import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
@@ -55,19 +70,39 @@ fun UserInfoScreen(
     onMyPicksClick: (String) -> Unit,
     onEditProfileClick: () -> Unit,
     onEditNotificationClick: () -> Unit,
-    userInfoViewModel: UserInfoViewModel = hiltViewModel()
+    userInfoViewModel: UserInfoViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val scrollState = rememberScrollState()
     val user by userInfoViewModel.profileUser.collectAsStateWithLifecycle()
 
+    var showLogOutDialog by remember { mutableStateOf(false) }
+
+    val onSignOutClick: () -> Unit = {
+        GoogleId(context).signOut()
+        accountViewModel.signOut()
+    }
+
     LaunchedEffect(Unit) {
-        userInfoViewModel.getUserById(userId)
+        userId?.let {
+            userInfoViewModel.getUserById(userId)
+        }
+
+        accountViewModel.signOutSuccess
+            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+            .collect { isSuccess ->
+                if (isSuccess) {
+                    onBackToMapClick()
+                }
+            }
     }
 
     Scaffold(
         topBar = {
             DefaultTopAppBar(
-                title = user.userName,
+                title = if (userId == null) stringResource(id = R.string.profile_sign_in_title) else user.userName,
                 onBackClick = onBackClick
             )
         }
@@ -87,13 +122,18 @@ fun UserInfoScreen(
             ) {
                 VerticalSpacer(16)
 
-                Image(
-                    painter = painterResource(R.drawable.img_user_default_profile),
-                    contentDescription = stringResource(R.string.user_info_default_profile_image),
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(user.userProfileImage)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = stringResource(R.string.user_info_profile_image),
                     modifier = Modifier
                         .size(180.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
+                    placeholder = painterResource(R.drawable.img_user_default_profile),
+                    error = painterResource(R.drawable.img_user_default_profile),
+                    contentScale = ContentScale.Crop,
                 )
 
                 VerticalSpacer(40)
@@ -116,7 +156,7 @@ fun UserInfoScreen(
                     )
                 )
 
-                if (userId == userInfoViewModel.currentUser.userId) {
+                if (userId == userInfoViewModel.currentUser?.userId) {
                     UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
@@ -131,6 +171,12 @@ fun UserInfoScreen(
                                 contentDescription = stringResource(R.string.user_info_setting_notification_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_notification_menu_title),
                                 onMenuClick = onEditNotificationClick
+                            ),
+                            MenuItem(
+                                imageVector = Icons.AutoMirrored.Outlined.Logout,
+                                contentDescription = stringResource(R.string.user_info_setting_sign_out_menu_icon_description),
+                                menuTitle = stringResource(R.string.user_info_setting_sign_out_menu_title),
+                                onMenuClick = { showLogOutDialog = true }
                             )
                         )
                     )
@@ -161,6 +207,36 @@ fun UserInfoScreen(
                     color = White,
                     style = MaterialTheme.typography.bodyLarge
                 )
+            }
+
+            if (showLogOutDialog) {
+                MessageAlertDialog(
+                    onDismissRequest = {
+                        showLogOutDialog = false
+                    },
+                    title = stringResource(R.string.sign_out_dialog_title),
+                    body = "",
+                    showBody = false
+                ) {
+                    DialogTextButton(
+                        onClick = {
+                            showLogOutDialog = false
+                        },
+                        text = stringResource(R.string.sign_out_dialog_dismiss)
+                    )
+
+                    HorizontalSpacer(8)
+
+                    DialogTextButton(
+                        onClick = {
+                            showLogOutDialog = false
+                            onSignOutClick()
+                        },
+                        text = stringResource(R.string.sign_out_dialog_confirm),
+                        textColor = Primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

@@ -87,29 +87,30 @@ class CreatePickViewModel @Inject constructor(
             val musicVideo = fetchMusicVideoUseCase(song)
 
             /* 등록 결과 - pick ID 담긴 Result */
-            val user = getCurrentUserUseCase()
-            val createResult = createPickUseCase(
-                Pick(
-                    id = "",
-                    song = song,
-                    comment = _comment.value,
-                    createdAt = "",
-                    createdBy = Creator(
-                        userId = user.userId,
-                        userName = user.userName
-                    ),
-                    location = LocationPoint(lastLocation!!.latitude, lastLocation!!.longitude),
-                    musicVideoUrl = musicVideo?.previewUrl ?: "",
-                    musicVideoThumbnailUrl = musicVideo?.thumbnailUrl ?: ""
+            getCurrentUserUseCase()?.let { user ->
+                val createResult = createPickUseCase(
+                    Pick(
+                        id = "",
+                        song = song,
+                        comment = _comment.value,
+                        createdAt = "",
+                        createdBy = Creator(
+                            userId = user.userId,
+                            userName = user.userName
+                        ),
+                        location = LocationPoint(lastLocation!!.latitude, lastLocation!!.longitude),
+                        musicVideoUrl = musicVideo?.previewUrl ?: "",
+                        musicVideoThumbnailUrl = musicVideo?.thumbnailUrl ?: ""
+                    )
                 )
-            )
 
-            createResult.onSuccess { pickId ->
-                _createPickUiState.emit(CreateUiState.Success(pickId))
-            }.onFailure {
-                /* TODO: Firestore 등록 실패처리 */
-                _createPickUiState.emit(CreateUiState.Error)
-                Log.d("CreatePickViewModel", createResult.exceptionOrNull()?.message.toString())
+                createResult.onSuccess { pickId ->
+                    _createPickUiState.emit(CreateUiState.Success(pickId))
+                }.onFailure {
+                    /* TODO: Firestore 등록 실패처리 */
+                    _createPickUiState.emit(CreateUiState.Error)
+                    Log.d("CreatePickViewModel", createResult.exceptionOrNull()?.message.toString())
+                }
             }
         }
     }

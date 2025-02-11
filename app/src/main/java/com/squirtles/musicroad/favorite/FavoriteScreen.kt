@@ -8,8 +8,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.squirtles.musicroad.common.picklist.PickListScreenContents
 import com.squirtles.musicroad.common.picklist.PickListType
+import com.squirtles.musicroad.picklist.PickListScreenContents
 
 @Composable
 fun FavoriteScreen(
@@ -39,6 +39,9 @@ fun FavoriteScreen(
         selectAllPicks = favoriteListViewModel::selectAllPicks,
         deselectAllPicks = favoriteListViewModel::deselectAllPicks,
         toggleSelectedPick = favoriteListViewModel::toggleSelectedPick,
-        deleteSelectedPicks = favoriteListViewModel::deleteSelectedPicks
+        deleteSelectedPicks = favoriteListViewModel::deleteSelectedPicks,
+        getUserId = {
+            favoriteListViewModel.getUserId().toString()
+        }
     )
 }
