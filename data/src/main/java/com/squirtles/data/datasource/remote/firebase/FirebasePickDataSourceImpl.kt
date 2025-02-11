@@ -12,16 +12,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.COLLECTION_FAVORITES
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.COLLECTION_PICKS
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.COLLECTION_USERS
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.FIELD_MY_PICKS
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.FIELD_PICK_ID
-import com.squirtles.data.datasource.remote.firebase.FirebaseDataSourceImpl.Companion.TAG_LOG
 import com.squirtles.data.datasource.remote.firebase.model.FirebasePick
 import com.squirtles.data.datasource.remote.firebase.model.FirebaseUser
 import com.squirtles.data.mapper.toFirebasePick
 import com.squirtles.data.mapper.toPick
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.COLLECTION_FAVORITES
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.COLLECTION_PICKS
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.COLLECTION_USERS
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.FIELD_MY_PICKS
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.FIELD_PICK_ID
+import com.squirtles.domain.datasource.remote.firebase.FirebaseDataSourceConstants.TAG_LOG
 import com.squirtles.domain.datasource.remote.firebase.FirebasePickDataSource
 import com.squirtles.domain.model.Pick
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -36,11 +36,7 @@ class FirebasePickDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : FirebasePickDataSource {
 
-    /**
-     * Fetches a pick by ID from Firestore.
-     * @param pickID The ID of the pick to fetch.
-     * @return  The fetched pick, or null if the pick does not exist on firestore.
-     */
+    /* Fetches a pick by ID from Firestore */
     override suspend fun fetchPick(pickID: String): Pick? {
         return suspendCancellableCoroutine { continuation ->
             db.collection("picks").document(pickID).get()
@@ -56,13 +52,7 @@ class FirebasePickDataSourceImpl @Inject constructor(
         }
     }
 
-    /**
-     * Fetches picks within a given radius from Firestore.
-     * @param lat The latitude of the center of the search area.
-     * @param lng The longitude of the center of the search area.
-     * @param radiusInM The radius in meters of the search area.
-     * @return A list of picks within the specified radius, ordered by distance from the center. can be empty.
-     */
+    /* Fetches picks within a given radius from Firestore */
     override suspend fun fetchPicksInArea(
         lat: Double,
         lng: Double,
@@ -107,28 +97,7 @@ class FirebasePickDataSourceImpl @Inject constructor(
         return matchingPicks
     }
 
-    /**
-     * GeoHash의 FP 문제 - Geohash의 쿼리가 정확하지 않으며 클라이언트 측에서 거짓양성 결과를 필터링해야 합니다.
-     * 이러한 추가 읽기로 인해 앱에 비용과 지연 시간이 추가됩니다.
-     * @param doc The pick document to check.
-     * @param center The center of the search area.
-     * @param radiusInM The radius in meters of the search area.
-     * @return True if the pick is within the specified radius, false otherwise.
-     */
-    private fun isAccurate(doc: DocumentSnapshot, center: GeoLocation, radiusInM: Double): Boolean {
-        val location = doc.getGeoPoint("location") ?: return false
-
-        val docLocation = GeoLocation(location.latitude, location.longitude)
-        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
-
-        return distanceInM <= radiusInM
-    }
-
-    /**
-     * Creates a new pick in Firestore.
-     * @param pick The pick to create.
-     * @return The created pick.
-     */
+    /* Creates a new pick in Firestore */
     override suspend fun createPick(pick: Pick): String =
         suspendCancellableCoroutine { continuation ->
             val firebasePick = pick.toFirebasePick()
@@ -231,5 +200,32 @@ class FirebasePickDataSourceImpl @Inject constructor(
                     continuation.resumeWithException(e)
                 }
         }
+    }
+
+    private suspend fun fetchUserDocument(userId: String): DocumentSnapshot {
+        return suspendCancellableCoroutine { continuation ->
+            db.collection(COLLECTION_USERS).document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    continuation.resume(document)
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("FirebaseDataSourceImpl", "Failed to get user document", exception)
+                    continuation.resumeWithException(exception)
+                }
+        }
+    }
+
+    /**
+     * GeoHash의 FP 문제 - Geohash의 쿼리가 정확하지 않으며 클라이언트 측에서 거짓양성 결과를 필터링해야 합니다.
+     * 이러한 추가 읽기로 인해 앱에 비용과 지연 시간이 추가됩니다.
+     */
+    private fun isAccurate(doc: DocumentSnapshot, center: GeoLocation, radiusInM: Double): Boolean {
+        val location = doc.getGeoPoint("location") ?: return false
+
+        val docLocation = GeoLocation(location.latitude, location.longitude)
+        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
+
+        return distanceInM <= radiusInM
     }
 }

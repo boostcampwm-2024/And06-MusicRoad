@@ -1,13 +1,15 @@
 package com.squirtles.data.repository.remote.firebase
 
-import com.squirtles.domain.datasource.remote.firebase.FirebaseRemoteDataSource
+import com.squirtles.domain.datasource.remote.firebase.FirebaseUserDataSource
 import com.squirtles.domain.model.User
 import com.squirtles.domain.repository.remote.RemoteRepository
 import com.squirtles.domain.repository.remote.firebase.FirebaseException
 import com.squirtles.domain.repository.remote.firebase.FirebaseUserRepository
+import javax.inject.Singleton
 
+@Singleton
 class FirebaseUserRepositoryImpl(
-    private val firebaseRemoteDataSource: FirebaseRemoteDataSource
+    private val userDataSource: FirebaseUserDataSource
 ) : FirebaseUserRepository, RemoteRepository() {
 
     override suspend fun createGoogleIdUser(
@@ -16,19 +18,19 @@ class FirebaseUserRepositoryImpl(
         userProfileImage: String?
     ): Result<User> {
         return handleResult(FirebaseException.CreatedUserFailedException()) {
-            firebaseRemoteDataSource.createGoogleIdUser(userId, userName, userProfileImage)
+            userDataSource.createGoogleIdUser(userId, userName, userProfileImage)
         }
     }
 
     override suspend fun fetchUser(userId: String): Result<User> {
         return handleResult(FirebaseException.UserNotFoundException()) {
-            firebaseRemoteDataSource.fetchUser(userId)
+            userDataSource.fetchUser(userId)
         }
     }
 
     override suspend fun updateUserName(userId: String, newUserName: String): Result<Boolean> {
         return handleResult {
-            firebaseRemoteDataSource.updateUserName(userId, newUserName)
+            userDataSource.updateUserName(userId, newUserName)
         }
     }
 }

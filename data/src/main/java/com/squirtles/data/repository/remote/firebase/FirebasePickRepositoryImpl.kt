@@ -1,36 +1,39 @@
 package com.squirtles.data.repository.remote.firebase
 
-import com.squirtles.domain.datasource.remote.firebase.FirebaseRemoteDataSource
+import com.squirtles.domain.datasource.remote.firebase.FirebasePickDataSource
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.repository.remote.RemoteRepository
 import com.squirtles.domain.repository.remote.firebase.FirebaseException
 import com.squirtles.domain.repository.remote.firebase.FirebasePickRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FirebasePickRepositoryImpl(
-    private val firebaseRemoteDataSource: FirebaseRemoteDataSource
+@Singleton
+class FirebasePickRepositoryImpl @Inject constructor(
+    private val pickDataSource: FirebasePickDataSource
 ) : FirebasePickRepository, RemoteRepository() {
 
     override suspend fun createPick(pick: Pick): Result<String> {
         return handleResult {
-            firebaseRemoteDataSource.createPick(pick)
+            pickDataSource.createPick(pick)
         }
     }
 
     override suspend fun deletePick(pickId: String, userId: String): Result<Boolean> {
         return handleResult {
-            firebaseRemoteDataSource.deletePick(pickId, userId)
+            pickDataSource.deletePick(pickId, userId)
         }
     }
 
     override suspend fun fetchPick(pickID: String): Result<Pick> {
         return handleResult(FirebaseException.NoSuchPickException()) {
-            firebaseRemoteDataSource.fetchPick(pickID)
+            pickDataSource.fetchPick(pickID)
         }
     }
 
     override suspend fun fetchMyPicks(userId: String): Result<List<Pick>> {
         return handleResult {
-            firebaseRemoteDataSource.fetchMyPicks(userId)
+            pickDataSource.fetchMyPicks(userId)
         }
     }
 
@@ -39,7 +42,7 @@ class FirebasePickRepositoryImpl(
         lng: Double,
         radiusInM: Double
     ): Result<List<Pick>> {
-        val pickList = firebaseRemoteDataSource.fetchPicksInArea(lat, lng, radiusInM)
+        val pickList = pickDataSource.fetchPicksInArea(lat, lng, radiusInM)
         return handleResult(FirebaseException.NoSuchPickInRadiusException()) {
             pickList.ifEmpty { null }
         }

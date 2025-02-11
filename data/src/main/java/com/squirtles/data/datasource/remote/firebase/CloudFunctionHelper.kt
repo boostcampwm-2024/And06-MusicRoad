@@ -5,7 +5,9 @@ import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
 import com.squirtles.data.BuildConfig
 import kotlinx.coroutines.tasks.await
+import javax.inject.Singleton
 
+@Singleton
 class CloudFunctionHelper {
     private val functions: FirebaseFunctions = Firebase.functions
 
