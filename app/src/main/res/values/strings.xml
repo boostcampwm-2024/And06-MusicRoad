@@ -136,6 +136,13 @@
     <string name="sign_in_dialog_title_favorite_picks">담은 픽을 확인하기 위해\n로그인이 필요합니다</string>
     <string name="sign_in_dialog_title_add_pick">픽을 등록하기 위해\n로그인이 필요합니다</string>
     <string name="sign_in_dialog_title_favorite">픽을 담기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog_title_user_info">픽을 담기 위해\n로그인이 필요합니다</string>
+    <string name="sign_in_dialog">로그인이 필요합니다</string>
     <string name="sign_in_dialog_dismiss">취소</string>
     <string name="google_id_no_credential_exception_message">기기에 로그인된 구글 계정이 없습니다</string>
+
+    <!--SignOut-->
+    <string name="sign_out_dialog_title">로그아웃 하시겠습니까?</string>
+    <string name="sign_out_dialog_dismiss">취소</string>
+    <string name="sign_out_dialog_confirm">로그아웃</string>
 </resources>

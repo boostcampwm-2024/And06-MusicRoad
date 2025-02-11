@@ -7,7 +7,7 @@ import com.squirtles.data.datasource.remote.applemusic.SearchSongsPagingSource.C
 import com.squirtles.data.datasource.remote.applemusic.api.AppleMusicApi
 import com.squirtles.data.datasource.remote.applemusic.model.SearchResponse
 import com.squirtles.data.mapper.toMusicVideo
-import com.squirtles.domain.datasource.AppleMusicRemoteDataSource
+import com.squirtles.domain.applemusic.AppleMusicRemoteDataSource
 import com.squirtles.domain.model.MusicVideo
 import com.squirtles.domain.model.Song
 import kotlinx.coroutines.flow.Flow

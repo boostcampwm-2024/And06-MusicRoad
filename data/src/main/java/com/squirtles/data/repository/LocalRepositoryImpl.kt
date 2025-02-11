@@ -1,23 +1,27 @@
 package com.squirtles.data.repository
 
 import android.location.Location
-import com.squirtles.domain.datasource.LocalDataSource
+import com.squirtles.domain.local.LocalDataSource
+import com.squirtles.domain.local.LocalRepository
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.User
-import com.squirtles.domain.repository.LocalRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LocalRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : LocalRepository {
-    override val userId get() = localDataSource.readUserId()
     override val currentUser get() = localDataSource.currentUser
     override val lastLocation get() = localDataSource.lastLocation
     override val favoriteListOrder get() = localDataSource.favoriteListOrder
     override val myListOrder get() = localDataSource.myListOrder
 
-    override suspend fun saveUserId(userId: String) {
-        localDataSource.saveUserId(userId)
+    override fun readUserIdDataStore(): Flow<String?> {
+        return localDataSource.readUserIdDataStore()
+    }
+
+    override suspend fun saveUserIdDataStore(userId: String) {
+        localDataSource.saveUserIdDataStore(userId)
     }
 
     override suspend fun saveCurrentUser(user: User) {

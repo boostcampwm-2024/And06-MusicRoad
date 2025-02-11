@@ -25,8 +25,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.squirtles.musicroad.R
-import com.squirtles.musicroad.main.navigations.MainNavGraph
-import com.squirtles.musicroad.main.navigations.MainNavigationActions
+import com.squirtles.musicroad.main.navigation.MainNavHost
+import com.squirtles.musicroad.main.navigation.MainNavigator
+import com.squirtles.musicroad.main.navigation.rememberMainNavigator
 import com.squirtles.musicroad.ui.theme.MusicRoadTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
@@ -136,14 +137,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setMusicRoadContent() {
         setContent {
+            val navigator: MainNavigator = rememberMainNavigator()
+
             MusicRoadTheme {
                 val navController = rememberNavController()
-                val navigationActions = remember(navController) {
-                    MainNavigationActions(navController)
-                }
-                MainNavGraph(
-                    navController = navController,
-                    navigationActions = navigationActions
+
+                MainNavHost(
+                    navigator = navigator,
                 )
             }
         }

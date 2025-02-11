@@ -5,7 +5,7 @@ import android.location.Location
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.squirtles.domain.datasource.LocalDataSource
+import com.squirtles.domain.local.LocalDataSource
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.User
 import kotlinx.coroutines.flow.Flow
@@ -33,14 +33,14 @@ class LocalDataSourceImpl @Inject constructor(
     private var _myListOrder = Order.LATEST
     override val myListOrder get() = _myListOrder
 
-    override fun readUserId(): Flow<String?> {
+    override fun readUserIdDataStore(): Flow<String?> {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         return context.dataStore.data.map { preferences ->
             preferences[dataStoreKey]
         }
     }
 
-    override suspend fun saveUserId(userId: String) {
+    override suspend fun saveUserIdDataStore(userId: String) {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
         context.dataStore.edit { preferences ->
             preferences[dataStoreKey] = userId
