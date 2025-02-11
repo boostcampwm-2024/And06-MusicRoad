@@ -141,7 +141,7 @@ fun MapScreen(
                         mapViewModel.getUserId()?.let { userId ->
                             onFavoriteClick(userId)
                         } ?: run {
-                            signInDialogDescription = getString(context, R.string.sign_in_dialog)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
                             showSignInDialog = true
                         }
                     },
@@ -150,7 +150,7 @@ fun MapScreen(
                             onCenterClick()
                             mapViewModel.saveCurLocationForced()
                         } ?: run {
-                            signInDialogDescription = getString(context, R.string.sign_in_dialog)
+                            signInDialogDescription = getString(context, R.string.sign_in_dialog_title_add_pick)
                             showSignInDialog = true
                         }
                     },
