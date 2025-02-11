@@ -1,10 +1,10 @@
-package com.squirtles.data.repository
+package com.squirtles.data.repository.local
 
 import android.location.Location
-import com.squirtles.domain.local.LocalDataSource
-import com.squirtles.domain.local.LocalRepository
+import com.squirtles.domain.datasource.local.LocalDataSource
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.User
+import com.squirtles.domain.repository.local.LocalRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

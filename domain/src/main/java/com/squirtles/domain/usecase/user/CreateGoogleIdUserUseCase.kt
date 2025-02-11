@@ -1,8 +1,8 @@
 package com.squirtles.domain.usecase.user
 
-import com.squirtles.domain.local.LocalRepository
 import com.squirtles.domain.model.User
-import com.squirtles.domain.remote.firebase.FirebaseUserRepository
+import com.squirtles.domain.repository.local.LocalRepository
+import com.squirtles.domain.repository.remote.firebase.FirebaseUserRepository
 import javax.inject.Inject
 
 class CreateGoogleIdUserUseCase @Inject constructor(

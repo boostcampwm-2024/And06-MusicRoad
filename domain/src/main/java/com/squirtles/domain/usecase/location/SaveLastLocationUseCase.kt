@@ -1,7 +1,7 @@
 package com.squirtles.domain.usecase.location
 
 import android.location.Location
-import com.squirtles.domain.local.LocalRepository
+import com.squirtles.domain.repository.local.LocalRepository
 import javax.inject.Inject
 
 class SaveLastLocationUseCase @Inject constructor(

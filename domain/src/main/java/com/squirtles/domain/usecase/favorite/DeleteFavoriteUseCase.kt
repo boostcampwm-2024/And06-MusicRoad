@@ -1,6 +1,6 @@
 package com.squirtles.domain.usecase.favorite
 
-import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
+import com.squirtles.domain.repository.remote.firebase.FirebaseFavoriteRepository
 import com.squirtles.domain.usecase.picklist.RemovePickUseCaseInterface
 import javax.inject.Inject
 

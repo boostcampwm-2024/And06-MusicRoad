@@ -2,7 +2,7 @@ package com.squirtles.musicroad.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.squirtles.domain.remote.firebase.FirebaseException
+import com.squirtles.domain.repository.remote.firebase.FirebaseException
 import com.squirtles.domain.usecase.user.FetchUserUseCase
 import com.squirtles.domain.usecase.user.GetUserIdFromDataStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

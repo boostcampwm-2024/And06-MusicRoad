@@ -1,7 +1,7 @@
 package com.squirtles.domain.usecase.user
 
-import com.squirtles.domain.local.LocalRepository
 import com.squirtles.domain.model.User
+import com.squirtles.domain.repository.local.LocalRepository
 import javax.inject.Inject
 
 class FetchUserUseCase @Inject constructor(

@@ -1,6 +1,6 @@
 package com.squirtles.domain.usecase.favorite
 
-import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
+import com.squirtles.domain.repository.remote.firebase.FirebaseFavoriteRepository
 import javax.inject.Inject
 
 class CreateFavoriteUseCase @Inject constructor(

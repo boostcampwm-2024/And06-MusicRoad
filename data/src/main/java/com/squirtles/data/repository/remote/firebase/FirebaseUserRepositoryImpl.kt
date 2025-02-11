@@ -1,10 +1,10 @@
-package com.squirtles.data.repository
+package com.squirtles.data.repository.remote.firebase
 
-import com.squirtles.domain.firebase.FirebaseRemoteDataSource
+import com.squirtles.domain.datasource.remote.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.model.User
-import com.squirtles.domain.remote.RemoteRepository
-import com.squirtles.domain.remote.firebase.FirebaseException
-import com.squirtles.domain.remote.firebase.FirebaseUserRepository
+import com.squirtles.domain.repository.remote.RemoteRepository
+import com.squirtles.domain.repository.remote.firebase.FirebaseException
+import com.squirtles.domain.repository.remote.firebase.FirebaseUserRepository
 
 class FirebaseUserRepositoryImpl(
     private val firebaseRemoteDataSource: FirebaseRemoteDataSource

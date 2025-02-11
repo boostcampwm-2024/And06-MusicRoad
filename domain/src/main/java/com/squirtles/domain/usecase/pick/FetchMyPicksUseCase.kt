@@ -1,6 +1,6 @@
 package com.squirtles.domain.usecase.pick
 
-import com.squirtles.domain.remote.firebase.FirebasePickRepository
+import com.squirtles.domain.repository.remote.firebase.FirebasePickRepository
 import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
 import javax.inject.Inject
 

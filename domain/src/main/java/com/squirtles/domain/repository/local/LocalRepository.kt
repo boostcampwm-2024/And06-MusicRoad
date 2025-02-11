@@ -1,4 +1,4 @@
-package com.squirtles.domain.local
+package com.squirtles.domain.repository.local
 
 import android.location.Location
 import com.squirtles.domain.model.Order

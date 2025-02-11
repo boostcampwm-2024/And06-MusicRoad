@@ -1,4 +1,4 @@
-package com.squirtles.domain.remote.firebase
+package com.squirtles.domain.repository.remote.firebase
 
 sealed class FirebaseException(override val message: String) : Exception() {
     data class CreatedUserFailedException(override val message: String = "Failed to create a user") :

@@ -1,7 +1,7 @@
 package com.squirtles.domain.usecase.pick
 
 import com.squirtles.domain.model.Pick
-import com.squirtles.domain.remote.firebase.FirebasePickRepository
+import com.squirtles.domain.repository.remote.firebase.FirebasePickRepository
 import javax.inject.Inject
 
 class CreatePickUseCase @Inject constructor(

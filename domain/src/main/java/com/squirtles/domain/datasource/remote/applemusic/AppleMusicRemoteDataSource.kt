@@ -1,12 +1,12 @@
-package com.squirtles.domain.remote.applemusic
+package com.squirtles.domain.datasource.remote.applemusic
 
 import androidx.paging.PagingData
 import com.squirtles.domain.model.MusicVideo
 import com.squirtles.domain.model.Song
 import kotlinx.coroutines.flow.Flow
 
-interface AppleMusicRepository {
+interface AppleMusicRemoteDataSource {
     fun searchSongs(searchText: String): Flow<PagingData<Song>>
-    suspend fun searchSongById(songId: String): Result<Song>
-    suspend fun searchMusicVideos(searchText: String): Result<List<MusicVideo>>
+    suspend fun searchSongById(songId: String): Song
+    suspend fun searchMusicVideos(searchText: String): List<MusicVideo>
 }
