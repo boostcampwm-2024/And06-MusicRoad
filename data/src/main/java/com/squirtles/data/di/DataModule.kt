@@ -12,13 +12,13 @@ import com.squirtles.data.repository.FirebasePickRepositoryImpl
 import com.squirtles.data.repository.FirebaseRepositoryImpl
 import com.squirtles.data.repository.FirebaseUserRepositoryImpl
 import com.squirtles.data.repository.LocalRepositoryImpl
+import com.squirtles.domain.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.local.LocalDataSource
 import com.squirtles.domain.local.LocalRepository
 import com.squirtles.domain.remote.applemusic.AppleMusicRemoteDataSource
 import com.squirtles.domain.remote.applemusic.AppleMusicRepository
 import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
 import com.squirtles.domain.remote.firebase.FirebasePickRepository
-import com.squirtles.domain.remote.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.remote.firebase.FirebaseRepository
 import com.squirtles.domain.remote.firebase.FirebaseUserRepository
 import dagger.Module

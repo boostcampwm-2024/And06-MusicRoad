@@ -1,10 +1,10 @@
 package com.squirtles.data.repository
 
+import com.squirtles.domain.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.remote.RemoteRepository
 import com.squirtles.domain.remote.firebase.FirebaseException
 import com.squirtles.domain.remote.firebase.FirebasePickRepository
-import com.squirtles.domain.remote.firebase.FirebaseRemoteDataSource
 
 class FirebasePickRepositoryImpl(
     private val firebaseRemoteDataSource: FirebaseRemoteDataSource

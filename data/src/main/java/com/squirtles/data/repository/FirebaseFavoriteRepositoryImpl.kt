@@ -1,9 +1,9 @@
 package com.squirtles.data.repository
 
+import com.squirtles.domain.firebase.FirebaseRemoteDataSource
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.remote.RemoteRepository
 import com.squirtles.domain.remote.firebase.FirebaseFavoriteRepository
-import com.squirtles.domain.remote.firebase.FirebaseRemoteDataSource
 
 
 class FirebaseFavoriteRepositoryImpl(
