@@ -1,11 +1,12 @@
 package com.squirtles.domain.usecase.order
 
+import com.squirtles.domain.repository.local.LocalPickListOrderRepository
 import com.squirtles.domain.repository.local.LocalRepository
 import com.squirtles.domain.usecase.picklist.GetPickListOrderUseCaseInterface
 import javax.inject.Inject
 
 class GetMyPickListOrderUseCase @Inject constructor(
-    private val localRepository: LocalRepository
+    private val localPickListOrderRepository: LocalPickListOrderRepository
 ) : GetPickListOrderUseCaseInterface {
-    override suspend operator fun invoke() = localRepository.myListOrder
+    override suspend operator fun invoke() = localPickListOrderRepository.myListOrder
 }

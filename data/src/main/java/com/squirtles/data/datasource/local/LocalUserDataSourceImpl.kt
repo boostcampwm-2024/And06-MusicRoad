@@ -1,39 +1,25 @@
 package com.squirtles.data.datasource.local
 
 import android.content.Context
-import android.location.Location
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.squirtles.domain.datasource.local.LocalDataSource
-import com.squirtles.domain.model.Order
+import com.squirtles.domain.datasource.local.LocalUserDataSource
 import com.squirtles.domain.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalDataSourceImpl @Inject constructor(
+class LocalUserDataSourceImpl @Inject constructor(
     private val context: Context,
-) : LocalDataSource {
+) : LocalUserDataSource {
     private val Context.dataStore by preferencesDataStore(name = USER_PREFERENCES_NAME)
 
     private var _currentUser: User? = null
     override val currentUser: User?
         get() = _currentUser
-
-    private var _currentLocation: MutableStateFlow<Location?> = MutableStateFlow(null)
-    override val lastLocation: StateFlow<Location?> = _currentLocation.asStateFlow()
-
-    private var _favoriteListOrder = Order.LATEST
-    override val favoriteListOrder get() = _favoriteListOrder
-
-    private var _myListOrder = Order.LATEST
-    override val myListOrder get() = _myListOrder
 
     override fun readUserIdDataStore(): Flow<String?> {
         val dataStoreKey = stringPreferencesKey(USER_ID_KEY)
@@ -59,18 +45,6 @@ class LocalDataSourceImpl @Inject constructor(
             preferences.remove(dataStoreKey)
         }
         _currentUser = null
-    }
-
-    override suspend fun saveCurrentLocation(location: Location) {
-        _currentLocation.emit(location)
-    }
-
-    override suspend fun saveFavoriteListOrder(order: Order) {
-        _favoriteListOrder = order
-    }
-
-    override suspend fun saveMyListOrder(order: Order) {
-        _myListOrder = order
     }
 
     companion object {

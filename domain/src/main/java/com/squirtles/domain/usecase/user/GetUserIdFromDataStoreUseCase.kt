@@ -1,10 +1,10 @@
 package com.squirtles.domain.usecase.user
 
-import com.squirtles.domain.repository.local.LocalRepository
+import com.squirtles.domain.repository.local.LocalUserRepository
 import javax.inject.Inject
 
 class GetUserIdFromDataStoreUseCase @Inject constructor(
-    private val localRepository: LocalRepository
+    private val localUserRepository: LocalUserRepository
 ) {
-    operator fun invoke() = localRepository.readUserIdDataStore()
+    operator fun invoke() = localUserRepository.readUserIdDataStore()
 }
