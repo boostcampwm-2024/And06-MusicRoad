@@ -1,10 +1,10 @@
 package com.squirtles.musicroad.mypick
 
-import com.squirtles.domain.usecase.order.GetMyPickListOrderUseCase
-import com.squirtles.domain.usecase.order.SaveMyPickListOrderUseCase
-import com.squirtles.domain.usecase.pick.DeletePickUseCase
-import com.squirtles.domain.usecase.pick.FetchMyPicksUseCase
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
+import com.squirtles.domain.order.usecase.GetMyPickListOrderUseCase
+import com.squirtles.domain.order.usecase.SaveMyPickListOrderUseCase
+import com.squirtles.domain.pick.usecase.DeletePickUseCase
+import com.squirtles.domain.pick.usecase.FetchMyPicksUseCase
+import com.squirtles.domain.user.usecase.GetCurrentUserUseCase
 import com.squirtles.musicroad.common.picklist.PickListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

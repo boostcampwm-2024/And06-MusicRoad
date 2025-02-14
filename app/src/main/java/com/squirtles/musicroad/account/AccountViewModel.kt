@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.squirtles.domain.usecase.user.ClearUserUseCase
-import com.squirtles.domain.usecase.user.CreateGoogleIdUserUseCase
-import com.squirtles.domain.usecase.user.FetchUserUseCase
+import com.squirtles.domain.user.usecase.ClearUserUseCase
+import com.squirtles.domain.user.usecase.CreateGoogleIdUserUseCase
+import com.squirtles.domain.user.usecase.FetchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Order
 import com.squirtles.domain.model.Pick
-import com.squirtles.domain.usecase.picklist.FetchPickListUseCaseInterface
-import com.squirtles.domain.usecase.picklist.GetPickListOrderUseCaseInterface
-import com.squirtles.domain.usecase.picklist.RemovePickUseCaseInterface
-import com.squirtles.domain.usecase.picklist.SavePickListOrderUseCaseInterface
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
+import com.squirtles.domain.picklist.FetchPickListUseCaseInterface
+import com.squirtles.domain.picklist.GetPickListOrderUseCaseInterface
+import com.squirtles.domain.picklist.RemovePickUseCaseInterface
+import com.squirtles.domain.picklist.SavePickListOrderUseCaseInterface
+import com.squirtles.domain.user.usecase.GetCurrentUserUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow

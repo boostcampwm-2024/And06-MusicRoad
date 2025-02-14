@@ -3,10 +3,10 @@ package com.squirtles.musicroad.userinfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.User
-import com.squirtles.domain.usecase.user.FetchUserByIdUseCase
-import com.squirtles.domain.usecase.user.FetchUserUseCase
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
-import com.squirtles.domain.usecase.user.UpdateUserNameUseCase
+import com.squirtles.domain.user.usecase.FetchUserByIdUseCase
+import com.squirtles.domain.user.usecase.FetchUserUseCase
+import com.squirtles.domain.user.usecase.GetCurrentUserUseCase
+import com.squirtles.domain.user.usecase.UpdateUserNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

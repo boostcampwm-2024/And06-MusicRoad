@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.usecase.music.FetchSongsUseCase
+import com.squirtles.domain.applemusic.usecase.FetchSongsUseCase
 import com.squirtles.musicroad.create.SearchUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview

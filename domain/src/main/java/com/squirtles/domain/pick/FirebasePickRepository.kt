@@ -1,0 +1,12 @@
+package com.squirtles.domain.pick
+
+import com.squirtles.domain.model.Pick
+import com.squirtles.domain.firebase.FirebaseRepository
+
+interface FirebasePickRepository : FirebaseRepository {
+    suspend fun createPick(pick: Pick): Result<String>
+    suspend fun deletePick(pickId: String, userId: String): Result<Boolean>
+    suspend fun fetchPick(pickID: String): Result<Pick>
+    suspend fun fetchPicksInArea(lat: Double, lng: Double, radiusInM: Double): Result<List<Pick>>
+    suspend fun fetchMyPicks(userId: String): Result<List<Pick>>
+}

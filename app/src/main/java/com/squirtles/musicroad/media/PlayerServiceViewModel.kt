@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.PlayerState
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.usecase.player.MediaPlayerListenerUseCase
-import com.squirtles.domain.usecase.player.MediaPlayerUseCase
+import com.squirtles.domain.player.MediaPlayerListenerUseCase
+import com.squirtles.domain.player.MediaPlayerUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.SharingStarted

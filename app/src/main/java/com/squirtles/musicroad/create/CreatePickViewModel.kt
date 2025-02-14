@@ -10,10 +10,10 @@ import com.squirtles.domain.model.Creator
 import com.squirtles.domain.model.LocationPoint
 import com.squirtles.domain.model.Pick
 import com.squirtles.domain.model.Song
-import com.squirtles.domain.usecase.location.GetLastLocationUseCase
-import com.squirtles.domain.usecase.music.FetchMusicVideoUseCase
-import com.squirtles.domain.usecase.pick.CreatePickUseCase
-import com.squirtles.domain.usecase.user.GetCurrentUserUseCase
+import com.squirtles.domain.location.usecase.GetLastLocationUseCase
+import com.squirtles.domain.applemusic.usecase.FetchMusicVideoUseCase
+import com.squirtles.domain.pick.usecase.CreatePickUseCase
+import com.squirtles.domain.user.usecase.GetCurrentUserUseCase
 import com.squirtles.musicroad.navigation.SearchRoute
 import com.squirtles.musicroad.utils.throttleFirst
 import dagger.hilt.android.lifecycle.HiltViewModel
