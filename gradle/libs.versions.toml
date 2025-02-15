@@ -43,7 +43,7 @@ splashscreen = "1.0.1"
 uiViewbinding = "1.7.5"
 pagingComposeAndroid = "3.3.4"
 kotlinxImmutable = "0.3.7"
-firebaseAuthKtx = "20.7.0"
+firebaseAuthKtx = "22.3.1"
 
 [libraries]
 # AndroidX

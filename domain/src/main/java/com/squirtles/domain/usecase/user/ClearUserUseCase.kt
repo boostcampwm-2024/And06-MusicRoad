@@ -1,10 +1,8 @@
 package com.squirtles.domain.usecase.user
 
-import com.squirtles.domain.local.LocalRepository
+import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-class ClearUserUseCase @Inject constructor(
-    private val localRepository: LocalRepository
-) {
-    suspend operator fun invoke() = localRepository.clearUser()
+class ClearUserUseCase @Inject constructor() {
+    operator fun invoke() = FirebaseAuth.getInstance().signOut()
 }

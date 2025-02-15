@@ -32,36 +32,33 @@ class GoogleId(private val context: Context) {
         .addCredentialOption(googleIdOption)
         .build()
 
-    private fun signInWithGoogle(result: GetCredentialResponse, onSuccess: (GoogleIdTokenCredential) -> Unit) {
+    private fun signInWithGoogle(result: GetCredentialResponse, onSuccess: (String, GoogleIdTokenCredential) -> Unit) {
         when (val data = result.credential) {
             is CustomCredential -> {
                 if (data.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(data.data)
-                    Log.d("SignIn", "id : ${googleIdTokenCredential.id}")
-                    Log.d("SignIn", "id_token : ${googleIdTokenCredential.idToken}")
-                    Log.d("SignIn", "display_name : ${googleIdTokenCredential.displayName}")
-                    Log.d("SignIn", "profile_url : ${googleIdTokenCredential.profilePictureUri.toString()}")
+                    Log.d("SignIn", "token : ${googleIdTokenCredential.idToken}")
                     signInWithFirebase(googleIdTokenCredential, onSuccess)
                 }
             }
         }
     }
 
-    private fun signInWithFirebase(googleIdTokenCredential: GoogleIdTokenCredential, onSuccess: (GoogleIdTokenCredential) -> Unit) {
+    private fun signInWithFirebase(googleIdTokenCredential: GoogleIdTokenCredential, onSuccess: (String, GoogleIdTokenCredential) -> Unit) {
         val credential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = FirebaseAuth.getInstance().currentUser
-                    Log.d("SignIn", "Firebase 로그인 성공: ${user?.email}")
-                    onSuccess(googleIdTokenCredential)
+                val user = FirebaseAuth.getInstance().currentUser
+                if (task.isSuccessful && user != null) {
+                    Log.d("SignIn", "Firebase 인증 uid : ${user.uid}")
+                    onSuccess(user.uid, googleIdTokenCredential)
                 } else {
                     Log.e("SignIn", "Firebase 인증 실패", task.exception)
                 }
             }
     }
 
-    fun signIn(onSuccess: (GoogleIdTokenCredential) -> Unit) {
+    fun signIn(onSuccess: (String, GoogleIdTokenCredential) -> Unit) {
         CoroutineScope(Dispatchers.Main).launch {
             runCatching {
                 val result = credentialManager.getCredential(context, request)

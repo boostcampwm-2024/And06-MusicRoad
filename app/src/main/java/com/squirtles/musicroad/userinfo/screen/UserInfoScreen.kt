@@ -63,12 +63,12 @@ import com.squirtles.musicroad.userinfo.components.UserInfoMenus
 
 @Composable
 fun UserInfoScreen(
-    userId: String,
+    uid: String,
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
-    onEditProfileClick: () -> Unit,
+    onEditProfileClick: (String) -> Unit,
     onEditNotificationClick: () -> Unit,
     userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel()
@@ -86,8 +86,8 @@ fun UserInfoScreen(
     }
 
     LaunchedEffect(Unit) {
-        userId?.let {
-            userInfoViewModel.getUserById(userId)
+        uid.let {
+            userInfoViewModel.getUserById(uid)
         }
 
         accountViewModel.signOutSuccess
@@ -102,7 +102,7 @@ fun UserInfoScreen(
     Scaffold(
         topBar = {
             DefaultTopAppBar(
-                title = if (userId == null) stringResource(id = R.string.profile_sign_in_title) else user.userName,
+                title = user.userName,
                 onBackClick = onBackClick
             )
         }
@@ -145,18 +145,18 @@ fun UserInfoScreen(
                             imageVector = Icons.Outlined.Archive,
                             contentDescription = stringResource(R.string.user_info_favorite_menu_icon_description),
                             menuTitle = stringResource(R.string.user_info_favorite_menu_title),
-                            onMenuClick = { onFavoritePicksClick(userId) }
+                            onMenuClick = { onFavoritePicksClick(uid) }
                         ),
                         MenuItem(
                             imageVector = Icons.Default.MusicNote,
                             contentDescription = stringResource(R.string.user_info_created_by_self_menu_icon_description),
                             menuTitle = stringResource(R.string.user_info_created_by_self_menu_title),
-                            onMenuClick = { onMyPicksClick(userId) }
+                            onMenuClick = { onMyPicksClick(uid) }
                         )
                     )
                 )
 
-                if (userId == userInfoViewModel.currentUser?.userId) {
+                if (uid == userInfoViewModel.currentUid) {
                     UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
@@ -164,7 +164,7 @@ fun UserInfoScreen(
                                 imageVector = Icons.Outlined.SwitchAccount,
                                 contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
-                                onMenuClick = onEditProfileClick
+                                onMenuClick = { onEditProfileClick(user.userName) }
                             ),
                             MenuItem(
                                 imageVector = Icons.Outlined.Notifications,

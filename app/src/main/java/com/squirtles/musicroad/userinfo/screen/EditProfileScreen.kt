@@ -61,13 +61,14 @@ import java.util.regex.Pattern
 
 @Composable
 internal fun EditProfileScreen(
+    currentUserName: String,
     onBackClick: () -> Unit,
     userInfoViewModel: UserInfoViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
-    val userName = remember { mutableStateOf(userInfoViewModel.currentUser?.userName ?: "") }
+    val userName = remember { mutableStateOf(currentUserName) }
     val nickNameErrorMessage = remember { mutableStateOf("") }
     var showCreateIndicator by rememberSaveable { mutableStateOf(false) }
 
@@ -101,7 +102,7 @@ internal fun EditProfileScreen(
         topBar = {
             EditProfileAppBar(
                 confirmEnabled = nickNameErrorMessage.value.isEmpty() &&
-                        userInfoViewModel.currentUser?.userName != userName.value,
+                        currentUserName != userName.value,
                 onConfirmClick = {
                     showCreateIndicator = true
                     userInfoViewModel.updateUsername(userName.value)
