@@ -5,9 +5,9 @@ import com.squirtles.domain.model.User
 
 interface FirebaseRepository {
     suspend fun createGoogleIdUser(uid: String, email: String, userName: String?, userProfileImage: String?): Result<User>
-
     suspend fun fetchUser(uid: String): Result<User>
     suspend fun updateUserName(uid: String, newUserName: String): Result<Boolean>
+    suspend fun deleteUser(uid: String): Result<Boolean>
 
     suspend fun fetchPick(pickID: String): Result<Pick>
     suspend fun fetchPicksInArea(lat: Double, lng: Double, radiusInM: Double): Result<List<Pick>>

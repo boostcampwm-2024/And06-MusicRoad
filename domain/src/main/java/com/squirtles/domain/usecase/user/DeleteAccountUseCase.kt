@@ -2,6 +2,7 @@ package com.squirtles.domain.usecase.user
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.squirtles.domain.firebase.FirebaseRepository
 import com.squirtles.domain.usecase.favorite.DeleteFavoriteUseCase
 import com.squirtles.domain.usecase.favorite.FetchFavoritePicksUseCase
 import com.squirtles.domain.usecase.mypick.DeletePickUseCase
@@ -15,7 +16,8 @@ class DeleteAccountUseCase @Inject constructor(
     private val fetchFavoritePicksUseCase: FetchFavoritePicksUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
     private val fetchMyPicksUseCase: FetchMyPicksUseCase,
-    private val deletePickUseCase: DeletePickUseCase
+    private val deletePickUseCase: DeletePickUseCase,
+    private val firebaseRepository: FirebaseRepository
 ) {
     suspend operator fun invoke() = coroutineScope {
         val currentUser = FirebaseAuth.getInstance().currentUser
@@ -36,13 +38,12 @@ class DeleteAccountUseCase @Inject constructor(
                 // 모든 삭제 작업이 끝날 때까지 기다림
                 (favoritePicksDeleteJobs + myPicksDeleteJobs).awaitAll()
 
-                // TODO
                 // 3. Firebase Firestore 유저 정보 삭제
+                firebaseRepository.deleteUser(currentUser.uid)
 
                 // 4. Firebase Auth 유저 삭제
-                // currentUser.delete()
+                currentUser.delete()
             } catch (e: Exception) {
-                // 오류 처리
                 Log.e("DeleteAccount", "Error deleting user account: ${e.message}")
             }
         }

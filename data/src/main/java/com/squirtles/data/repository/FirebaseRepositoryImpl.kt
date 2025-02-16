@@ -31,6 +31,12 @@ class FirebaseRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteUser(uid: String): Result<Boolean> {
+        return handleResult(FirebaseException.UserNotFoundException()) {
+            firebaseRemoteDataSource.deleteUser(uid)
+        }
+    }
+
     override suspend fun fetchPick(pickID: String): Result<Pick> {
         return handleResult(FirebaseException.NoSuchPickException()) {
             firebaseRemoteDataSource.fetchPick(pickID)
