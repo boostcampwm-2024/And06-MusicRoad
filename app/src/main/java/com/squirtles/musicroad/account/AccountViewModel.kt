@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.squirtles.domain.usecase.user.CreateGoogleIdUserUseCase
+import com.squirtles.domain.usecase.user.DeleteAccountUseCase
 import com.squirtles.domain.usecase.user.FetchUserByIdUseCase
 import com.squirtles.domain.usecase.user.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val fetchUserByIdUseCase: FetchUserByIdUseCase,
     private val createGoogleIdUserUseCase: CreateGoogleIdUserUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase
 ) : ViewModel() {
 
     private val _signInSuccess = MutableSharedFlow<Boolean>()
@@ -67,7 +69,7 @@ class AccountViewModel @Inject constructor(
 
     fun deleteAccount() {
         viewModelScope.launch {
-            signOutUseCase()
+            deleteAccountUseCase()
             _deleteAccountSuccess.emit(true)
         }
     }
