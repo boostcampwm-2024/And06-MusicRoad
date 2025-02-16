@@ -26,6 +26,9 @@ class AccountViewModel @Inject constructor(
     private val _signOutSuccess = MutableSharedFlow<Boolean>()
     val signOutSuccess = _signOutSuccess.asSharedFlow()
 
+    private val _deleteAccountSuccess = MutableSharedFlow<Boolean>()
+    val deleteAccountSuccess = _deleteAccountSuccess.asSharedFlow()
+
     fun signIn(uid: String, credential: GoogleIdTokenCredential) {
         viewModelScope.launch {
             fetchUserByIdUseCase(uid)
@@ -59,6 +62,13 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch {
             clearUserUseCase()
             _signOutSuccess.emit(true)
+        }
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            clearUserUseCase()
+            _deleteAccountSuccess.emit(true)
         }
     }
 }
