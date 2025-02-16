@@ -1,9 +1,11 @@
 package com.squirtles.musicroad.userinfo.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -37,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -55,20 +58,22 @@ import com.squirtles.musicroad.common.DialogTextButton
 import com.squirtles.musicroad.common.HorizontalSpacer
 import com.squirtles.musicroad.common.MessageAlertDialog
 import com.squirtles.musicroad.common.VerticalSpacer
+import com.squirtles.musicroad.ui.theme.DarkGray
 import com.squirtles.musicroad.ui.theme.Primary
 import com.squirtles.musicroad.ui.theme.White
 import com.squirtles.musicroad.userinfo.UserInfoViewModel
 import com.squirtles.musicroad.userinfo.components.MenuItem
 import com.squirtles.musicroad.userinfo.components.UserInfoMenus
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserInfoScreen(
-    userId: String,
+    uid: String,
     onBackClick: () -> Unit,
     onBackToMapClick: () -> Unit,
     onFavoritePicksClick: (String) -> Unit,
     onMyPicksClick: (String) -> Unit,
-    onEditProfileClick: () -> Unit,
+    onEditProfileClick: (String) -> Unit,
     onEditNotificationClick: () -> Unit,
     userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel()
@@ -79,30 +84,48 @@ fun UserInfoScreen(
     val user by userInfoViewModel.profileUser.collectAsStateWithLifecycle()
 
     var showLogOutDialog by remember { mutableStateOf(false) }
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
 
     val onSignOutClick: () -> Unit = {
         GoogleId(context).signOut()
         accountViewModel.signOut()
     }
 
+    val onDeleteAccountClick: () -> Unit = {
+        GoogleId(context).signOut()
+        accountViewModel.deleteAccount()
+    }
+
     LaunchedEffect(Unit) {
-        userId?.let {
-            userInfoViewModel.getUserById(userId)
+        uid.let {
+            userInfoViewModel.getUserById(uid)
         }
 
-        accountViewModel.signOutSuccess
-            .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .collect { isSuccess ->
-                if (isSuccess) {
-                    onBackToMapClick()
+        launch {
+            accountViewModel.signOutSuccess
+                .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect { isSuccess ->
+                    if (isSuccess) {
+                        onBackToMapClick()
+                    }
                 }
-            }
+        }
+
+        launch {
+            accountViewModel.deleteAccountSuccess
+                .flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .collect { isSuccess ->
+                    if (isSuccess) {
+                        onBackToMapClick()
+                    }
+                }
+        }
     }
 
     Scaffold(
         topBar = {
             DefaultTopAppBar(
-                title = if (userId == null) stringResource(id = R.string.profile_sign_in_title) else user.userName,
+                title = user.userName,
                 onBackClick = onBackClick
             )
         }
@@ -145,18 +168,18 @@ fun UserInfoScreen(
                             imageVector = Icons.Outlined.Archive,
                             contentDescription = stringResource(R.string.user_info_favorite_menu_icon_description),
                             menuTitle = stringResource(R.string.user_info_favorite_menu_title),
-                            onMenuClick = { onFavoritePicksClick(userId) }
+                            onMenuClick = { onFavoritePicksClick(uid) }
                         ),
                         MenuItem(
                             imageVector = Icons.Default.MusicNote,
                             contentDescription = stringResource(R.string.user_info_created_by_self_menu_icon_description),
                             menuTitle = stringResource(R.string.user_info_created_by_self_menu_title),
-                            onMenuClick = { onMyPicksClick(userId) }
+                            onMenuClick = { onMyPicksClick(uid) }
                         )
                     )
                 )
 
-                if (userId == userInfoViewModel.currentUser?.userId) {
+                if (uid == userInfoViewModel.currentUid) {
                     UserInfoMenus(
                         title = stringResource(R.string.user_info_setting_category_title),
                         menus = listOf(
@@ -164,7 +187,7 @@ fun UserInfoScreen(
                                 imageVector = Icons.Outlined.SwitchAccount,
                                 contentDescription = stringResource(R.string.user_info_setting_profile_menu_icon_description),
                                 menuTitle = stringResource(R.string.user_info_setting_profile_menu_title),
-                                onMenuClick = onEditProfileClick
+                                onMenuClick = { onEditProfileClick(user.userName) }
                             ),
                             MenuItem(
                                 imageVector = Icons.Outlined.Notifications,
@@ -179,6 +202,18 @@ fun UserInfoScreen(
                                 onMenuClick = { showLogOutDialog = true }
                             )
                         )
+                    )
+
+                    // 회원 탈퇴
+                    Text(
+                        text = stringResource(id = R.string.user_info_setting_delete_user_account),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                            .clickable { showDeleteAccountDialog = true },
+                        color = DarkGray,
+                        textAlign = TextAlign.Start,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -233,6 +268,36 @@ fun UserInfoScreen(
                             onSignOutClick()
                         },
                         text = stringResource(R.string.sign_out_dialog_confirm),
+                        textColor = Primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            if (showDeleteAccountDialog) {
+                MessageAlertDialog(
+                    onDismissRequest = {
+                        showDeleteAccountDialog = false
+                    },
+                    title = stringResource(R.string.delete_account_dialog_title),
+                    body = stringResource(R.string.delete_account_dialog_description),
+                    showBody = true
+                ) {
+                    DialogTextButton(
+                        onClick = {
+                            showDeleteAccountDialog = false
+                        },
+                        text = stringResource(R.string.delete_account_dialog_dismiss)
+                    )
+
+                    HorizontalSpacer(8)
+
+                    DialogTextButton(
+                        onClick = {
+                            showDeleteAccountDialog = false
+                            onDeleteAccountClick()
+                        },
+                        text = stringResource(R.string.delete_account_dialog_confirm),
                         textColor = Primary,
                         fontWeight = FontWeight.Bold
                     )

@@ -112,7 +112,7 @@ fun MapScreen(
                         mapViewModel.picks[clickedMarkerState.curPickId]?.let { pick ->
                             InfoWindow(
                                 pick = pick,
-                                userId = mapViewModel.getUserId(),
+                                uid = mapViewModel.getUid(),
                                 navigateToPick = { pickId ->
                                     onPickSummaryClick(pickId)
                                 },
@@ -138,15 +138,15 @@ fun MapScreen(
                     modifier = Modifier.padding(bottom = 16.dp),
                     lastLocation = lastLocation,
                     onFavoriteClick = {
-                        mapViewModel.getUserId()?.let { userId ->
-                            onFavoriteClick(userId)
+                        mapViewModel.getUid()?.let { uid ->
+                            onFavoriteClick(uid)
                         } ?: run {
                             signInDialogDescription = getString(context, R.string.sign_in_dialog_title_favorite_picks)
                             showSignInDialog = true
                         }
                     },
                     onCenterClick = {
-                        mapViewModel.getUserId()?.let {
+                        mapViewModel.getUid()?.let {
                             onCenterClick()
                             mapViewModel.saveCurLocationForced()
                         } ?: run {
@@ -155,7 +155,7 @@ fun MapScreen(
                         }
                     },
                     onUserInfoClick = {
-                        mapViewModel.getUserId()?.let {
+                        mapViewModel.getUid()?.let {
                             onUserInfoClick(it)
                         } ?: run {
                             signInDialogDescription = getString(context, R.string.sign_in_dialog)
@@ -175,7 +175,7 @@ fun MapScreen(
                         .fillMaxHeight()
                         .padding(WindowInsets.statusBars.asPaddingValues()),
                     clusterPickList = clickedMarkerState.clusterPickList,
-                    userId = mapViewModel.getUserId(),
+                    uid = mapViewModel.getUid(),
                     calculateDistance = { lat, lng ->
                         mapViewModel.calculateDistance(lat, lng).let { distance ->
                             when {
@@ -212,8 +212,8 @@ fun MapScreen(
             onDismissRequest = { showSignInDialog = false },
             onGoogleSignInClick = {
                 GoogleId(context).signIn(
-                    onSuccess = { credential ->
-                        accountViewModel.signIn(credential)
+                    onSuccess = { uid, credential ->
+                        accountViewModel.signIn(uid, credential)
                         showSignInDialog = false
                     }
                 )
