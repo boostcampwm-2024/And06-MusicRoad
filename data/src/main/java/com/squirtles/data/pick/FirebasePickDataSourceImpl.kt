@@ -15,8 +15,10 @@ import com.google.firebase.firestore.toObject
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.COLLECTION_FAVORITES
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.COLLECTION_PICKS
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.COLLECTION_USERS
+import com.squirtles.data.firebase.FirebaseDataSourceConstants.FIELD_ADDED_AT
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.FIELD_MY_PICKS
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.FIELD_PICK_ID
+import com.squirtles.data.firebase.FirebaseDataSourceConstants.FIELD_USER_ID
 import com.squirtles.data.firebase.FirebaseDataSourceConstants.TAG_LOG
 import com.squirtles.data.pick.model.FirebasePick
 import com.squirtles.data.user.model.FirebaseUser
@@ -216,6 +218,34 @@ class FirebasePickDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun fetchFavoritePicks(userId: String): List<Pick> {
+        val favoriteDocuments = fetchFavoritesByUserId(userId)
+
+        val tasks = mutableListOf<Task<DocumentSnapshot>>()
+        val favorites = mutableListOf<Pick>()
+
+        try {
+            favoriteDocuments.forEach { doc ->
+                tasks.add(
+                    db.collection(COLLECTION_PICKS)
+                        .document(doc.data[FIELD_PICK_ID].toString())
+                        .get()
+                )
+            }
+            Tasks.whenAllComplete(tasks).await()
+        } catch (exception: Exception) {
+            Log.e("FirebaseDataSourceImpl", "Failed to get favorite picks", exception)
+            throw exception
+        }
+        tasks.forEach { task ->
+            task.result.toObject<FirebasePick>()?.run {
+                favorites.add(this.toPick().copy(id = task.result.id))
+            }
+        }
+
+        return favorites
+    }
+
     /**
      * GeoHash의 FP 문제 - Geohash의 쿼리가 정확하지 않으며 클라이언트 측에서 거짓양성 결과를 필터링해야 합니다.
      * 이러한 추가 읽기로 인해 앱에 비용과 지연 시간이 추가됩니다.
@@ -227,5 +257,26 @@ class FirebasePickDataSourceImpl @Inject constructor(
         val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
 
         return distanceInM <= radiusInM
+    }
+
+    private suspend fun fetchFavoritesByUserId(userId: String): QuerySnapshot {
+        val query = db.collection(COLLECTION_FAVORITES)
+            .whereEqualTo(FIELD_USER_ID, userId)
+            .orderBy(FIELD_ADDED_AT, Query.Direction.DESCENDING)
+
+        return executeQuery(query)
+    }
+
+    private suspend fun executeQuery(query: Query): QuerySnapshot {
+        return suspendCancellableCoroutine { continuation ->
+            query.get()
+                .addOnSuccessListener { result ->
+                    continuation.resume(result)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("FirebaseDataSourceImpl", "Error fetching favorite documents", exception)
+                    continuation.resumeWithException(exception)
+                }
+        }
     }
 }

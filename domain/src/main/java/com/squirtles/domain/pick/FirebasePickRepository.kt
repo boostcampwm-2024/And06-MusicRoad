@@ -9,4 +9,5 @@ interface FirebasePickRepository : FirebaseRepository {
     suspend fun fetchPick(pickID: String): Result<Pick>
     suspend fun fetchPicksInArea(lat: Double, lng: Double, radiusInM: Double): Result<List<Pick>>
     suspend fun fetchMyPicks(userId: String): Result<List<Pick>>
+    suspend fun fetchFavoritePicks(userId: String): Result<List<Pick>>
 }

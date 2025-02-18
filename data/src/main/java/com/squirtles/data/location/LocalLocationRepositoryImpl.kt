@@ -12,7 +12,7 @@ class LocalLocationRepositoryImpl: LocalLocationRepository {
     private var _currentLocation: MutableStateFlow<Location?> = MutableStateFlow(null)
     override val lastLocation: StateFlow<Location?> = _currentLocation.asStateFlow()
 
-    override suspend fun saveCurrentLocation(location: Location) {
-        _currentLocation.emit(location)
+    override suspend fun saveCurrentLocation(geoLocation: Location) {
+        _currentLocation.emit(geoLocation)
     }
 }

@@ -28,10 +28,4 @@ class FirebaseFavoriteRepositoryImpl @Inject constructor(
             favoriteDataSource.deleteFavorite(pickId, userId)
         }
     }
-
-    override suspend fun fetchFavoritePicks(userId: String): Result<List<Pick>> {
-        return handleResult {
-            favoriteDataSource.fetchFavoritePicks(userId)
-        }
-    }
 }

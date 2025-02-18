@@ -1,8 +1,8 @@
 package com.squirtles.data.pick
 
-import com.squirtles.domain.pick.FirebasePickDataSource
-import com.squirtles.domain.model.Pick
 import com.squirtles.domain.firebase.FirebaseException
+import com.squirtles.domain.model.Pick
+import com.squirtles.domain.pick.FirebasePickDataSource
 import com.squirtles.domain.pick.FirebasePickRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,6 +44,12 @@ class FirebasePickRepositoryImpl @Inject constructor(
         val pickList = pickDataSource.fetchPicksInArea(lat, lng, radiusInM)
         return handleResult(FirebaseException.NoSuchPickInRadiusException()) {
             pickList.ifEmpty { null }
+        }
+    }
+
+    override suspend fun fetchFavoritePicks(userId: String): Result<List<Pick>> {
+        return handleResult {
+            pickDataSource.fetchFavoritePicks(userId)
         }
     }
 }

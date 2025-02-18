@@ -1,8 +1,8 @@
 package com.squirtles.data.user
 
-import com.squirtles.domain.user.FirebaseUserDataSource
-import com.squirtles.domain.model.User
 import com.squirtles.domain.firebase.FirebaseException
+import com.squirtles.domain.model.User
+import com.squirtles.domain.user.FirebaseUserDataSource
 import com.squirtles.domain.user.FirebaseUserRepository
 import javax.inject.Singleton
 

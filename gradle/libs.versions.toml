@@ -45,6 +45,7 @@ kotlinxImmutable = "0.3.7"
 jetbrainsKotlinJvm = "1.9.22"
 navigationCommonKtx = "2.8.5"
 runtimeAndroid = "1.7.6"
+firebaseFirestoreKtxVersion = "25.1.2"
 
 [libraries]
 # AndroidX
@@ -131,6 +132,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "pagingComposeAndroid" }
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
+google-firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtxVersion" }
 
 # Plugins
 [plugins]

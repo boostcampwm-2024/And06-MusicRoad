@@ -34,34 +34,6 @@ class FirebaseFavoriteDataSourceImpl @Inject constructor(
     private val cloudFunctionHelper: CloudFunctionHelper
 ) : FirebaseFavoriteDataSource {
 
-    override suspend fun fetchFavoritePicks(userId: String): List<Pick> {
-        val favoriteDocuments = fetchFavoritesByUserId(userId)
-
-        val tasks = mutableListOf<Task<DocumentSnapshot>>()
-        val favorites = mutableListOf<Pick>()
-
-        try {
-            favoriteDocuments.forEach { doc ->
-                tasks.add(
-                    db.collection(COLLECTION_PICKS)
-                        .document(doc.data[FIELD_PICK_ID].toString())
-                        .get()
-                )
-            }
-            Tasks.whenAllComplete(tasks).await()
-        } catch (exception: Exception) {
-            Log.e("FirebaseDataSourceImpl", "Failed to get favorite picks", exception)
-            throw exception
-        }
-        tasks.forEach { task ->
-            task.result.toObject<FirebasePick>()?.run {
-                favorites.add(this.toPick().copy(id = task.result.id))
-            }
-        }
-
-        return favorites
-    }
-
     override suspend fun fetchIsFavorite(pickId: String, userId: String): Boolean {
         val favoriteDocument = fetchFavoriteByPickIdAndUserId(pickId, userId)
         return favoriteDocument.isEmpty.not()
@@ -138,27 +110,6 @@ class FirebaseFavoriteDataSourceImpl @Inject constructor(
                         "Error at fetching favorite document",
                         exception
                     )
-                    continuation.resumeWithException(exception)
-                }
-        }
-    }
-
-    private suspend fun fetchFavoritesByUserId(userId: String): QuerySnapshot {
-        val query = db.collection(COLLECTION_FAVORITES)
-            .whereEqualTo(FIELD_USER_ID, userId)
-            .orderBy(FIELD_ADDED_AT, Query.Direction.DESCENDING)
-
-        return executeQuery(query)
-    }
-
-    private suspend fun executeQuery(query: Query): QuerySnapshot {
-        return suspendCancellableCoroutine { continuation ->
-            query.get()
-                .addOnSuccessListener { result ->
-                    continuation.resume(result)
-                }
-                .addOnFailureListener { exception ->
-                    Log.w("FirebaseDataSourceImpl", "Error fetching favorite documents", exception)
                     continuation.resumeWithException(exception)
                 }
         }

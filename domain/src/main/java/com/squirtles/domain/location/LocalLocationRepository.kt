@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.StateFlow
 interface LocalLocationRepository {
     val lastLocation: StateFlow<Location?>
 
-    suspend fun saveCurrentLocation(location: Location)
+    suspend fun saveCurrentLocation(geoLocation: Location)
 }

@@ -1,7 +1,7 @@
 package com.squirtles.musicroad.favorite
 
 import com.squirtles.domain.favorite.usecase.DeleteFavoriteUseCase
-import com.squirtles.domain.favorite.usecase.FetchFavoritePicksUseCase
+import com.squirtles.domain.pick.usecase.FetchFavoritePicksUseCase
 import com.squirtles.domain.order.usecase.GetFavoriteListOrderUseCase
 import com.squirtles.domain.order.usecase.SaveFavoriteListOrderUseCase
 import com.squirtles.domain.user.usecase.GetCurrentUserUseCase
