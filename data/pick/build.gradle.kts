@@ -1,9 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
-var properties = Properties()
-properties.load(FileInputStream("local.properties"))
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -12,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.firebase"
+    namespace = "com.example.pick"
     compileSdk = 34
 
     defaultConfig {
@@ -23,29 +17,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            isMinifyEnabled = false
-
-            buildConfigField(
-                "String",
-                "FIRESTORE_DB_ID",
-                "\"${properties.getProperty("FIRESTORE_DB_ID_DEBUG")}\""
-            )
-        }
-
         release {
             isMinifyEnabled = false
-
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-
-            buildConfigField(
-                "String",
-                "FIRESTORE_DB_ID",
-                "\"${properties.getProperty("FIRESTORE_DB_ID_RELEASE")}\""
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -55,13 +29,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
 dependencies {
     implementation(projects.core.model)
+    implementation(projects.domain.pick)
+    implementation(projects.data.firebase)
 
     // hilt
     implementation(libs.hilt.android)

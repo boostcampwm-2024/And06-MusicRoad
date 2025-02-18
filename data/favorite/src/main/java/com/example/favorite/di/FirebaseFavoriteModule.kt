@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object FirebaseFavoriteDi {
+object FirebaseFavoriteModule {
 
     @Provides
     @Singleton
@@ -23,7 +23,10 @@ object FirebaseFavoriteDi {
 
     @Provides
     @Singleton
-    fun provideFirebaseFavoriteDataSource(db: FirebaseFirestore, cloudFunctionHelper: CloudFunctionHelper): FirebaseFavoriteDataSource =
+    fun provideFirebaseFavoriteDataSource(
+        db: FirebaseFirestore,
+        cloudFunctionHelper: CloudFunctionHelper
+    ): FirebaseFavoriteDataSource =
         FirebaseFavoriteDataSourceImpl(db, cloudFunctionHelper)
 
     @Provides

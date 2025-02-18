@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.location"
+    namespace = "com.example.order"
     compileSdk = 34
 
     defaultConfig {
@@ -32,8 +32,9 @@ android {
 }
 
 dependencies {
-    implementation(projects.domain.location)
-    
+    implementation(projects.core.model)
+    implementation(projects.domain.order)
+
     // hilt
     implementation(libs.hilt.android)
     implementation(libs.firebase.functions.ktx)

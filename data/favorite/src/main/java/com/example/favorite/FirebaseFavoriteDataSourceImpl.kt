@@ -1,10 +1,10 @@
 package com.example.favorite
 
 import android.util.Log
-import com.example.favorite.model.FirebaseFavorite
 import com.example.firebase.FirebaseDataSourceConstants.COLLECTION_FAVORITES
 import com.example.firebase.FirebaseDataSourceConstants.FIELD_PICK_ID
 import com.example.firebase.FirebaseDataSourceConstants.FIELD_USER_ID
+import com.example.firebase.model.FirebaseFavorite
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CoroutineScope
